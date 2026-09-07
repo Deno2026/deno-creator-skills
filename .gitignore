@@ -1,0 +1,8 @@
+# 비밀·대용량은 넣지 않는다
+*.key
+keys.json
+.env
+*.mp4
+*.wav
+dist/
+tmp/
