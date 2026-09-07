@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "kit_version": "0.1.0",
-  "how_to_read": "tasks 에서 작업 유형 하나를 고르고 read_order 를 번호 순서로 읽는다. <project> 는 감독이 지목한 작품 폴더(projects/<작품>), <model> 은 craft/guides/ 의 모델 가이드 이름이다. 실행이 막히면 이 파일을 손으로 읽어도 결과는 같다. AGENTS.md 는 언제나 먼저 읽은 상태다.",
+  "how_to_read": "tasks 에서 작업 유형 하나를 고르고 read_order 를 번호 순서로 읽는다. <project> 는 감독이 지목한 작품 폴더(projects/<작품>), <model> 은 craft/guides/ 의 모델 가이드 이름이다. 작품 폴더 안의 지시서(scenes/)·자산 목록(assets/)은 그 작품의 읽기 목록에 딸린 것으로 본다. 실행이 막히면 이 파일을 손으로 읽어도 결과는 같다. AGENTS.md 는 언제나 먼저 읽은 상태다.",
   "limits": {
     "root_agent_max_bytes": 12288,
     "task_read_max_bytes": 65536
@@ -39,8 +39,10 @@
         "craft/doctrine.md",
         "craft/taste.md",
         "craft/guides/<model>.md",
+        "craft/guides/image-assets.md",
         "<project>/BRIEF.md",
-        "<project>/STATE.md"
+        "<project>/STATE.md",
+        "<project>/DECISIONS.md"
       ]
     },
     "generate-image": {
@@ -54,7 +56,8 @@
         "craft/taste.md",
         "craft/guides/image-assets.md",
         "<project>/BRIEF.md",
-        "<project>/STATE.md"
+        "<project>/STATE.md",
+        "<project>/DECISIONS.md"
       ]
     },
     "review": {
