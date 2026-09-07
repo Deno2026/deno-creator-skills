@@ -1,0 +1,24 @@
+# 비밀 — 접속 키·토큰은 문서에도 커밋에도 두지 않는다
+.env
+.env.*
+*.key
+keys.json
+secrets/
+
+# 렌더 원본 — 폴더에만 두고 Git에는 올리지 않는다
+projects/**/renders/**
+!projects/**/renders/README.md
+*.mp4
+*.mov
+*.webm
+*.wav
+*.mp3
+*.flac
+
+# 임시
+tmp/
+_scratch/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
