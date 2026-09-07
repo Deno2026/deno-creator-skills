@@ -21,8 +21,8 @@
 | 항목 | 확정 | 날짜 |
 |---|---|---|
 | 톤 | 실사, 따뜻한 텅스텐 실내광과 푸른 새벽 창 | 2026-09-07 |
-| 인물 | 앵커 `assets/anchors/owner_v1.png` (얼굴·헤어 고정, 앞치마) | 2026-09-07 |
-| 공간 | 참조 `assets/refs/bakery_counter_v1.png` (장소만) | 2026-09-07 |
+| 인물 | 정체성 기준 `assets/refs/owner_identity_v1.png` (얼굴·헤어). 클립 앵커는 `assets/anchors/C0n_anchor_v1.png` (구도·의상·공간 포함, 클립마다) | 2026-09-07 |
+| 공간 | 참조 `assets/refs/space_bakery_counter_v1.png` (장소만) | 2026-09-07 |
 | 모델 | MiniMax H3 R2V (`craft/guides/minimax-h3-r2v.md`) | 2026-09-07 |
 
 ## 이 작품만의 규칙

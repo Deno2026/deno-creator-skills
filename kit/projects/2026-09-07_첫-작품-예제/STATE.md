@@ -13,7 +13,7 @@
 
 | 클립 | 앵커 | 지시서 | 최신 판 | 판정 |
 |---|---|---|---|---|
-| C01 | assets/anchors/owner_v1.png (확인 대기) | scenes/C01.md | — | — |
+| C01 | assets/anchors/C01_anchor_v1.png (확인 대기) | scenes/C01.md | — | — |
 | C02 | — | — | — | — |
 | C03 | — | — | — | — |
 

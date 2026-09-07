@@ -10,8 +10,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
+
+STATE_LINES = {
+    "상태": re.compile(r"^>\s*상태:\s*(ACTIVE|WAITING_USER|HOLD|CLOSED)\s*$"),
+    "마지막 갱신": re.compile(r"^>\s*마지막 갱신:\s*\d{4}-\d{2}-\d{2}\s*$"),
+    "다음 행동": re.compile(r"^>\s*다음 행동:\s*\S.*$"),
+}
+PROJECT_FILES = ("BRIEF.md", "STATE.md", "DECISIONS.md")
+PROJECT_DIRS = ("scenes", "assets", "renders", "review")
 
 
 def find_root(start: Path) -> Path:
@@ -61,8 +70,37 @@ def resolve(root: Path, config: dict, task: str, project: str | None, model: str
     return docs, notices
 
 
+def check_projects(root: Path) -> int:
+    """작품 폴더 모양과 STATE 머리 세 줄을 검사한다. 템플릿은 건너뛴다."""
+    problems = 0
+    projects = root / "projects"
+    if not projects.is_dir():
+        return 0
+    for folder in sorted(projects.iterdir()):
+        if not folder.is_dir() or folder.name.startswith("_"):
+            continue
+        rel = folder.relative_to(root).as_posix()
+        for name in PROJECT_FILES:
+            if not (folder / name).is_file():
+                print(f"[ERROR] {rel}: {name} 없음")
+                problems += 1
+        for name in PROJECT_DIRS:
+            if not (folder / name).is_dir():
+                print(f"[ERROR] {rel}: 폴더 {name}/ 없음 (템플릿 모양을 유지한다)")
+                problems += 1
+        state = folder / "STATE.md"
+        if state.is_file():
+            head = state.read_text(encoding="utf-8").splitlines()[:12]
+            for label, pattern in STATE_LINES.items():
+                if not any(pattern.match(line) for line in head):
+                    print(f"[ERROR] {rel}/STATE.md: 머리 12줄에 '> {label}:' 줄이 없거나 형식이 다르다")
+                    problems += 1
+    return problems
+
+
 def check(root: Path, config: dict) -> int:
     problems = 0
+    problems += check_projects(root)
     agents = root / "AGENTS.md"
     limit_root = int(config.get("limits", {}).get("root_agent_max_bytes", 12288))
     size = agents.stat().st_size
