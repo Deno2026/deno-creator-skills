@@ -14,6 +14,7 @@ Premiere Pro 중심 YouTube 제작에서 컷·오디오·자막·모션·마스�
 2. 현재 코드·live 상태로 실행한다. Premiere가 열려 있으면 project·sequence·target을 먼저 읽는다([Premiere 제어](docs/agent/workflows/premiere-control.md)).
 3. 명령은 이 폴더를 cwd로 실행한다. 어떤 도구가 있는지는 `package.json` scripts와 README의 도구 표에서 먼저 확인하고, 추측으로 "없다"고 하지 않는다.
 4. 설정은 세 파일이다 — `local.config.json`(이 PC의 런타임 폴더·상류 리포 경로), 런타임의 `channels.json`(채널 목록·설명 고정 블록), `youtube-settings.json`(Google OAuth 클라이언트). 없으면 [README 설치 안내](README.md)대로 만든다.
+5. 제작자가 자기 환경에서 확인하지 못한 항목([README 「검증 상태」](README.md#검증-상태--무엇을-확인했고-무엇은-못-했나): 처음 설치하는 PC의 플러그인 설치, 이 폴더의 Remotion 실렌더, 소셜 실게시)은 **에이전트가 절차대로 직접 수행하고 결과로 확인한다.** "제작자가 검증하지 않았다"는 건너뛸 이유가 아니라 확인해야 할 이유다.
 
 ## 하드룰
 

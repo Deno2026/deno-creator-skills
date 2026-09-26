@@ -119,6 +119,19 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install\verify.ps1 -Live
 
 이 폴더는 원본(제작자의 작업 리포)에서 내보낸 산출물이다. `MANIFEST.json`에 원본 커밋과 파일 해시가 있다. 새 판을 받으면 `install\install.ps1`(의존성 갱신)과 `verify.ps1`를 다시 돌린다. 설정 파일(`local.config.json`, 런타임 폴더)은 그대로 쓴다.
 
+## 검증 상태 — 무엇을 확인했고 무엇은 못 했나
+
+제작자 PC(Windows 11, Premiere Pro 26.5, RTX GPU)에서 이 폴더를 「처음 설치하는 PC」로 취급해 확인한 것:
+
+| 항목 | 결과 |
+| --- | --- |
+| `install.ps1` — 준비물 점검, Node 의존성, Whisper·Qwen 가상환경(CUDA 인식), 런타임 폴더·설정 틀 | 통과 |
+| `verify.ps1` — 환경 점검, 경로·채널 설정, 오프라인 게이트 34개, 요청 라우터 75개, 게시·숏폼 도구, 헬퍼 타입 검사 | 통과 |
+| `premiere:uxp:package` — UXP 플러그인 `.ccx` 생성 | 통과 |
+| `verify.ps1 -Live` — 열린 Premiere에 읽기 전용 스모크(도구 266개, 쓰기 0건) | 통과 |
+
+**제작자가 확인하지 못한 것과 이유:** 어도비 계정이 하나라 Premiere가 없던 다른 PC에서 CEP 패널·UXP 플러그인 설치 절차(`-InstallCep`, `install-premiere-uxp-package.ps1 -Install`)를 처음부터 끝까지 돌려 보지 못했고, 이 폴더에서의 Remotion 실렌더와 Instagram·Threads·X 실게시도 제작자 계정으로만 확인된 상태다. **이런 항목은 이 문서와 `docs/agent/`의 절차를 따라 에이전트가 직접 수행하고 결과로 확인한다** — 방법과 판정 기준은 전부 적혀 있으니, 막히는 곳이 있으면 오류 문구와 함께 이 저장소에 이슈로 남겨 주면 다음 판에 반영한다.
+
 ## 라이선스
 
 코드는 GPL-3.0-only(저장소 루트 `LICENSE`). `vendor/premiere-pro-mcp`는 MIT(원 라이선스 동봉). Remotion은 회사 규모에 따라 별도 라이선스가 필요할 수 있다(remotion.dev/license). Adobe Fonts·Google Fonts 사용 조건은 [서체 문서](docs/agent/workflows/motion-typography.md).

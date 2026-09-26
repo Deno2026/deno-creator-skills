@@ -33,9 +33,9 @@
 
 ## 이름과 자리
 
-- 저장소: https://github.com/Deno2026/deno-creator-skills (2026-09-27, 옛 `deno-director-mcp`에서 개명). 로컬 `E:\DENO-Repos\deno-creator-skills`.
+- 저장소: https://github.com/Deno2026/deno-creator-skills (2026-09-27, 옛 `deno-director-mcp`에서 개명).
 - 제품·사이트 이름은 **Deno MCP**로 유지하고, 이 저장소는 그 MCP가 가리키는 자료 창고다. MCP도 하나, 저장소도 하나.
-- 상태: 비공개 준비 중. 프리미어 후반 키트의 「처음 설치」 검증이 끝나면 공개한다.
+- 상태: 2026-09-27 공개. 프리미어 후반 키트는 첫 판이며, 제작자가 확인하지 못한 항목은 [키트 README 「검증 상태」](premiere/README.md#검증-상태--무엇을-확인했고-무엇은-못-했나)에 적혀 있다.
 
 ## 남은 일
 

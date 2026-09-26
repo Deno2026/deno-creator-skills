@@ -1,11 +1,11 @@
 {
   "kit": "deno-creator-skills/premiere",
   "version": "0.1.0",
-  "exportedAt": "2026-09-26T21:41:04.784Z",
+  "exportedAt": "2026-09-26T21:53:49.496Z",
   "sourceRepo": "PremierePro Helper (local)",
-  "sourceCommit": "fc1d7fb",
+  "sourceCommit": "a5edba7",
   "files": {
-    "AGENTS.md": "e205cae870dfba653a2f79b6545ce27b9af5b66be5a7a748587d0eee608a51b0",
+    "AGENTS.md": "75cda0cedd038bf97becb1871e95fe27055fc1060dd6b080f53a8d139c0c8660",
     "apps/youtube-upload-helper/.env.example": "1f9f7ef88c5a8baad4cb64c8008ac737021b1715af1807ef2079d8ae936e2040",
     "apps/youtube-upload-helper/electron/main.cjs": "0dbd6181d1a71d7e49a1ef52eaae71d6a08d05e1e36bb8c9360584be1c7d9a96",
     "apps/youtube-upload-helper/electron/next-server.cjs": "ed0e4a71a7a280a79f5a3790c5f4efc4e244cd3f4ec1dbf4b900903a5a1efc5f",
@@ -291,7 +291,7 @@
     "productions/_template/STYLE_BRIEF.md": "fda4c601f355b5d092d95cf260bf7d4286e6bd211c977ddf6884bb7f70e06309",
     "productions/_template/thumbnail/package.json": "e3613f2d7fc791c4b5f52eaeb894309d840796fef97c7f23092c16e88ec1cef0",
     "productions/README.md": "4fae840cbfb362592389167e6df08f27f3fd36b3d939064f0995823339ee082c",
-    "README.md": "4dfd4df038fbbaf2f442bc84eaf320a566d27cf4b56bb17cd82334d114e20cf5",
+    "README.md": "7823af4205bb88276a076e4ef7bff454aac939a411ea5eb4815e5405fbe1c6f6",
     "remotion.config.ts": "eb2a5fca3b1b516269eb27d94e75e262db4c73468663bce65293d8d76fc857e7",
     "scripts/align_premiere_captions_to_waveform.py": "570c351e9b1be8d7ba15c2db50d8a3716d3460f3b56de4e7e4fbb80083aac2f1",
     "scripts/apply-premiere-audio-balance.mjs": "6d9ac36842b33a4a1205dbba05a1343abcaaa3df28de9dd02ba71e5cfe8fde51",
