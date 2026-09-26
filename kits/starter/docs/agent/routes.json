@@ -9,19 +9,20 @@
       ],
       "note": "새 작품은 목적·방향을 사용자와 정해 BRIEF.md에 적는 것부터. 상태는 상태.md에"
     },
-    "generate": {
+    "local": {
       "read": [
         "AGENTS.md",
+        "MY-PC.md",
         "skills/README.md"
       ],
-      "note": "유료 생성 전 deno_estimate로 비용 안내 → 사용자 확인 → generate"
+      "note": "내 ComfyUI로 만들기: 지도 편(deno-comfyui-workflows) → 처음 한 번 comfyui-fit-my-pc로 MY-PC.md 고정 → 해당 워크플로 편과 첨부 파일. 편은 deno_knowhow_get으로 받아 skills/에 둔다"
     },
     "recipe": {
       "read": [
         "skills/README.md",
         "skills/deno-kit.json"
       ],
-      "note": "꾸러미(skills/)의 목적·순서를 따르되 표현·호흡은 사용자가 정한다. 로컬/상용 갈래도 사용자가 고른다"
+      "note": "꾸러미(skills/)의 목적·순서를 따르되 표현·호흡은 사용자가 정한다"
     },
     "review": {
       "read": [

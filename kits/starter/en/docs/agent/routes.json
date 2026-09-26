@@ -9,19 +9,20 @@
       ],
       "note": "A new production starts by deciding purpose and direction with the user in BRIEF.md. Progress goes to STATE.md"
     },
-    "generate": {
+    "local": {
       "read": [
         "AGENTS.md",
+        "MY-PC.md",
         "skills/README.md"
       ],
-      "note": "Before paid generation: deno_estimate → user confirmation → generate"
+      "note": "Making things in the user's own ComfyUI: the map package (deno-comfyui-workflows) → once, comfyui-fit-my-pc to fix MY-PC.md → the workflow package and its attached files. Fetch packages with deno_knowhow_get into skills/"
     },
     "recipe": {
       "read": [
         "skills/README.md",
         "skills/deno-kit.json"
       ],
-      "note": "Follow the package's purpose and order; expression and pacing are the user's. The user also picks local or commercial execution"
+      "note": "Follow the package's purpose and order; expression and pacing are the user's"
     },
     "review": {
       "read": [

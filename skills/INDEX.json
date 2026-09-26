@@ -78,7 +78,7 @@
       "slug": "comfyui-fit-my-pc",
       "title": "내 PC에 맞는 설정값 찾기 — 스모크 테스트 → 사다리 → 사용자와 결정 → 고정 (디노 값은 참고점)",
       "kind": "technique",
-      "version": "3",
+      "version": "4",
       "execution": "local",
       "tags": [
         "장비",
@@ -106,9 +106,9 @@
         "Qwen-Image 2.1"
       ],
       "summary": "디노 꾸러미의 수치는 디노 PC(RTX PRO 6000 96GB) 기준의 최고 품질 권장값이다. 에이전트는 사용자 PC에서 스모크 테스트(영상 MiniMax H3는 5초·초안 크기, 사진 Qwen-Image 2.1은 1080p급)로 시작해 되는 값을 한 단계씩 올리거나 내리며 찾고, 2~3안을 사용자에게 물어 정한 값을 프로젝트 파일 MY-PC.md에 고정한 뒤 그 값으로만 돌린다.",
-      "updated_at": "2026-09-26T16:49:36.396Z",
+      "updated_at": "2026-09-26T23:58:02.356Z",
       "file": "skills/comfyui-fit-my-pc.md",
-      "sha256": "834bf70b61db0a7f33e26dc1cc3cf0233bc9fb2b4383af3387b6ff1985c69684",
+      "sha256": "b9f62e930e3371f48303b4f416d0a6eab5eaa92c5045d4fa1ea5ad4749d7c981",
       "files": []
     },
     {

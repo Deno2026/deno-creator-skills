@@ -1,6 +1,6 @@
 {
   "source": "https://api.denomcp.com/v1/starter-kit",
-  "kit_version": "7",
+  "kit_version": "8",
   "ko": [
     "AGENTS.md",
     "docs/agent/routes.json",
@@ -11,7 +11,8 @@
     "tools/agent-hooks/compact_reminder.py",
     "README.md",
     "productions/README.md",
-    "skills/deno-kit.json"
+    "skills/deno-kit.json",
+    "MY-PC.md"
   ],
   "en": [
     "en/AGENTS.md",
@@ -23,11 +24,12 @@
     "en/tools/agent-hooks/compact_reminder.py",
     "en/README.md",
     "en/productions/README.md",
-    "en/skills/deno-kit.json"
+    "en/skills/deno-kit.json",
+    "en/MY-PC.md"
   ],
   "how_to_apply": {
-    "ko": "사용자가 원한다고 답한 뒤에만 쓴다 — 먼저 권하거나 알아서 설치하지 않는다. 아직 없는 파일만 리포 루트 기준 경로에 새로 쓴다. 이미 있는 파일은 바꾸지 않는다: skip = 그대로 둠, ask = 덧붙일 수 있는 내용(agents_md_section / .gitignore 줄 / 이미 있는 훅 파일이면 hooks.SessionStart 항목)을 보여 주고 사용자가 고를 때만 덧붙인다. skills/deno-kit.json의 installed_at은 오늘 날짜(YYYY-MM-DD)로 채운다. 킷은 도화지다 — 구조와 순서만 잡고, 디노의 취향·판단을 규칙으로 더하지 않는다.",
-    "en": "Use this only after the user says they want it — never suggest or install it unprompted. Write only the files that do not exist yet, at their paths relative to the repo root. Never change an existing file: 'skip' = leave it; 'ask' = show the user the lines that could be added (agents_md_section / gitignore lines / the hooks.SessionStart entry of a hooks file that already exists) and add them only if the user picks them. In skills/deno-kit.json set installed_at to today's date (YYYY-MM-DD). The kit is a blank canvas: it sets structure and order only — never add Deno's taste or judgment as rules."
+    "ko": "사용자가 원한다고 답한 뒤에만 쓴다 — 먼저 권하거나 알아서 설치하지 않는다. 아직 없는 파일만 리포 루트 기준 경로에 새로 쓴다. 이미 있는 파일은 바꾸지 않는다: skip = 그대로 둠, ask = 덧붙일 수 있는 내용(agents_md_section / .gitignore 줄 / 이미 있는 훅 파일이면 hooks.SessionStart 항목)을 보여 주고 사용자가 고를 때만 덧붙인다. skills/deno-kit.json의 installed_at은 오늘 날짜(YYYY-MM-DD)로 채운다. 킷은 도화지다 — 구조와 순서만 잡고, 디노의 취향·판단을 규칙으로 더하지 않는다. MY-PC.md는 없을 때만 새로 쓰고 값은 비워 둔다 — 측정으로 채운다.",
+    "en": "Use this only after the user says they want it — never suggest or install it unprompted. Write only the files that do not exist yet, at their paths relative to the repo root. Never change an existing file: 'skip' = leave it; 'ask' = show the user the lines that could be added (agents_md_section / gitignore lines / the hooks.SessionStart entry of a hooks file that already exists) and add them only if the user picks them. In skills/deno-kit.json set installed_at to today's date (YYYY-MM-DD). The kit is a blank canvas: it sets structure and order only — never add Deno's taste or judgment as rules. Write MY-PC.md only if it does not exist and leave its values empty — they are filled from measurements."
   },
-  "sha256": "633011fa2dd3489c9f125d24f7e6a3c8c28cb8abd6ad5761a50de004752c155b"
+  "sha256": "0e28f41597ecb1e84a29d2d8b303bc046be4c8e962db8b0c4aca40bc121d3d5e"
 }

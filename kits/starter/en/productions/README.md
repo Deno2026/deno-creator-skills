@@ -8,7 +8,7 @@ One work = one `productions/<date_title>/` folder. Records go to Git, generated 
 - Who watches it, where it goes
 - The order of what to show (story, structure)
 - Tone, pacing, expression — the user's choices; do not copy the package's examples as-is
-- Package and version in use, execution path (local/commercial)
+- Package and version in use
 
 ## STATE.md — progress (where a fresh session picks up)
 
