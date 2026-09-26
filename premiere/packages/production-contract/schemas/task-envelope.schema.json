@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.deno.video/schemas/task-envelope.v2.json",
+  "title": "DENO advisory production task envelope",
+  "description": "A workflow-routing aid. It does not grant or deny execution permission.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "operationId",
+    "production",
+    "domain",
+    "action",
+    "currentState",
+    "readOrder",
+    "advisoryOnly",
+    "stateNotes",
+    "guidance"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 2},
+    "operationId": {"type": "string", "minLength": 1},
+    "production": {"type": ["string", "null"], "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "domain": {"type": "string", "minLength": 1},
+    "action": {"type": "string", "minLength": 1},
+    "currentState": {"type": ["string", "null"]},
+    "readOrder": {"type": "array", "items": {"type": "string"}},
+    "advisoryOnly": {"const": true},
+    "stateNotes": {"type": "array", "items": {"type": "string"}},
+    "guidance": {"type": "array", "items": {"type": "string"}}
+  }
+}

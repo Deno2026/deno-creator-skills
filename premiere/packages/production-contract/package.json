@@ -1,0 +1,11 @@
+{
+  "name": "@deno-video/production-contract",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./schemas/production-state": "./schemas/production-state.schema.json",
+    "./schemas/task-envelope": "./schemas/task-envelope.schema.json",
+    "./schemas/delivery-manifest": "./schemas/delivery-manifest.schema.json"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "video_url": "https://www.youtube.com/watch?v=VIDEO_ID_HERE",
+  "video_id": "VIDEO_ID_HERE",
+  "video_title_reference": "기존 업로드 영상 제목 참고용",
+  "operation": "add_missing_manual_captions",
+  "target_visibility_change": "none",
+  "caption_policy": {
+    "touch_auto_generated_captions": false,
+    "replace_manual_caption_if_exists": false,
+    "requires_user_confirmation_before_youtube_change": true
+  },
+  "source_korean_srt": "E:\\path\\to\\final_korean.srt",
+  "caption_jobs": [
+    {
+      "language": "ko",
+      "display_name": "Korean",
+      "srt_file": "E:\\path\\to\\clean_korean.srt",
+      "action": "add_if_missing",
+      "source": "user_final_korean_srt"
+    },
+    {
+      "language": "en",
+      "display_name": "English",
+      "srt_file": "E:\\path\\to\\english.srt",
+      "action": "add_if_missing",
+      "source": "llm_only_translation"
+    }
+  ],
+  "metadata_scope": "captions_only",
+  "notes": "기존 영상 자막 보강 요청 예시"
+}

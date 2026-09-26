@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DENO Premiere UXP</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: system-ui, sans-serif;
+      }
+
+      body {
+        margin: 0;
+        padding: 14px;
+        color: #f2f2f2;
+        background: #252525;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: 15px;
+        font-weight: 650;
+      }
+
+      /* UXP는 CSS Grid와 gap을 지원하지 않는다. Flexbox와 margin만 쓴다.
+         (2026-07-22 확인: grid로 짜면 해당 블록이 통째로 렌더되지 않는다) */
+      .status-card {
+        display: flex;
+        flex-direction: column;
+        padding: 12px;
+        border: 1px solid #474747;
+        border-radius: 7px;
+        background: #303030;
+      }
+
+      .row {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 9px;
+      }
+
+      .row-last {
+        margin-bottom: 0;
+      }
+
+      .label {
+        width: 76px;
+        flex-shrink: 0;
+        color: #b8b8b8;
+        font-size: 12px;
+      }
+
+      .value {
+        flex: 1;
+        font-size: 12px;
+        line-height: 1.4;
+        white-space: pre-wrap;
+      }
+
+      .status-running {
+        color: #b9d77d;
+      }
+
+      .status-error {
+        color: #ff9b91;
+      }
+
+      .path {
+        color: #9f9f9f;
+        font-size: 10px;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>DENO Premiere UXP</h1>
+
+    <section class="status-card" aria-live="polite">
+      <!-- 기본 문구는 "JS가 아직 화면을 못 그렸다"를 뜻해야 한다. 예전 기본값
+           "시작 중"은 폴러 상태와 겹쳐 부팅 실패를 이틀간 가렸다(2026-07-22). -->
+      <div class="row">
+        <span class="label">코드 버전</span>
+        <span id="panelVersion" class="value status-error">JS 미실행 — 캐시 또는 로드 실패</span>
+      </div>
+      <div class="row">
+        <span class="label">상태</span>
+        <span id="pollStatus" class="value">미실행</span>
+      </div>
+      <div class="row">
+        <span class="label">처리 수</span>
+        <span id="processedCount" class="value">0</span>
+      </div>
+      <div class="row">
+        <span class="label">마지막 명령</span>
+        <span id="lastCommand" class="value">없음</span>
+      </div>
+      <div class="row">
+        <span class="label">마지막 오류</span>
+        <span id="lastError" class="value">없음</span>
+      </div>
+      <div class="row">
+        <span class="label">브리지 URL</span>
+        <span id="bridgeDirectoryUrl" class="value path">plugin-data:/bridge</span>
+      </div>
+      <div class="row row-last">
+        <span class="label">실제 경로</span>
+        <span id="bridgeDirectoryNative" class="value path">확인 중</span>
+      </div>
+    </section>
+
+    <script src="index.js"></script>
+  </body>
+</html>

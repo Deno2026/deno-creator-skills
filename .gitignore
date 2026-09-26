@@ -16,3 +16,13 @@ runtime/
 *-oauth-token.json
 *-settings.json
 !*.example.json
+
+# 프리미어 후반 키트 산출물(premiere/)에서 추적하지 않는 것
+premiere/renders/
+premiere/assets/
+premiere/productions/*
+!premiere/productions/README.md
+premiere/local.config.json
+**/.next/
+**/.local/
+premiere/dist/

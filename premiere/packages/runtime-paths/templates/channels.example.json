@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "defaultChannel": "main",
+  "channels": [
+    {
+      "id": "main",
+      "title": "My channel",
+      "handle": "@my-handle",
+      "youtubeChannelId": "UCxxxxxxxxxxxxxxxxxxxxxx",
+      "descriptionLinks": {
+        "comfyReferral": false,
+        "discord": false,
+        "tutorialBlocks": false
+      },
+      "uploadDefaults": {
+        "presetName": "기본 롱폼",
+        "tags": "",
+        "categoryId": "27",
+        "containsSyntheticMedia": false
+      }
+    }
+  ],
+  "descriptionBlocks": {
+    "comfyReferral": {
+      "url": "",
+      "ko": "",
+      "en": ""
+    },
+    "discord": {
+      "url": "",
+      "ko": "",
+      "en": ""
+    },
+    "tutorialBlocks": {
+      "hub": "",
+      "pcSpec": ""
+    },
+    "pinnedCommentHandle": ""
+  },
+  "_note": "설명에 항상 붙일 링크·블록은 여기에 적고 채널별 descriptionLinks로 켜고 끈다. 비워 두면 아무 링크도 붙지 않는다. 파일을 고치면 앱과 도구를 다시 시작한다."
+}

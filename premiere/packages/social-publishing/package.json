@@ -1,0 +1,20 @@
+{
+  "name": "@deno/social-publishing",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "license": "GPL-3.0-only",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "smoke": "node --test tests/smoke_*.cjs"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "3.1127.0",
+    "@aws-sdk/s3-request-presigner": "3.1127.0",
+    "@deno/publishing-core": "file:../publishing-core",
+    "@deno/runtime-paths": "file:../runtime-paths",
+    "twitter-text": "3.1.0"
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "revision": "809e4d8b8d7e9364a914909bb777679606c178b8",
+  "faces": [
+    {
+      "folder": "barlowcondensed",
+      "file": "BarlowCondensed-ExtraBold.ttf",
+      "weight": 800,
+      "role": "condensed-display",
+      "files": {
+        "BarlowCondensed-ExtraBold.ttf": {
+          "url": "https://raw.githubusercontent.com/google/fonts/809e4d8b8d7e9364a914909bb777679606c178b8/ofl/barlowcondensed/BarlowCondensed-ExtraBold.ttf",
+          "path": "fonts/motion/barlowcondensed/BarlowCondensed-ExtraBold.ttf",
+          "sha256": "724c9c25952d5f4a2d87185d9767aa006144c5f0d944dc05bf7d5d603551c260",
+          "bytes": 110296
+        },
+        "OFL.txt": {
+          "url": "https://raw.githubusercontent.com/google/fonts/809e4d8b8d7e9364a914909bb777679606c178b8/ofl/barlowcondensed/OFL.txt",
+          "path": "fonts/motion/barlowcondensed/OFL.txt",
+          "sha256": "186d750eb496a4c17a76385f82be6aea2ac1cf2de074a811d63786cf374ea73f",
+          "bytes": 4377
+        },
+        "METADATA.pb": {
+          "url": "https://raw.githubusercontent.com/google/fonts/809e4d8b8d7e9364a914909bb777679606c178b8/ofl/barlowcondensed/METADATA.pb",
+          "path": "fonts/motion/barlowcondensed/METADATA.pb",
+          "sha256": "fdb9c7b3c0c2c1069bc0193f0b72fb95efef36dc155c281e307da71b7dcfc558",
+          "bytes": 5571
+        }
+      }
+    },
+    {
+      "folder": "archivoblack",
+      "file": "ArchivoBlack-Regular.ttf",
+      "weight": 400,
+      "role": "heavy-display",
+      "files": {
+        "ArchivoBlack-Regular.ttf": {
+          "url": "https://raw.githubusercontent.com/google/fonts/809e4d8b8d7e9364a914909bb777679606c178b8/ofl/archivoblack/ArchivoBlack-Regular.ttf",
+          "path": "fonts/motion/archivoblack/ArchivoBlack-Regular.ttf",
+          "sha256": "dd9a89a019b4849f66ab75455fe7bdf931311042cbb0f0f97acc061539703180",
+          "bytes": 90988
+        },
+        "OFL.txt": {
+          "url": "https://raw.githubusercontent.com/google/fonts/809e4d8b8d7e9364a914909bb777679606c178b8/ofl/archivoblack/OFL.txt",
+          "path": "fonts/motion/archivoblack/OFL.txt",
+          "sha256": "3173acd82f8c6159b5b1037b539fcbd4edff68e65c2ea8b9412b5a5ca97b08ff",
+          "bytes": 4492
+        },
+        "METADATA.pb": {
+          "url": "https://raw.githubusercontent.com/google/fonts/809e4d8b8d7e9364a914909bb777679606c178b8/ofl/archivoblack/METADATA.pb",
+          "path": "fonts/motion/archivoblack/METADATA.pb",
+          "sha256": "def0eb81b3f0d8739a25566ce484cac9e396ad46108a02a809dd8a04c26bfdc5",
+          "bytes": 637
+        }
+      }
+    },
+    {
+      "folder": "spacegrotesk",
+      "file": "SpaceGrotesk[wght].ttf",
+      "weight": 700,
+      "role": "technical-label",
+      "files": {
+        "SpaceGrotesk[wght].ttf": {
+          "url": "https://raw.githubusercontent.com/google/fonts/809e4d8b8d7e9364a914909bb777679606c178b8/ofl/spacegrotesk/SpaceGrotesk%5Bwght%5D.ttf",
+          "path": "fonts/motion/spacegrotesk/SpaceGrotesk[wght].ttf",
+          "sha256": "acad6de1fc93436f5c0f1f4137751ef04f1aea3063e7036535970ffcfbd79f72",
+          "bytes": 136676
+        },
+        "OFL.txt": {
+          "url": "https://raw.githubusercontent.com/google/fonts/809e4d8b8d7e9364a914909bb777679606c178b8/ofl/spacegrotesk/OFL.txt",
+          "path": "fonts/motion/spacegrotesk/OFL.txt",
+          "sha256": "564ce565c371c5e5bbf286006565a7c9aa55a9f56e7ca58d56e05d649dd61a72",
+          "bytes": 4495
+        },
+        "METADATA.pb": {
+          "url": "https://raw.githubusercontent.com/google/fonts/809e4d8b8d7e9364a914909bb777679606c178b8/ofl/spacegrotesk/METADATA.pb",
+          "path": "fonts/motion/spacegrotesk/METADATA.pb",
+          "sha256": "3713adf5c1a21affdbede103b6bb23f551d4195771fa8bc1b91ce813bd1623ee",
+          "bytes": 1509
+        }
+      }
+    }
+  ]
+}

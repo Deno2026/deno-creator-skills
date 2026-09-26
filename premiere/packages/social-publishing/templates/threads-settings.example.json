@@ -1,0 +1,7 @@
+{
+  "appId": "",
+  "appSecret": "",
+  "redirectUri": "https://YOUR-DOMAIN/oauth/threads/callback",
+  "threadsUserId": "",
+  "username": ""
+}

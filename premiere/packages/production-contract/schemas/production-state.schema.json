@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.deno.video/schemas/production-state.v2.json",
+  "title": "DENO production state",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "production",
+    "createdAt",
+    "updatedAt",
+    "active",
+    "master",
+    "publishing",
+    "packaging"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 2},
+    "production": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"},
+    "active": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "state", "nextAction"],
+      "properties": {
+        "domain": {"type": "string", "minLength": 1},
+        "state": {"type": "string", "minLength": 1},
+        "nextAction": {"type": "string", "minLength": 1}
+      }
+    },
+    "master": {"$ref": "#/$defs/master"},
+    "publishing": {"$ref": "#/$defs/publishing"},
+    "packaging": {"$ref": "#/$defs/packaging"}
+  },
+  "$defs": {
+    "domain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "revision", "manifest"],
+      "properties": {
+        "status": {"type": "string", "minLength": 1},
+        "revision": {"type": ["string", "null"]},
+        "manifest": {"type": ["string", "null"]}
+      }
+    },
+    "master": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "edit", "audio", "motion", "captions", "render"],
+      "properties": {
+        "status": {"type": "string"},
+        "edit": {"$ref": "#/$defs/domain"},
+        "audio": {"$ref": "#/$defs/domain"},
+        "motion": {"$ref": "#/$defs/domain"},
+        "captions": {"$ref": "#/$defs/domain"},
+        "render": {"$ref": "#/$defs/domain"}
+      }
+    },
+    "publishing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "request", "video", "sync", "postUpload"],
+      "properties": {
+        "status": {"type": "string"},
+        "request": {"$ref": "#/$defs/domain"},
+        "video": {"$ref": "#/$defs/domain"},
+        "sync": {"$ref": "#/$defs/domain"},
+        "postUpload": {"$ref": "#/$defs/domain"}
+      }
+    },
+    "packaging": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metadata", "thumbnail"],
+      "properties": {
+        "metadata": {"$ref": "#/$defs/domain"},
+        "thumbnail": {"$ref": "#/$defs/domain"}
+      }
+    }
+  }
+}

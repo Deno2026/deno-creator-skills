@@ -1,0 +1,9 @@
+{
+  "clientId": "",
+  "clientSecret": "",
+  "tokenEndpointAuthMethod": "none",
+  "redirectUri": "http://127.0.0.1:3400/oauth/x/callback",
+  "redirectUriHttps": "https://localhost:3400/oauth/x/callback",
+  "userId": "",
+  "username": ""
+}

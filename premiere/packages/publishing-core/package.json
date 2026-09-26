@@ -1,0 +1,21 @@
+{
+  "name": "@deno/publishing-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "smoke:ready-gate": "node tests/smoke_helper_ready_gate.cjs",
+    "smoke:private-shorts": "node tests/smoke_private_short_uploader.cjs",
+    "smoke:overlay": "node tests/smoke_video_overlay_review.cjs",
+    "smoke:description-policy": "node tests/smoke_youtube_description_referral_policy.cjs",
+    "smoke:publication-gate": "node tests/smoke_youtube_publication_gate.cjs",
+    "smoke:backfill-inventory": "node tests/smoke_youtube_metadata_backfill_inventory_policy.cjs",
+    "smoke:backfill-policy": "node tests/smoke_youtube_metadata_backfill_policy.cjs",
+    "smoke:channel-policy": "node tests/smoke_youtube_channel_policy.cjs",
+    "smoke": "npm run smoke:ready-gate && npm run smoke:private-shorts && npm run smoke:overlay && npm run smoke:description-policy && npm run smoke:publication-gate && npm run smoke:backfill-inventory && npm run smoke:backfill-policy && npm run smoke:channel-policy"
+  },
+  "dependencies": {
+    "@deno/runtime-paths": "file:../runtime-paths",
+    "googleapis": "^171.4.0"
+  }
+}

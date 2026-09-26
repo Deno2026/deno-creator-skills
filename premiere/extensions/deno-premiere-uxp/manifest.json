@@ -1,0 +1,38 @@
+{
+  "manifestVersion": 5,
+  "id": "com.deno.premiere.uxp",
+  "name": "DENO Premiere UXP",
+  "version": "0.6.2",
+  "main": "index.html",
+  "host": {
+    "app": "premierepro",
+    "minVersion": "26.3.0"
+  },
+  "hostUIContext": {
+    "hideFromMenu": true
+  },
+  "requiredPermissions": {
+    "localFileSystem": "plugin"
+  },
+  "entrypoints": [
+    {
+      "type": "panel",
+      "id": "denoPremiereUxp",
+      "label": {
+        "default": "DENO Premiere UXP"
+      },
+      "minimumSize": {
+        "width": 260,
+        "height": 190
+      },
+      "preferredDockedSize": {
+        "width": 320,
+        "height": 260
+      },
+      "preferredFloatingSize": {
+        "width": 360,
+        "height": 300
+      }
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "sourcePackage": "local:server-capabilities",
+  "toolCount": 2,
+  "tools": [
+    {
+      "name": "get_premiere_capabilities",
+      "category": "capabilities",
+      "description": "Inspect the code-only Premiere capability registry. Returns verified UXP routes, CEP fallbacks, experimental routes, blocked API gaps, safety level, and summary counts without requiring Premiere to be open.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Optional exact capability category filter."
+          },
+          "availability": {
+            "type": "string",
+            "description": "Optional exact availability filter."
+          },
+          "preferred_route": {
+            "type": "string",
+            "description": "Optional exact preferred route filter."
+          },
+          "uxp_status": {
+            "type": "string",
+            "description": "Optional exact UXP maturity-status filter."
+          },
+          "access": {
+            "type": "string",
+            "enum": ["read", "write"],
+            "description": "Optional access filter."
+          },
+          "official_uxp_only": {
+            "type": "boolean",
+            "description": "Return only commands backed by a registered, non-diagnostic Adobe UXP/AME handler whose runtime status is not blocked or failed."
+          },
+          "live_only": {
+            "type": "boolean",
+            "description": "Return only commands with current live-verified UXP availability."
+          },
+          "include_tools": {
+            "type": "boolean",
+            "description": "Include matching tool records. Defaults to false when no filter is supplied and true when a filter is supplied."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 400,
+            "description": "Maximum matching tool records to return. Defaults to 100."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "resolve_premiere_tool",
+      "category": "capabilities",
+      "description": "Resolve one Premiere command to its best code-only route and report UXP, CEP, external-code fallback, verification, and safety status. Computer Use is never returned.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tool_name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Exact Premiere command name."
+          }
+        },
+        "required": [
+          "tool_name"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

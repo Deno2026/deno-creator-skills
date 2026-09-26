@@ -1,0 +1,17 @@
+{
+  "name": "@deno/runtime-paths",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.cjs",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "require": "./index.cjs",
+      "default": "./index.cjs"
+    }
+  },
+  "scripts": {
+    "test": "node --test --test-isolation=none test/runtime-paths.test.cjs"
+  }
+}

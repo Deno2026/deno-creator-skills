@@ -1,0 +1,1349 @@
+diff -ruN a/premiere-pro-mcp/cep-plugin/CSInterface.js premiere-pro-mcp/cep-plugin/CSInterface.js
+--- a/premiere-pro-mcp/cep-plugin/CSInterface.js	1985-10-26 17:15:00.000000000 +0900
++++ b/premiere-pro-mcp/cep-plugin/CSInterface.js	2026-09-27 05:42:43.983396500 +0900
+@@ -25,16 +25,10 @@
+  * @param {function} callback - Callback with the result string.
+  */
+ CSInterface.prototype.evalScript = function (script, callback) {
+-  if (typeof __adobe_cep__ !== "undefined") {
+-    var result = __adobe_cep__.evalScript(script);
+-    if (callback) {
+-      // CSInterface v9+ uses async callback
+-      if (typeof result === "undefined" || result === "undefined") {
+-        // v9+ path: callback is registered and called asynchronously
+-        // The __adobe_cep__.evalScript already handles the callback via internal mechanism
+-      }
+-      callback(result);
+-    }
++  if (typeof window !== "undefined" && window.__adobe_cep__) {
++    window.__adobe_cep__.evalScript(script, callback || function () {});
++  } else if (typeof __adobe_cep__ !== "undefined") {
++    __adobe_cep__.evalScript(script, callback || function () {});
+   } else {
+     // Running outside CEP (for testing)
+     console.warn("[CSInterface] Not running in CEP environment");
+diff -ruN a/premiere-pro-mcp/cep-plugin/CSXS/manifest.xml premiere-pro-mcp/cep-plugin/CSXS/manifest.xml
+--- a/premiere-pro-mcp/cep-plugin/CSXS/manifest.xml	1985-10-26 17:15:00.000000000 +0900
++++ b/premiere-pro-mcp/cep-plugin/CSXS/manifest.xml	2026-09-27 05:42:43.984940700 +0900
+@@ -22,6 +22,8 @@
+           <ScriptPath>./host.jsx</ScriptPath>
+           <CEFCommandLine>
+             <Parameter>--allow-file-access-from-files</Parameter>
++            <Parameter>--enable-nodejs</Parameter>
++            <Parameter>--mixed-context</Parameter>
+           </CEFCommandLine>
+         </Resources>
+         <Lifecycle>
+diff -ruN a/premiere-pro-mcp/cep-plugin/main.js premiere-pro-mcp/cep-plugin/main.js
+--- a/premiere-pro-mcp/cep-plugin/main.js	1985-10-26 17:15:00.000000000 +0900
++++ b/premiere-pro-mcp/cep-plugin/main.js	2026-09-27 05:43:24.817301200 +0900
+@@ -29,14 +29,34 @@
+   document.getElementById("statusText").textContent = text;
+ }
+ 
+-// ---- File I/O via Node.js (CEP has access to Node) ----
+-var fs = require("fs");
+-var path = require("path");
+-var os = require("os");
+-tempDir = path.join(os.tmpdir(), "premiere-mcp-bridge");
++// ---- File I/O via Node.js (CEP has access to Node when enabled in manifest) ----
++var fs = null;
++var path = null;
++var os = null;
++var storageKey = "mcp_bridge_temp_dir_v2";
++
++try {
++  var nodeRequire = (typeof require === "function") ? require : (window.cep_node && window.cep_node.require);
++  fs = nodeRequire ? nodeRequire("fs") : null;
++  path = nodeRequire ? nodeRequire("path") : null;
++  os = nodeRequire ? nodeRequire("os") : null;
++} catch (e) {
++  log("Node file API unavailable: " + e.message, "err");
++}
++
++if (path && os) {
++  tempDir = path.join(os.tmpdir(), "premiere-mcp-bridge");
++} else {
++  tempDir = "";
++  log("Node file API unavailable: enable --enable-nodejs/--mixed-context in the CEP manifest and restart Premiere.", "err");
++}
+ 
+ function ensureDir(dir) {
+   try {
++    if (!fs) {
++      log("Node file API unavailable. Restart Premiere after enabling Node flags.", "err");
++      return;
++    }
+     if (!fs.existsSync(dir)) {
+       fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
+     }
+@@ -47,6 +67,7 @@
+ 
+ function listCommandFiles() {
+   try {
++    if (!fs) return [];
+     if (!fs.existsSync(tempDir)) return [];
+     var files = fs.readdirSync(tempDir);
+     return files
+@@ -59,6 +80,7 @@
+ 
+ function readFile(filePath) {
+   try {
++    if (!fs) return null;
+     return fs.readFileSync(filePath, "utf-8");
+   } catch (e) {
+     return null;
+@@ -67,6 +89,7 @@
+ 
+ function writeFile(filePath, content) {
+   try {
++    if (!fs) return false;
+     fs.writeFileSync(filePath, content, "utf-8");
+     return true;
+   } catch (e) {
+@@ -77,6 +100,7 @@
+ 
+ function deleteFile(filePath) {
+   try {
++    if (!fs) return;
+     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+   } catch (e) {}
+ }
+@@ -193,7 +217,7 @@
+   log("Temp directory saved: " + tempDir);
+   // Persist via localStorage
+   try {
+-    localStorage.setItem("mcp_bridge_temp_dir", tempDir);
++    localStorage.setItem(storageKey, tempDir);
+   } catch (e) {}
+ }
+ 
+@@ -204,7 +228,7 @@
+ 
+   // Restore saved temp dir
+   try {
+-    var saved = localStorage.getItem("mcp_bridge_temp_dir");
++    var saved = localStorage.getItem(storageKey);
+     if (saved) {
+       tempDir = saved;
+       document.getElementById("tempDir").value = tempDir;
+diff -ruN a/premiere-pro-mcp/dist/bridge/script-builder.js premiere-pro-mcp/dist/bridge/script-builder.js
+--- a/premiere-pro-mcp/dist/bridge/script-builder.js	1985-10-26 17:15:00.000000000 +0900
++++ b/premiere-pro-mcp/dist/bridge/script-builder.js	2026-09-27 05:42:43.958573800 +0900
+@@ -83,6 +83,85 @@
+   return null;
+ }
+ 
++function __normalizeName(value) {
++  if (value === null || value === undefined) return "";
++  return String(value).toLowerCase().replace(/[\\s_\\-\\(\\)\\[\\]\\.]/g, "");
++}
++
++function __aliasGroup(name) {
++  var normalized = __normalizeName(name);
++  var groups = [
++    ["Motion", "모션", "동작", "움직임", "AE.ADBE Motion"],
++    ["Opacity", "불투명도", "AE.ADBE Opacity"],
++    ["Time Remapping", "시간 다시 매핑", "시간다시매핑"],
++    ["Volume", "볼륨", "audioVolume"],
++    ["Channel Volume", "채널 볼륨"],
++    ["Panner", "패너"],
++    ["Position", "위치"],
++    ["Scale", "비율", "비율 조정", "비율조정", "크기", "확대", "확대/축소"],
++    ["Rotation", "회전"],
++    ["Anchor Point", "기준점", "앵커 포인트", "앵커포인트"],
++    ["Uniform Scale", "균일 비율", "균일비율", "균일 비율 조정", "균일비율조정"],
++    ["Anti-flicker Filter", "깜박임 제거 필터", "깜박임제거필터"],
++    ["Blend Mode", "혼합 모드", "혼합모드"],
++    ["Level", "레벨"],
++    ["Balance", "균형", "밸런스"],
++    ["Pan", "팬"]
++  ];
++  for (var i = 0; i < groups.length; i++) {
++    for (var j = 0; j < groups[i].length; j++) {
++      if (__normalizeName(groups[i][j]) === normalized) {
++        return i;
++      }
++    }
++  }
++  return -1;
++}
++
++function __nameMatches(actual, query) {
++  if (actual === query) return true;
++  var actualNorm = __normalizeName(actual);
++  var queryNorm = __normalizeName(query);
++  if (actualNorm === queryNorm) return true;
++  var actualGroup = __aliasGroup(actual);
++  var queryGroup = __aliasGroup(query);
++  return actualGroup >= 0 && actualGroup === queryGroup;
++}
++
++function __componentMatches(comp, query) {
++  if (!comp) return false;
++  try { if (__nameMatches(comp.displayName, query)) return true; } catch(e) {}
++  try { if (__nameMatches(comp.matchName, query)) return true; } catch(e) {}
++  return false;
++}
++
++function __propertyMatches(prop, query) {
++  if (!prop) return false;
++  try { if (__nameMatches(prop.displayName, query)) return true; } catch(e) {}
++  try { if (__nameMatches(prop.matchName, query)) return true; } catch(e) {}
++  return false;
++}
++
++function __findComponentOnClip(clip, effectName) {
++  if (!clip || !clip.components) return null;
++  for (var i = 0; i < clip.components.numItems; i++) {
++    if (__componentMatches(clip.components[i], effectName)) {
++      return clip.components[i];
++    }
++  }
++  return null;
++}
++
++function __findPropertyOnComponent(comp, propertyName) {
++  if (!comp || !comp.properties) return null;
++  for (var p = 0; p < comp.properties.numItems; p++) {
++    if (__propertyMatches(comp.properties[p], propertyName)) {
++      return comp.properties[p];
++    }
++  }
++  return null;
++}
++
+ function __getAllClips(seq) {
+   if (!seq) seq = app.project.activeSequence;
+   if (!seq) return [];
+@@ -199,4 +278,4 @@
+  * @deprecated Use buildScript() directly. This is an alias kept for backward compatibility.
+  */
+ export const buildToolScript = buildScript;
+-//# sourceMappingURL=script-builder.js.map
+\ No newline at end of file
++//# sourceMappingURL=script-builder.js.map
+diff -ruN a/premiere-pro-mcp/dist/tools/export.js premiere-pro-mcp/dist/tools/export.js
+--- a/premiere-pro-mcp/dist/tools/export.js	1985-10-26 17:15:00.000000000 +0900
++++ b/premiere-pro-mcp/dist/tools/export.js	2026-09-27 05:42:43.976106500 +0900
+@@ -3,6 +3,46 @@
+ import { readFileSync, unlinkSync, existsSync } from "node:fs";
+ import { join } from "node:path";
+ import { tmpdir } from "node:os";
++import { execFileSync } from "node:child_process";
++function capturePremiereWindowToPng(outputPath) {
++    if (process.platform !== "win32") {
++        throw new Error("Window capture fallback is only available on Windows");
++    }
++    const script = `
++$ErrorActionPreference = 'Stop'
++Add-Type -AssemblyName System.Drawing
++Add-Type @"
++using System;
++using System.Drawing;
++using System.Runtime.InteropServices;
++public class Win32PremiereMcpCapture {
++  [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
++  [DllImport("user32.dll")] public static extern bool PrintWindow(IntPtr hwnd, IntPtr hdcBlt, UInt32 nFlags);
++  [StructLayout(LayoutKind.Sequential)] public struct RECT { public int Left; public int Top; public int Right; public int Bottom; }
++}
++"@
++$p = Get-Process | Where-Object { ($_.ProcessName -eq 'Adobe Premiere Pro' -or $_.ProcessName -like '*Premiere*') -and $_.MainWindowHandle -ne 0 } | Select-Object -First 1
++if (-not $p) { throw 'Premiere window not found' }
++$rect = New-Object Win32PremiereMcpCapture+RECT
++[Win32PremiereMcpCapture]::GetWindowRect($p.MainWindowHandle, [ref]$rect) | Out-Null
++$width = [Math]::Max(1, $rect.Right - $rect.Left)
++$height = [Math]::Max(1, $rect.Bottom - $rect.Top)
++$bmp = New-Object System.Drawing.Bitmap $width, $height
++$graphics = [System.Drawing.Graphics]::FromImage($bmp)
++$hdc = $graphics.GetHdc()
++$ok = [Win32PremiereMcpCapture]::PrintWindow($p.MainWindowHandle, $hdc, 2)
++$graphics.ReleaseHdc($hdc)
++if (-not $ok) { throw 'PrintWindow failed' }
++$bmp.Save($env:MCP_CAPTURE_PATH, [System.Drawing.Imaging.ImageFormat]::Png)
++$graphics.Dispose()
++$bmp.Dispose()
++`;
++    execFileSync("powershell.exe", ["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", script], {
++        env: { ...process.env, MCP_CAPTURE_PATH: outputPath },
++        timeout: 15000,
++        stdio: "pipe",
++    });
++}
+ export function getExportTools(bridgeOptions) {
+     return {
+         export_sequence: {
+@@ -283,13 +323,39 @@
+                     : ""}
+           
+           var outputPath = "${escapedPath}";
+-          seq.exportFramePNG(seq.getPlayerPosition().ticks, outputPath);
++          if (typeof seq.exportFramePNG === "function") {
++            seq.exportFramePNG(seq.getPlayerPosition().ticks, outputPath);
++            return __result({
++              exported: true,
++              outputPath: outputPath,
++              method: "exportFramePNG",
++              capturedTimeSeconds: __ticksToSeconds(seq.getPlayerPosition().ticks)
++            });
++          }
+           
+-          return __result({ exported: true, outputPath: outputPath });
++          return __result({
++            exported: false,
++            outputPath: outputPath,
++            method: "windowsPrintWindow",
++            nativeExportUnavailable: true,
++            capturedTimeSeconds: __ticksToSeconds(seq.getPlayerPosition().ticks),
++            note: "Sequence.exportFramePNG is unavailable in this Premiere version; using Windows PrintWindow fallback."
++          });
+         `);
+                 const result = await sendCommand(script, bridgeOptions);
+                 if (!result.success)
+                     return result;
++                if (result.data?.method === "windowsPrintWindow") {
++                    try {
++                        capturePremiereWindowToPng(tempPath);
++                    }
++                    catch (e) {
++                        return {
++                            success: false,
++                            error: `Window capture fallback failed: ${e instanceof Error ? e.message : String(e)}`,
++                        };
++                    }
++                }
+                 // Read the exported PNG and return as base64 image content
+                 // Wait a moment for the file to be written
+                 let attempts = 0;
+@@ -314,6 +380,8 @@
+                             captured: true,
+                             mimeType: "image/png",
+                             base64: base64,
++                            method: result.data?.method || "exportFramePNG",
++                            capturedTimeSeconds: result.data?.capturedTimeSeconds,
+                         },
+                     };
+                 }
+@@ -540,4 +608,4 @@
+         },
+     };
+ }
+-//# sourceMappingURL=export.js.map
+\ No newline at end of file
++//# sourceMappingURL=export.js.map
+diff -ruN a/premiere-pro-mcp/dist/tools/keyframes.js premiere-pro-mcp/dist/tools/keyframes.js
+--- a/premiere-pro-mcp/dist/tools/keyframes.js	1985-10-26 17:15:00.000000000 +0900
++++ b/premiere-pro-mcp/dist/tools/keyframes.js	2026-09-27 05:42:43.977107300 +0900
+@@ -27,12 +27,7 @@
+           var effectName = "${escapeForExtendScript(args.effect_name)}";
+           var comp = null;
+           
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            if (clip.components[i].displayName === effectName || clip.components[i].matchName === effectName) {
+-              comp = clip.components[i];
+-              break;
+-            }
+-          }
++          comp = __findComponentOnClip(clip, effectName);
+           
+           if (!comp) return __error("Effect not found: " + effectName);
+           
+@@ -90,29 +85,20 @@
+           if (!result) return __error("Clip not found");
+           
+           var clip = result.clip;
+-          var comp = null;
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            if (clip.components[i].displayName === "${escapeForExtendScript(args.effect_name)}" || clip.components[i].matchName === "${escapeForExtendScript(args.effect_name)}") {
+-              comp = clip.components[i];
+-              break;
+-            }
+-          }
++          var comp = __findComponentOnClip(clip, "${escapeForExtendScript(args.effect_name)}");
+           if (!comp) return __error("Effect not found: ${escapeForExtendScript(args.effect_name)}");
+           
+-          var prop = null;
+-          for (var p = 0; p < comp.properties.numItems; p++) {
+-            if (comp.properties[p].displayName === "${escapeForExtendScript(args.property_name)}") {
+-              prop = comp.properties[p];
+-              break;
+-            }
+-          }
++          var prop = __findPropertyOnComponent(comp, "${escapeForExtendScript(args.property_name)}");
+           if (!prop) return __error("Property not found: ${escapeForExtendScript(args.property_name)}");
+           
+           prop.setValue(${args.value}, true);
+           return __result({
+             set: true,
+-            effect: "${escapeForExtendScript(args.effect_name)}",
+-            property: "${escapeForExtendScript(args.property_name)}",
++            requestedEffect: "${escapeForExtendScript(args.effect_name)}",
++            requestedProperty: "${escapeForExtendScript(args.property_name)}",
++            effect: comp.displayName,
++            effectMatchName: comp.matchName,
++            property: prop.displayName,
+             value: ${args.value}
+           });
+         `);
+@@ -145,22 +131,10 @@
+           if (!result) return __error("Clip not found");
+           
+           var clip = result.clip;
+-          var comp = null;
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            if (clip.components[i].displayName === "${escapeForExtendScript(args.effect_name)}" || clip.components[i].matchName === "${escapeForExtendScript(args.effect_name)}") {
+-              comp = clip.components[i];
+-              break;
+-            }
+-          }
++          var comp = __findComponentOnClip(clip, "${escapeForExtendScript(args.effect_name)}");
+           if (!comp) return __error("Effect not found");
+           
+-          var prop = null;
+-          for (var p = 0; p < comp.properties.numItems; p++) {
+-            if (comp.properties[p].displayName === "${escapeForExtendScript(args.property_name)}") {
+-              prop = comp.properties[p];
+-              break;
+-            }
+-          }
++          var prop = __findPropertyOnComponent(comp, "${escapeForExtendScript(args.property_name)}");
+           if (!prop) return __error("Property not found");
+           
+           var isTimeVarying = false;
+@@ -185,8 +159,10 @@
+           }
+           
+           return __result({
+-            effect: "${escapeForExtendScript(args.effect_name)}",
+-            property: "${escapeForExtendScript(args.property_name)}",
++            requestedEffect: "${escapeForExtendScript(args.effect_name)}",
++            requestedProperty: "${escapeForExtendScript(args.property_name)}",
++            effect: comp.displayName,
++            property: prop.displayName,
+             isTimeVarying: true,
+             keyframes: keyframes
+           });
+@@ -228,22 +204,10 @@
+           if (!result) return __error("Clip not found");
+           
+           var clip = result.clip;
+-          var comp = null;
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            if (clip.components[i].displayName === "${escapeForExtendScript(args.effect_name)}" || clip.components[i].matchName === "${escapeForExtendScript(args.effect_name)}") {
+-              comp = clip.components[i];
+-              break;
+-            }
+-          }
++          var comp = __findComponentOnClip(clip, "${escapeForExtendScript(args.effect_name)}");
+           if (!comp) return __error("Effect not found");
+           
+-          var prop = null;
+-          for (var p = 0; p < comp.properties.numItems; p++) {
+-            if (comp.properties[p].displayName === "${escapeForExtendScript(args.property_name)}") {
+-              prop = comp.properties[p];
+-              break;
+-            }
+-          }
++          var prop = __findPropertyOnComponent(comp, "${escapeForExtendScript(args.property_name)}");
+           if (!prop) return __error("Property not found");
+           
+           // Enable keyframes if not already
+@@ -260,8 +224,10 @@
+           
+           return __result({
+             added: true,
+-            effect: "${escapeForExtendScript(args.effect_name)}",
+-            property: "${escapeForExtendScript(args.property_name)}",
++            requestedEffect: "${escapeForExtendScript(args.effect_name)}",
++            requestedProperty: "${escapeForExtendScript(args.property_name)}",
++            effect: comp.displayName,
++            property: prop.displayName,
+             time: ${args.time_seconds},
+             value: ${args.value}
+           });
+@@ -299,22 +265,10 @@
+           if (!result) return __error("Clip not found");
+           
+           var clip = result.clip;
+-          var comp = null;
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            if (clip.components[i].displayName === "${escapeForExtendScript(args.effect_name)}" || clip.components[i].matchName === "${escapeForExtendScript(args.effect_name)}") {
+-              comp = clip.components[i];
+-              break;
+-            }
+-          }
++          var comp = __findComponentOnClip(clip, "${escapeForExtendScript(args.effect_name)}");
+           if (!comp) return __error("Effect not found");
+           
+-          var prop = null;
+-          for (var p = 0; p < comp.properties.numItems; p++) {
+-            if (comp.properties[p].displayName === "${escapeForExtendScript(args.property_name)}") {
+-              prop = comp.properties[p];
+-              break;
+-            }
+-          }
++          var prop = __findPropertyOnComponent(comp, "${escapeForExtendScript(args.property_name)}");
+           if (!prop) return __error("Property not found");
+           
+           var time = new Time();
+@@ -323,8 +277,10 @@
+           
+           return __result({
+             removed: true,
+-            effect: "${escapeForExtendScript(args.effect_name)}",
+-            property: "${escapeForExtendScript(args.property_name)}",
++            requestedEffect: "${escapeForExtendScript(args.effect_name)}",
++            requestedProperty: "${escapeForExtendScript(args.property_name)}",
++            effect: comp.displayName,
++            property: prop.displayName,
+             time: ${args.time_seconds}
+           });
+         `);
+@@ -365,22 +321,10 @@
+           if (!result) return __error("Clip not found");
+           
+           var clip = result.clip;
+-          var comp = null;
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            if (clip.components[i].displayName === "${escapeForExtendScript(args.effect_name)}" || clip.components[i].matchName === "${escapeForExtendScript(args.effect_name)}") {
+-              comp = clip.components[i];
+-              break;
+-            }
+-          }
++          var comp = __findComponentOnClip(clip, "${escapeForExtendScript(args.effect_name)}");
+           if (!comp) return __error("Effect not found");
+           
+-          var prop = null;
+-          for (var p = 0; p < comp.properties.numItems; p++) {
+-            if (comp.properties[p].displayName === "${escapeForExtendScript(args.property_name)}") {
+-              prop = comp.properties[p];
+-              break;
+-            }
+-          }
++          var prop = __findPropertyOnComponent(comp, "${escapeForExtendScript(args.property_name)}");
+           if (!prop) return __error("Property not found");
+           
+           var startTime = new Time();
+@@ -391,8 +335,10 @@
+           
+           return __result({
+             removed: true,
+-            effect: "${escapeForExtendScript(args.effect_name)}",
+-            property: "${escapeForExtendScript(args.property_name)}",
++            requestedEffect: "${escapeForExtendScript(args.effect_name)}",
++            requestedProperty: "${escapeForExtendScript(args.property_name)}",
++            effect: comp.displayName,
++            property: prop.displayName,
+             range: { start: ${args.start_seconds}, end: ${args.end_seconds} }
+           });
+         `);
+@@ -436,22 +382,10 @@
+           if (!result) return __error("Clip not found");
+           
+           var clip = result.clip;
+-          var comp = null;
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            if (clip.components[i].displayName === "${escapeForExtendScript(args.effect_name)}" || clip.components[i].matchName === "${escapeForExtendScript(args.effect_name)}") {
+-              comp = clip.components[i];
+-              break;
+-            }
+-          }
++          var comp = __findComponentOnClip(clip, "${escapeForExtendScript(args.effect_name)}");
+           if (!comp) return __error("Effect not found");
+           
+-          var prop = null;
+-          for (var p = 0; p < comp.properties.numItems; p++) {
+-            if (comp.properties[p].displayName === "${escapeForExtendScript(args.property_name)}") {
+-              prop = comp.properties[p];
+-              break;
+-            }
+-          }
++          var prop = __findPropertyOnComponent(comp, "${escapeForExtendScript(args.property_name)}");
+           if (!prop) return __error("Property not found");
+           
+           var time = new Time();
+@@ -497,22 +431,10 @@
+           if (!result) return __error("Clip not found");
+           
+           var clip = result.clip;
+-          var comp = null;
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            if (clip.components[i].displayName === "${escapeForExtendScript(args.effect_name)}" || clip.components[i].matchName === "${escapeForExtendScript(args.effect_name)}") {
+-              comp = clip.components[i];
+-              break;
+-            }
+-          }
++          var comp = __findComponentOnClip(clip, "${escapeForExtendScript(args.effect_name)}");
+           if (!comp) return __error("Effect not found");
+           
+-          var prop = null;
+-          for (var p = 0; p < comp.properties.numItems; p++) {
+-            if (comp.properties[p].displayName === "${escapeForExtendScript(args.property_name)}") {
+-              prop = comp.properties[p];
+-              break;
+-            }
+-          }
++          var prop = __findPropertyOnComponent(comp, "${escapeForExtendScript(args.property_name)}");
+           if (!prop) return __error("Property not found");
+           
+           var time = new Time();
+@@ -520,8 +442,10 @@
+           var value = prop.getValueAtTime(time);
+           
+           return __result({
+-            effect: "${escapeForExtendScript(args.effect_name)}",
+-            property: "${escapeForExtendScript(args.property_name)}",
++            requestedEffect: "${escapeForExtendScript(args.effect_name)}",
++            requestedProperty: "${escapeForExtendScript(args.property_name)}",
++            effect: comp.displayName,
++            property: prop.displayName,
+             time: ${args.time_seconds},
+             value: value
+           });
+@@ -531,4 +455,4 @@
+         },
+     };
+ }
+-//# sourceMappingURL=keyframes.js.map
+\ No newline at end of file
++//# sourceMappingURL=keyframes.js.map
+diff -ruN a/premiere-pro-mcp/dist/tools/timeline.js premiere-pro-mcp/dist/tools/timeline.js
+--- a/premiere-pro-mcp/dist/tools/timeline.js	1985-10-26 17:15:00.000000000 +0900
++++ b/premiere-pro-mcp/dist/tools/timeline.js	2026-09-27 05:42:43.976106500 +0900
+@@ -309,17 +309,12 @@
+           var changes = {};
+           
+           ${args.opacity !== undefined ? `
+-          // Set opacity via Motion component
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            var comp = clip.components[i];
+-            if (comp.matchName === "AE.ADBE Opacity" || comp.displayName === "Opacity") {
+-              for (var p = 0; p < comp.properties.numItems; p++) {
+-                if (comp.properties[p].displayName === "Opacity") {
+-                  comp.properties[p].setValue(${args.opacity}, true);
+-                  changes.opacity = ${args.opacity};
+-                }
+-              }
+-            }
++          var opacityComp = __findComponentOnClip(clip, "Opacity");
++          var opacityProp = __findPropertyOnComponent(opacityComp, "Opacity");
++          if (opacityProp) {
++            opacityProp.setValue(${args.opacity}, true);
++            changes.opacity = ${args.opacity};
++            changes.opacityProperty = opacityProp.displayName;
+           }
+           ` : ""}
+           
+@@ -329,18 +324,17 @@
+           ` : ""}
+           
+           ${args.scale !== undefined || args.position_x !== undefined || args.position_y !== undefined || args.rotation !== undefined ? `
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            var comp = clip.components[i];
+-            if (comp.matchName === "AE.ADBE Motion" || comp.displayName === "Motion") {
+-              for (var p = 0; p < comp.properties.numItems; p++) {
+-                var prop = comp.properties[p];
++          var motionComp = __findComponentOnClip(clip, "Motion");
++          if (motionComp) {
++              for (var p = 0; p < motionComp.properties.numItems; p++) {
++                var prop = motionComp.properties[p];
+                 ${args.scale !== undefined ? `
+-                if (prop.displayName === "Scale") {
++                if (__propertyMatches(prop, "Scale")) {
+                   prop.setValue(${args.scale}, true);
+                   changes.scale = ${args.scale};
+                 }` : ""}
+                 ${args.position_x !== undefined || args.position_y !== undefined ? `
+-                if (prop.displayName === "Position") {
++                if (__propertyMatches(prop, "Position")) {
+                   var posVal = prop.getValue();
+                   var px = posVal && typeof posVal === "object" && posVal.length >= 2 ? posVal[0] : 0;
+                   var py = posVal && typeof posVal === "object" && posVal.length >= 2 ? posVal[1] : 0;
+@@ -349,12 +343,11 @@
+                   prop.setValue([px, py], true);
+                 }` : ""}
+                 ${args.rotation !== undefined ? `
+-                if (prop.displayName === "Rotation") {
++                if (__propertyMatches(prop, "Rotation")) {
+                   prop.setValue(${args.rotation}, true);
+                   changes.rotation = ${args.rotation};
+                 }` : ""}
+               }
+-            }
+           }
+           ` : ""}
+           
+@@ -458,4 +451,4 @@
+         },
+     };
+ }
+-//# sourceMappingURL=timeline.js.map
+\ No newline at end of file
++//# sourceMappingURL=timeline.js.map
+diff -ruN a/premiere-pro-mcp/dist/tools/track-targeting.js premiere-pro-mcp/dist/tools/track-targeting.js
+--- a/premiere-pro-mcp/dist/tools/track-targeting.js	1985-10-26 17:15:00.000000000 +0900
++++ b/premiere-pro-mcp/dist/tools/track-targeting.js	2026-09-27 05:42:43.974261800 +0900
+@@ -442,20 +442,14 @@
+ 
+           var clip = result.clip;
+           var set = false;
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            if (clip.components[i].displayName === "Motion") {
+-              for (var p = 0; p < clip.components[i].properties.numItems; p++) {
+-                if (clip.components[i].properties[p].displayName === "Position") {
+-                  clip.components[i].properties[p].setValue([${args.x}, ${args.y}], true);
+-                  set = true;
+-                  break;
+-                }
+-              }
+-              break;
+-            }
++          var motionComp = __findComponentOnClip(clip, "Motion");
++          var positionProp = __findPropertyOnComponent(motionComp, "Position");
++          if (positionProp) {
++            positionProp.setValue([${args.x}, ${args.y}], true);
++            set = true;
+           }
+           if (!set) return __error("Could not set position");
+-          return __result({ x: ${args.x}, y: ${args.y}, clip: clip.name });
++          return __result({ x: ${args.x}, y: ${args.y}, clip: clip.name, property: positionProp.displayName });
+         `);
+                 return sendCommand(script, bridgeOptions);
+             },
+@@ -483,20 +477,14 @@
+ 
+           var clip = result.clip;
+           var set = false;
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            if (clip.components[i].displayName === "Motion") {
+-              for (var p = 0; p < clip.components[i].properties.numItems; p++) {
+-                if (clip.components[i].properties[p].displayName === "Scale") {
+-                  clip.components[i].properties[p].setValue(${args.scale}, true);
+-                  set = true;
+-                  break;
+-                }
+-              }
+-              break;
+-            }
++          var motionComp = __findComponentOnClip(clip, "Motion");
++          var scaleProp = __findPropertyOnComponent(motionComp, "Scale");
++          if (scaleProp) {
++            scaleProp.setValue(${args.scale}, true);
++            set = true;
+           }
+           if (!set) return __error("Could not set scale");
+-          return __result({ scale: ${args.scale}, clip: clip.name });
++          return __result({ scale: ${args.scale}, clip: clip.name, property: scaleProp.displayName });
+         `);
+                 return sendCommand(script, bridgeOptions);
+             },
+@@ -524,20 +512,14 @@
+ 
+           var clip = result.clip;
+           var set = false;
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            if (clip.components[i].displayName === "Motion") {
+-              for (var p = 0; p < clip.components[i].properties.numItems; p++) {
+-                if (clip.components[i].properties[p].displayName === "Rotation") {
+-                  clip.components[i].properties[p].setValue(${args.degrees}, true);
+-                  set = true;
+-                  break;
+-                }
+-              }
+-              break;
+-            }
++          var motionComp = __findComponentOnClip(clip, "Motion");
++          var rotationProp = __findPropertyOnComponent(motionComp, "Rotation");
++          if (rotationProp) {
++            rotationProp.setValue(${args.degrees}, true);
++            set = true;
+           }
+           if (!set) return __error("Could not set rotation");
+-          return __result({ degrees: ${args.degrees}, clip: clip.name });
++          return __result({ degrees: ${args.degrees}, clip: clip.name, property: rotationProp.displayName });
+         `);
+                 return sendCommand(script, bridgeOptions);
+             },
+@@ -569,20 +551,14 @@
+ 
+           var clip = result.clip;
+           var set = false;
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            if (clip.components[i].displayName === "Motion") {
+-              for (var p = 0; p < clip.components[i].properties.numItems; p++) {
+-                if (clip.components[i].properties[p].displayName === "Anchor Point") {
+-                  clip.components[i].properties[p].setValue([${args.x}, ${args.y}], true);
+-                  set = true;
+-                  break;
+-                }
+-              }
+-              break;
+-            }
++          var motionComp = __findComponentOnClip(clip, "Motion");
++          var anchorProp = __findPropertyOnComponent(motionComp, "Anchor Point");
++          if (anchorProp) {
++            anchorProp.setValue([${args.x}, ${args.y}], true);
++            set = true;
+           }
+           if (!set) return __error("Could not set anchor point");
+-          return __result({ x: ${args.x}, y: ${args.y}, clip: clip.name });
++          return __result({ x: ${args.x}, y: ${args.y}, clip: clip.name, property: anchorProp.displayName });
+         `);
+                 return sendCommand(script, bridgeOptions);
+             },
+@@ -610,20 +586,14 @@
+ 
+           var clip = result.clip;
+           var set = false;
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            if (clip.components[i].displayName === "Opacity") {
+-              for (var p = 0; p < clip.components[i].properties.numItems; p++) {
+-                if (clip.components[i].properties[p].displayName === "Opacity") {
+-                  clip.components[i].properties[p].setValue(${args.opacity}, true);
+-                  set = true;
+-                  break;
+-                }
+-              }
+-              break;
+-            }
++          var opacityComp = __findComponentOnClip(clip, "Opacity");
++          var opacityProp = __findPropertyOnComponent(opacityComp, "Opacity");
++          if (opacityProp) {
++            opacityProp.setValue(${args.opacity}, true);
++            set = true;
+           }
+           if (!set) return __error("Could not set opacity");
+-          return __result({ opacity: ${args.opacity}, clip: clip.name });
++          return __result({ opacity: ${args.opacity}, clip: clip.name, property: opacityProp.displayName });
+         `);
+                 return sendCommand(script, bridgeOptions);
+             },
+@@ -1174,17 +1144,15 @@
+ 
+           var clip = result.clip;
+           var set = false;
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            if (clip.components[i].displayName === "Motion") {
+-              for (var p = 0; p < clip.components[i].properties.numItems; p++) {
+-                var pName = clip.components[i].properties[p].displayName;
+-                if (pName === "Anti-flicker Filter" || pName === "Use Composition's Shutter Angle") {
+-                  clip.components[i].properties[p].setValue(${args.enabled}, true);
+-                  set = true;
+-                  break;
+-                }
++          var motionComp = __findComponentOnClip(clip, "Motion");
++          if (motionComp) {
++            for (var p = 0; p < motionComp.properties.numItems; p++) {
++              var prop = motionComp.properties[p];
++              if (__propertyMatches(prop, "Anti-flicker Filter") || __propertyMatches(prop, "Use Composition's Shutter Angle")) {
++                prop.setValue(${args.enabled}, true);
++                set = true;
++                break;
+               }
+-              break;
+             }
+           }
+ 
+@@ -1216,20 +1184,14 @@
+ 
+           var clip = result.clip;
+           var set = false;
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            if (clip.components[i].displayName === "Motion") {
+-              for (var p = 0; p < clip.components[i].properties.numItems; p++) {
+-                if (clip.components[i].properties[p].displayName === "Uniform Scale") {
+-                  clip.components[i].properties[p].setValue(${args.uniform}, true);
+-                  set = true;
+-                  break;
+-                }
+-              }
+-              break;
+-            }
++          var motionComp = __findComponentOnClip(clip, "Motion");
++          var uniformProp = __findPropertyOnComponent(motionComp, "Uniform Scale");
++          if (uniformProp) {
++            uniformProp.setValue(${args.uniform}, true);
++            set = true;
+           }
+           if (!set) return __error("Uniform Scale property not found");
+-          return __result({ clip: clip.name, uniformScale: ${args.uniform} });
++          return __result({ clip: clip.name, uniformScale: ${args.uniform}, property: uniformProp.displayName });
+         `);
+                 return sendCommand(script, bridgeOptions);
+             },
+@@ -1260,15 +1222,12 @@
+           if (!result) return __error("Clip not found");
+ 
+           var clip = result.clip;
+-          var motion = null;
+-          for (var i = 0; i < clip.components.numItems; i++) {
+-            if (clip.components[i].displayName === "Motion") { motion = clip.components[i]; break; }
+-          }
++          var motion = __findComponentOnClip(clip, "Motion");
+           if (!motion) return __error("Motion component not found");
+ 
+           // Disable uniform scale first
+           for (var p = 0; p < motion.properties.numItems; p++) {
+-            if (motion.properties[p].displayName === "Uniform Scale") {
++            if (__propertyMatches(motion.properties[p], "Uniform Scale")) {
+               motion.properties[p].setValue(false, true);
+               break;
+             }
+@@ -1277,8 +1236,8 @@
+           var setW = false, setH = false;
+           for (var p = 0; p < motion.properties.numItems; p++) {
+             var pName = motion.properties[p].displayName;
+-            if (pName === "Scale Width") { motion.properties[p].setValue(${args.scale_width}, true); setW = true; }
+-            if (pName === "Scale Height") { motion.properties[p].setValue(${args.scale_height}, true); setH = true; }
++            if (__nameMatches(pName, "Scale Width") || __nameMatches(pName, "폭 비율 조정")) { motion.properties[p].setValue(${args.scale_width}, true); setW = true; }
++            if (__nameMatches(pName, "Scale Height") || __nameMatches(pName, "높이 비율 조정")) { motion.properties[p].setValue(${args.scale_height}, true); setH = true; }
+           }
+ 
+           return __result({ clip: clip.name, scaleWidth: ${args.scale_width}, scaleHeight: ${args.scale_height}, widthSet: setW, heightSet: setH });
+@@ -1288,4 +1247,4 @@
+         },
+     };
+ }
+-//# sourceMappingURL=track-targeting.js.map
+\ No newline at end of file
++//# sourceMappingURL=track-targeting.js.map
+diff -ruN a/premiere-pro-mcp/dist/tools/transitions.js premiere-pro-mcp/dist/tools/transitions.js
+--- a/premiere-pro-mcp/dist/tools/transitions.js	1985-10-26 17:15:00.000000000 +0900
++++ b/premiere-pro-mcp/dist/tools/transitions.js	2026-09-27 05:42:43.970750200 +0900
+@@ -37,29 +37,145 @@
+           if (!qeTrack) return __error("Track not found");
+           
+           var transitionName = "${escapeForExtendScript(args.transition_name)}";
+-          var transitions = qe.project.getVideoTransitionList();
+           var transitionQE = null;
+-          
+-          for (var i = 0; i < transitions.numItems; i++) {
+-            if (transitions[i].name === transitionName) {
+-              transitionQE = transitions[i];
+-              break;
++          try {
++            transitionQE = qe.project.getVideoTransitionByName(transitionName);
++          } catch(e) {}
++          
++          if (!transitionQE) {
++            var transitions = qe.project.getVideoTransitionList();
++            var transitionCount = transitions.numItems !== undefined ? transitions.numItems : transitions.length;
++            for (var i = 0; i < transitionCount; i++) {
++              var transitionItem = transitions[i];
++              var itemName = transitionItem && transitionItem.name !== undefined ? transitionItem.name : transitionItem;
++              if (itemName === transitionName) {
++                transitionQE = transitionItem;
++                break;
++              }
+             }
+           }
+           
+           if (!transitionQE) return __error("Transition not found: " + transitionName);
+           
+-          var cutTicks = __secondsToTicks(${args.cut_point_seconds}).toString();
+-          var durationTicks = __secondsToTicks(${duration}).toString();
++          var cutSeconds = ${args.cut_point_seconds};
++          var toleranceSeconds = 0.05;
++          var qeClip = null;
++          for (var itemIndex = 0; itemIndex < qeTrack.numItems; itemIndex++) {
++            var item = qeTrack.getItemAt(itemIndex);
++            if (item && item.type === "Clip" && item.end) {
++              var endSeconds = __ticksToSeconds(item.end.ticks);
++              if (Math.abs(endSeconds - cutSeconds) <= toleranceSeconds) {
++                qeClip = item;
++                break;
++              }
++            }
++          }
+           
+-          qeTrack.addTransition(transitionQE, true, cutTicks, durationTicks, "0", false);
++          if (!qeClip) return __error("No clip ending at cut point: " + cutSeconds);
++          var seq = app.project.activeSequence;
++          var standardTrack = seq.videoTracks[${args.track_index}];
++          function transitionSignature(tr) {
++            var name = "";
++            var start = "";
++            var end = "";
++            try { name = tr.name; } catch(e) {}
++            try { start = String(tr.start.ticks); } catch(e) {}
++            try { end = String(tr.end.ticks); } catch(e) {}
++            return name + "|" + start + "|" + end;
++          }
++          function snapshotTransitions(track) {
++            var signatures = [];
++            try {
++              for (var s = 0; s < track.transitions.numItems; s++) {
++                signatures.push(transitionSignature(track.transitions[s]));
++              }
++            } catch(e) {}
++            return signatures;
++          }
++          function hasSignature(signatures, signature) {
++            for (var h = 0; h < signatures.length; h++) {
++              if (signatures[h] === signature) return true;
++            }
++            return false;
++          }
++          function adjustNewTransitions(track, beforeSignatures, transitionName, cutSeconds, durationSeconds) {
++            var adjusted = [];
++            var desiredStart = cutSeconds - (durationSeconds / 2);
++            var desiredEnd = cutSeconds + (durationSeconds / 2);
++            var desiredStartTicks = __secondsToTicks(desiredStart).toString();
++            var desiredEndTicks = __secondsToTicks(desiredEnd).toString();
++            try {
++              for (var a = 0; a < track.transitions.numItems; a++) {
++                var tr = track.transitions[a];
++                var signature = transitionSignature(tr);
++                if (hasSignature(beforeSignatures, signature)) continue;
++                var trName = "";
++                try { trName = tr.name; } catch(e) {}
++                if (trName !== transitionName) continue;
++                var beforeStart = null;
++                var beforeEnd = null;
++                var beforeDuration = null;
++                try { beforeStart = __ticksToSeconds(tr.start.ticks); } catch(e) {}
++                try { beforeEnd = __ticksToSeconds(tr.end.ticks); } catch(e) {}
++                try { beforeDuration = __ticksToSeconds(tr.duration.ticks); } catch(e) {}
++                var proximityWindow = Math.max(2, durationSeconds + 1);
++                var nearCut = false;
++                if (beforeStart !== null && beforeEnd !== null) {
++                  nearCut = (beforeStart <= cutSeconds && beforeEnd >= cutSeconds) ||
++                    Math.abs(beforeStart - cutSeconds) <= proximityWindow ||
++                    Math.abs(beforeEnd - cutSeconds) <= proximityWindow;
++                }
++                if (!nearCut) continue;
++                try { tr.start = desiredStartTicks; } catch(e1) { try { tr.start.ticks = desiredStartTicks; } catch(e2) {} }
++                try { tr.end = desiredEndTicks; } catch(e3) { try { tr.end.ticks = desiredEndTicks; } catch(e4) {} }
++                var afterStart = null;
++                var afterEnd = null;
++                var afterDuration = null;
++                try { afterStart = __ticksToSeconds(tr.start.ticks); } catch(e5) {}
++                try { afterEnd = __ticksToSeconds(tr.end.ticks); } catch(e6) {}
++                try { afterDuration = __ticksToSeconds(tr.duration.ticks); } catch(e7) {}
++                adjusted.push({
++                  index: a,
++                  name: trName,
++                  beforeStartSeconds: beforeStart,
++                  beforeEndSeconds: beforeEnd,
++                  beforeDurationSeconds: beforeDuration,
++                  afterStartSeconds: afterStart,
++                  afterEndSeconds: afterEnd,
++                  afterDurationSeconds: afterDuration,
++                  durationMatched: Math.abs(afterDuration - durationSeconds) < 0.02
++                });
++              }
++            } catch(e8) {
++              adjusted.push({ error: String(e8) });
++            }
++            return adjusted;
++          }
++          var beforeStandardTransitions = snapshotTransitions(standardTrack);
++          var beforeTransitions = qeTrack.numTransitions;
++          qeClip.addTransition(transitionQE);
++          var afterTransitions = qeTrack.numTransitions;
++          var adjustedTransitions = adjustNewTransitions(standardTrack, beforeStandardTransitions, transitionName, cutSeconds, ${duration});
++          var durationApplied = adjustedTransitions.length > 0;
++          for (var matchedIndex = 0; matchedIndex < adjustedTransitions.length; matchedIndex++) {
++            if (adjustedTransitions[matchedIndex].durationMatched !== true) {
++              durationApplied = false;
++            }
++          }
+           
+           return __result({
+             added: true,
+             transition: transitionName,
+             trackIndex: ${args.track_index},
+             atSeconds: ${args.cut_point_seconds},
+-            durationSeconds: ${duration}
++            requestedDurationSeconds: ${duration},
++            requestedDurationTicks: __secondsToTicks(${duration}).toString(),
++            durationApplied: durationApplied,
++            addMethod: "defaultAddThenAdjustStartEnd",
++            adjustedTransitions: adjustedTransitions,
++            beforeTransitions: beforeTransitions,
++            afterTransitions: afterTransitions,
++            note: durationApplied ? "Transition was inserted, then start/end were adjusted to the requested duration." : "Transition was inserted, but no new standard transition object could be adjusted."
+           });
+         `);
+                 return sendCommand(script, bridgeOptions);
+@@ -102,36 +218,168 @@
+           if (!result) return __error("Clip not found");
+           
+           var transitionName = "${escapeForExtendScript(args.transition_name)}";
+-          var transitions = qe.project.getVideoTransitionList();
+           var transitionQE = null;
+-          for (var i = 0; i < transitions.numItems; i++) {
+-            if (transitions[i].name === transitionName) {
+-              transitionQE = transitions[i];
+-              break;
++          try {
++            transitionQE = qe.project.getVideoTransitionByName(transitionName);
++          } catch(e) {}
++          if (!transitionQE) {
++            var transitions = qe.project.getVideoTransitionList();
++            var transitionCount = transitions.numItems !== undefined ? transitions.numItems : transitions.length;
++            for (var i = 0; i < transitionCount; i++) {
++              var transitionItem = transitions[i];
++              var itemName = transitionItem && transitionItem.name !== undefined ? transitionItem.name : transitionItem;
++              if (itemName === transitionName) {
++                transitionQE = transitionItem;
++                break;
++              }
+             }
+           }
+           if (!transitionQE) return __error("Transition not found: " + transitionName);
+           
+           var qeTrack = qeSeq.getVideoTrackAt(result.trackIndex);
+-          var durationTicks = __secondsToTicks(${duration}).toString();
+           var clip = result.clip;
+           var position = "${position}";
++          var startSeconds = __ticksToSeconds(clip.start.ticks);
++          var endSeconds = __ticksToSeconds(clip.end.ticks);
++          var toleranceSeconds = 0.05;
++          var qeClip = null;
++          var previousQEClip = null;
++          for (var itemIndex = 0; itemIndex < qeTrack.numItems; itemIndex++) {
++            var item = qeTrack.getItemAt(itemIndex);
++            if (item && item.type === "Clip" && item.start && item.end) {
++              var itemStart = __ticksToSeconds(item.start.ticks);
++              var itemEnd = __ticksToSeconds(item.end.ticks);
++              if (Math.abs(itemStart - startSeconds) <= toleranceSeconds && Math.abs(itemEnd - endSeconds) <= toleranceSeconds && item.name === clip.name) {
++                qeClip = item;
++              }
++              if (Math.abs(itemEnd - startSeconds) <= toleranceSeconds) {
++                previousQEClip = item;
++              }
++            }
++          }
++          if (!qeClip) return __error("QE clip not found for selected clip");
++          var seq = app.project.activeSequence;
++          var standardTrack = seq.videoTracks[result.trackIndex];
++          function transitionSignature(tr) {
++            var name = "";
++            var start = "";
++            var end = "";
++            try { name = tr.name; } catch(e) {}
++            try { start = String(tr.start.ticks); } catch(e) {}
++            try { end = String(tr.end.ticks); } catch(e) {}
++            return name + "|" + start + "|" + end;
++          }
++          function snapshotTransitions(track) {
++            var signatures = [];
++            try {
++              for (var s = 0; s < track.transitions.numItems; s++) {
++                signatures.push(transitionSignature(track.transitions[s]));
++              }
++            } catch(e) {}
++            return signatures;
++          }
++          function hasSignature(signatures, signature) {
++            for (var h = 0; h < signatures.length; h++) {
++              if (signatures[h] === signature) return true;
++            }
++            return false;
++          }
++          function adjustNewTransitions(track, beforeSignatures, transitionName, cutSeconds, durationSeconds) {
++            var adjusted = [];
++            var desiredStart = cutSeconds - (durationSeconds / 2);
++            var desiredEnd = cutSeconds + (durationSeconds / 2);
++            var desiredStartTicks = __secondsToTicks(desiredStart).toString();
++            var desiredEndTicks = __secondsToTicks(desiredEnd).toString();
++            try {
++              for (var a = 0; a < track.transitions.numItems; a++) {
++                var tr = track.transitions[a];
++                var signature = transitionSignature(tr);
++                if (hasSignature(beforeSignatures, signature)) continue;
++                var trName = "";
++                try { trName = tr.name; } catch(e) {}
++                if (trName !== transitionName) continue;
++                var beforeStart = null;
++                var beforeEnd = null;
++                var beforeDuration = null;
++                try { beforeStart = __ticksToSeconds(tr.start.ticks); } catch(e) {}
++                try { beforeEnd = __ticksToSeconds(tr.end.ticks); } catch(e) {}
++                try { beforeDuration = __ticksToSeconds(tr.duration.ticks); } catch(e) {}
++                var proximityWindow = Math.max(2, durationSeconds + 1);
++                var nearCut = false;
++                if (beforeStart !== null && beforeEnd !== null) {
++                  nearCut = (beforeStart <= cutSeconds && beforeEnd >= cutSeconds) ||
++                    Math.abs(beforeStart - cutSeconds) <= proximityWindow ||
++                    Math.abs(beforeEnd - cutSeconds) <= proximityWindow;
++                }
++                if (!nearCut) continue;
++                try { tr.start = desiredStartTicks; } catch(e1) { try { tr.start.ticks = desiredStartTicks; } catch(e2) {} }
++                try { tr.end = desiredEndTicks; } catch(e3) { try { tr.end.ticks = desiredEndTicks; } catch(e4) {} }
++                var afterStart = null;
++                var afterEnd = null;
++                var afterDuration = null;
++                try { afterStart = __ticksToSeconds(tr.start.ticks); } catch(e5) {}
++                try { afterEnd = __ticksToSeconds(tr.end.ticks); } catch(e6) {}
++                try { afterDuration = __ticksToSeconds(tr.duration.ticks); } catch(e7) {}
++                adjusted.push({
++                  index: a,
++                  name: trName,
++                  cutSeconds: cutSeconds,
++                  beforeStartSeconds: beforeStart,
++                  beforeEndSeconds: beforeEnd,
++                  beforeDurationSeconds: beforeDuration,
++                  afterStartSeconds: afterStart,
++                  afterEndSeconds: afterEnd,
++                  afterDurationSeconds: afterDuration,
++                  durationMatched: Math.abs(afterDuration - durationSeconds) < 0.02
++                });
++              }
++            } catch(e8) {
++              adjusted.push({ error: String(e8) });
++            }
++            return adjusted;
++          }
++          var beforeStandardTransitions = snapshotTransitions(standardTrack);
++          var beforeTransitions = qeTrack.numTransitions;
++          var addedPositions = [];
+           
+           if (position === "start" || position === "both") {
+-            var startTicks = clip.start.ticks;
+-            qeTrack.addTransition(transitionQE, true, startTicks, durationTicks, "0", false);
++            if (previousQEClip) {
++              previousQEClip.addTransition(transitionQE);
++              addedPositions.push("start");
++            }
++          }
++          if (position === "end" || position === "both") {
++            qeClip.addTransition(transitionQE);
++            addedPositions.push("end");
++          }
++          var afterTransitions = qeTrack.numTransitions;
++          var adjustedTransitions = [];
++          if (position === "start" || position === "both") {
++            adjustedTransitions = adjustedTransitions.concat(adjustNewTransitions(standardTrack, beforeStandardTransitions, transitionName, startSeconds, ${duration}));
+           }
+           if (position === "end" || position === "both") {
+-            var endTicks = clip.end.ticks;
+-            qeTrack.addTransition(transitionQE, true, endTicks, durationTicks, "0", false);
++            adjustedTransitions = adjustedTransitions.concat(adjustNewTransitions(standardTrack, beforeStandardTransitions, transitionName, endSeconds, ${duration}));
++          }
++          var durationApplied = adjustedTransitions.length > 0;
++          for (var matchedIndex = 0; matchedIndex < adjustedTransitions.length; matchedIndex++) {
++            if (adjustedTransitions[matchedIndex].durationMatched !== true) {
++              durationApplied = false;
++            }
+           }
+           
+           return __result({
+             added: true,
+             transition: transitionName,
+             clipName: clip.name,
+-            position: position,
+-            durationSeconds: ${duration}
++            position: addedPositions.join(","),
++            requestedDurationSeconds: ${duration},
++            requestedDurationTicks: __secondsToTicks(${duration}).toString(),
++            durationApplied: durationApplied,
++            addMethod: "defaultAddThenAdjustStartEnd",
++            adjustedTransitions: adjustedTransitions,
++            beforeTransitions: beforeTransitions,
++            afterTransitions: afterTransitions,
++            note: durationApplied ? "Transition was inserted, then start/end were adjusted to the requested duration." : "Transition was inserted, but no new standard transition object could be adjusted to the requested duration."
+           });
+         `);
+                 return sendCommand(script, bridgeOptions);
+@@ -169,26 +417,41 @@
+           if (!seq) return __error("No active sequence");
+           
+           var transitionName = "${escapeForExtendScript(args.transition_name)}";
+-          var transitions = qe.project.getVideoTransitionList();
+           var transitionQE = null;
+-          for (var i = 0; i < transitions.numItems; i++) {
+-            if (transitions[i].name === transitionName) {
+-              transitionQE = transitions[i];
+-              break;
++          try {
++            transitionQE = qe.project.getVideoTransitionByName(transitionName);
++          } catch(e) {}
++          if (!transitionQE) {
++            var transitions = qe.project.getVideoTransitionList();
++            var transitionCount = transitions.numItems !== undefined ? transitions.numItems : transitions.length;
++            for (var i = 0; i < transitionCount; i++) {
++              var transitionItem = transitions[i];
++              var itemName = transitionItem && transitionItem.name !== undefined ? transitionItem.name : transitionItem;
++              if (itemName === transitionName) {
++                transitionQE = transitionItem;
++                break;
++              }
+             }
+           }
+           if (!transitionQE) return __error("Transition not found: " + transitionName);
+           
+           var track = seq.videoTracks[${trackIndex}];
+           var qeTrack = qeSeq.getVideoTrackAt(${trackIndex});
+-          var durationTicks = __secondsToTicks(${duration}).toString();
+           var count = 0;
+           
+           // Add transition at each cut point (between consecutive clips)
+-          for (var c = 0; c < track.clips.numItems - 1; c++) {
+-            var cutTicks = track.clips[c].end.ticks;
++          for (var c = 0; c < qeTrack.numItems; c++) {
++            var item = qeTrack.getItemAt(c);
++            if (!item || item.type !== "Clip") {
++              continue;
++            }
+             try {
+-              qeTrack.addTransition(transitionQE, true, cutTicks, durationTicks, "0", false);
++              try {
++                item.addTransition(transitionQE, false, __secondsToTicks(${duration}).toString(), 0.5, 0);
++              } catch(e1) {
++                try { item.addTransition(transitionQE, false, __secondsToTicks(${duration}).toString()); }
++                catch(e2) { item.addTransition(transitionQE); }
++              }
+               count++;
+             } catch(e) {}
+           }
+@@ -197,7 +460,8 @@
+             added: count,
+             transition: transitionName,
+             trackIndex: ${trackIndex},
+-            durationSeconds: ${duration}
++            durationSeconds: ${duration},
++            durationTicks: __secondsToTicks(${duration}).toString()
+           });
+         `);
+                 return sendCommand(script, bridgeOptions);
+@@ -211,8 +475,13 @@
+           app.enableQE();
+           var transitions = qe.project.getVideoTransitionList();
+           var list = [];
+-          for (var i = 0; i < transitions.numItems; i++) {
+-            list.push({ name: transitions[i].name, index: i });
++          var transitionCount = transitions.numItems !== undefined ? transitions.numItems : transitions.length;
++          for (var i = 0; i < transitionCount; i++) {
++            var transitionItem = transitions[i];
++            list.push({
++              name: transitionItem && transitionItem.name !== undefined ? transitionItem.name : transitionItem,
++              index: i
++            });
+           }
+           return __result(list);
+         `);
+@@ -227,8 +496,13 @@
+           app.enableQE();
+           var transitions = qe.project.getAudioTransitionList();
+           var list = [];
+-          for (var i = 0; i < transitions.numItems; i++) {
+-            list.push({ name: transitions[i].name, index: i });
++          var transitionCount = transitions.numItems !== undefined ? transitions.numItems : transitions.length;
++          for (var i = 0; i < transitionCount; i++) {
++            var transitionItem = transitions[i];
++            list.push({
++              name: transitionItem && transitionItem.name !== undefined ? transitionItem.name : transitionItem,
++              index: i
++            });
+           }
+           return __result(list);
+         `);
+@@ -237,4 +511,4 @@
+         },
+     };
+ }
+-//# sourceMappingURL=transitions.js.map
+\ No newline at end of file
++//# sourceMappingURL=transitions.js.map

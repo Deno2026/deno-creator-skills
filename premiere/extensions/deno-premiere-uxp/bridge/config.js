@@ -1,0 +1,11 @@
+const BRIDGE_DIRECTORY_URL = "plugin-data:/bridge";
+const BRIDGE_FOLDER_NAME = "bridge";
+
+module.exports = Object.freeze({
+  BRIDGE_DIRECTORY_URL,
+  BRIDGE_FOLDER_NAME,
+  POLL_INTERVAL_MS: 200,
+  STORAGE_STAGE_WARNING_MS: 3000,
+  MAX_REQUEST_BYTES: 2 * 1024 * 1024,
+  PROTOCOL_VERSION: 1
+});

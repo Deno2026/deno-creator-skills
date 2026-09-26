@@ -1,0 +1,7 @@
+{
+  "appId": "",
+  "appSecret": "",
+  "redirectUri": "http://localhost:3400/oauth/instagram/callback",
+  "igUserId": "",
+  "username": ""
+}

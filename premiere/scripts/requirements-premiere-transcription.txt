@@ -1,0 +1,4 @@
+# Local, Computer-Use-free Premiere transcription backend.
+faster-whisper==1.2.1
+nvidia-cublas-cu12==12.9.2.10; platform_system == "Windows"
+nvidia-cudnn-cu12==9.24.0.43; platform_system == "Windows"

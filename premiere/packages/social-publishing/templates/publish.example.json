@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "slug": "2026-09-07_resolution",
+  "video": {
+    "path": "E:\\DENO-Repos\\DenoVerse\\productions\\shorts\\example\\renders\\final_full\\05_FINAL_CAPTIONS.mp4"
+  },
+  "publishAt": "2030-01-02T19:00:00+09:00",
+  "targets": [
+    "youtube",
+    "instagram"
+  ],
+  "youtube": {
+    "title": "Resolution changes in ComfyUI #Shorts",
+    "description": "An explanation of image resolution.\n\n#Shorts",
+    "tags": [
+      "Shorts",
+      "ComfyUI",
+      "resolution"
+    ],
+    "categoryId": "28",
+    "madeForKids": false,
+    "containsSyntheticMedia": true,
+    "privacy": "scheduled",
+    "descriptionBlocks": "default",
+    "analysis": {
+      "summary": "Replace with the actual visual review.",
+      "sampleCount": 9,
+      "onScreenText": [],
+      "audioAssessment": "Replace with the actual audio review.",
+      "audioAssessmentSource": "direct_review",
+      "reviewedAudioSha256": "REPLACE_WITH_INSPECTED_AUDIO_SHA256",
+      "reviewedContactSheetSha256": "REPLACE_WITH_INSPECTED_CONTACT_SHEET_SHA256",
+      "reviewedSampleIndexes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "metadataRationale": "Explain how the reviewed content supports this metadata."
+    }
+  },
+  "instagram": {
+    "caption": "Resolution changes in ComfyUI. #comfyui #AI",
+    "shareToFeed": true,
+    "thumbOffsetMs": 0
+  },
+  "threads": {
+    "text": "영상 내용에 맞춘 Threads 본문"
+  },
+  "x": {
+    "text": "영상 내용에 맞춘 X 본문"
+  }
+}

@@ -1,0 +1,1331 @@
+{
+  "schemaVersion": 1,
+  "sourcePackage": {
+    "name": "deno-premiere-uxp-mcp",
+    "version": "0.6.2"
+  },
+  "toolCount": 37,
+  "tools": [
+    {
+      "name": "get_caption_tracks",
+      "category": "captions",
+      "description": "Read caption-track timing and runtime item metadata. Premiere Pro UXP 26.3 does not expose user-edited caption text, so each item returns text: null and textAvailable: false; getName() is returned separately as kind metadata. Uses the active sequence when sequence_id is omitted.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sequence_id": {
+            "type": "string",
+            "description": "Sequence name or ID. Uses the active sequence if omitted."
+          }
+        },
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/captions.js"
+    },
+    {
+      "name": "get_clip_transcript",
+      "category": "captions",
+      "description": "Read existing Premiere transcripts from clip project items and return normalized word timing in seconds.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "item_name": {
+            "type": "string",
+            "description": "Exact project item name. Scans all transcript-bearing clip items when omitted."
+          }
+        },
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/captions.js"
+    },
+    {
+      "name": "probe_caption_item",
+      "category": "captions",
+      "description": "Diagnostic only: inspect the runtime API surface of the first caption track item (property names, text getter probes, component chain). Remove once the caption text path is confirmed.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sequence_id": {
+            "type": "string",
+            "description": "Sequence name or ID. Uses the active sequence if omitted."
+          }
+        },
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/captions.js"
+    },
+    {
+      "name": "remove_transition",
+      "category": "transitions",
+      "description": "Remove the end-edge video transition from a specific video clip using the official UXP transition Action. Only the live-verified end position is exposed; start and both remain blocked pending separate disposable-project verification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "description": "Synthetic UXP video TrackItem ID returned by a read tool."
+          },
+          "position": {
+            "type": "string",
+            "enum": ["end"],
+            "description": "Live-verified clip edge whose transition will be removed (default and only accepted value: end)."
+          }
+        },
+        "required": ["node_id"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/transitions.js"
+    },
+    {
+      "name": "export_open_timeline_io",
+      "category": "export",
+      "description": "Export the active sequence as OpenTimelineIO through Adobe ProjectConverter. This writes a file and is not undoable.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "output_path": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Absolute output .otio file path."
+          }
+        },
+        "required": ["output_path"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/export.js"
+    },
+    {
+      "name": "get_media_encoder_info",
+      "category": "export",
+      "description": "Report whether Adobe Media Encoder is installed according to the official EncoderManager.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/export.js"
+    },
+    {
+      "name": "list_media_encoder_events",
+      "category": "export",
+      "description": "List bounded Adobe Media Encoder events received after this UXP plugin registered its official EncoderManager listeners. This is an event journal, not a queue snapshot.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "after_event_id": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Return events with a larger local event ID (default: 0)."
+          },
+          "job_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Optional exact AME job ID filter."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200,
+            "description": "Maximum events to return (default: 100)."
+          }
+        },
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/export.js"
+    },
+    {
+      "name": "launch_media_encoder",
+      "category": "export",
+      "description": "Launch Adobe Media Encoder asynchronously through the official EncoderManager. This changes external application state and is not undoable.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/export.js"
+    },
+    {
+      "name": "set_encoder_xmp_options",
+      "category": "export",
+      "description": "Set Adobe Media Encoder embedded and/or sidecar XMP export options. At least one option is required; the two direct calls are non-atomic and not undoable.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "embedded_enabled": { "type": "boolean" },
+          "sidecar_enabled": { "type": "boolean" }
+        },
+        "anyOf": [
+          { "required": ["embedded_enabled"] },
+          { "required": ["sidecar_enabled"] }
+        ],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/export.js"
+    },
+    {
+      "name": "get_installed_mogrt_path",
+      "category": "text",
+      "description": "Read Premiere's official local directory path for installed Adobe MOGRT files.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/mogrt.js"
+    },
+    {
+      "name": "rename_caption_track",
+      "category": "captions",
+      "description": "Rename an existing caption track with the official CaptionTrack Action and verify the name by read-back.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sequence_id": { "type": "string", "minLength": 1 },
+          "track_index": { "type": "integer", "minimum": 0 },
+          "name": { "type": "string", "minLength": 1 }
+        },
+        "required": ["track_index", "name"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/captions.js"
+    },
+    {
+      "name": "set_caption_track_mute",
+      "category": "captions",
+      "description": "Set mute on an existing caption track with the official direct UXP API and verify the value by read-back. This write is not undoable.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sequence_id": { "type": "string", "minLength": 1 },
+          "track_index": { "type": "integer", "minimum": 0 },
+          "muted": { "type": "boolean" }
+        },
+        "required": ["track_index", "muted"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/captions.js"
+    },
+    {
+      "name": "list_transcription_languages",
+      "category": "captions",
+      "description": "List the transcription languages exposed by Adobe's official Transcript API.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/captions.js"
+    },
+    {
+      "name": "has_transcript",
+      "category": "captions",
+      "description": "Report whether a clip project item has an existing Premiere transcript through Adobe's official Transcript API.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "item_id": { "type": "string", "minLength": 1 }
+        },
+        "required": ["item_id"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/captions.js"
+    },
+    {
+      "name": "set_source_monitor_position",
+      "category": "source-monitor",
+      "description": "Set the open Source Monitor clip position in seconds with the official UXP API and verify exact ticks by read-back. This write is not undoable.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "position_seconds": { "type": "number", "minimum": 0 }
+        },
+        "required": ["position_seconds"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/source-monitor.js"
+    },
+    {
+      "name": "is_premiere_project",
+      "category": "official-project",
+      "description": "Check whether a path is recognized as a Premiere project by Adobe's official Project.isProject API.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_path": { "type": "string", "minLength": 1 }
+        },
+        "required": ["project_path"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-project.js"
+    },
+    {
+      "name": "open_sequence",
+      "category": "official-project",
+      "description": "Open a sequence in the active project with Adobe's official Project.openSequence API. This changes Premiere UI state and is not undoable.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sequence_id": { "type": "string", "minLength": 1 }
+        },
+        "required": ["sequence_id"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-project.js"
+    },
+    {
+      "name": "pause_growing_media",
+      "category": "official-project",
+      "description": "Pause or resume growing-media updates for the active Premiere project through the official direct API. This write is not undoable and has no read-back API.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "paused": { "type": "boolean" }
+        },
+        "required": ["paused"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-project.js"
+    },
+    {
+      "name": "has_object_mask",
+      "category": "official-project",
+      "description": "Check whether the active project or a sequence contains an Adobe object mask using the official ObjectMaskUtils API.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "scope": { "type": "string", "enum": ["project", "sequence"] },
+          "sequence_id": { "type": "string", "minLength": 1 }
+        },
+        "required": ["scope"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-project.js"
+    },
+    {
+      "name": "get_project_ingest_settings",
+      "category": "official-project",
+      "description": "Read whether ingest is enabled for the active project through Adobe's official ProjectSettings API.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-project.js"
+    },
+    {
+      "name": "set_project_ingest_enabled",
+      "category": "official-project",
+      "description": "Enable or disable ingest for the active project with Adobe's official ProjectSettings Action and verify the value by read-back.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "enabled": { "type": "boolean" }
+        },
+        "required": ["enabled"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-project.js"
+    },
+    {
+      "name": "set_project_scratch_disk_mode",
+      "category": "official-project",
+      "description": "Set one project scratch-disk category to Adobe's official same-as-project or My Documents symbolic location and verify the resulting path. Arbitrary paths are not exposed.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "folder_type": {
+            "type": "string",
+            "enum": ["capture", "audio_preview", "video_preview", "auto_save", "cc_libraries", "capsule_media"]
+          },
+          "location": {
+            "type": "string",
+            "enum": ["same_as_project", "my_documents"]
+          }
+        },
+        "required": ["folder_type", "location"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-project.js"
+    },
+    {
+      "name": "subscribe_premiere_events",
+      "category": "events",
+      "description": "Subscribe to bounded Adobe Premiere project, sequence, operation, track, or snap events. The journal begins at subscription time and is not a current-state snapshot.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 6,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": ["project", "sequence", "operation", "video_tracks", "audio_tracks", "snap"]
+            }
+          },
+          "sequence_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Sequence name or ID for sequence or track-targeted subscriptions. Uses the active sequence when omitted."
+          }
+        },
+        "required": ["groups"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-events.js"
+    },
+    {
+      "name": "list_premiere_events",
+      "category": "events",
+      "description": "Read the bounded 200-entry journal of official Premiere events captured after subscription. This is an event journal, not a project or timeline state snapshot.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "after_event_id": { "type": "integer", "minimum": 0 },
+          "event_types": {
+            "type": "array",
+            "maxItems": 32,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "groups": {
+            "type": "array",
+            "maxItems": 6,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": ["project", "sequence", "operation", "video_tracks", "audio_tracks", "snap"]
+            }
+          },
+          "limit": { "type": "integer", "minimum": 1, "maximum": 200 }
+        },
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-events.js"
+    },
+    {
+      "name": "unsubscribe_premiere_events",
+      "category": "events",
+      "description": "Remove exact official Premiere event listeners previously registered by this plugin. Omitting groups removes every listener owned by this journal.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 6,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": ["project", "sequence", "operation", "video_tracks", "audio_tracks", "snap"]
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-events.js"
+    },
+    {
+      "name": "import_clip_transcript_json",
+      "category": "official-transcript-project",
+      "description": "Import bounded external transcript JSON into one clip project item using Adobe Transcript Actions. Existing transcripts are replaced only when explicitly requested. This is undoable but destructive to prior transcript state.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "item_id": { "type": "string", "minLength": 1 },
+          "transcript_json": { "type": "string", "minLength": 1, "maxLength": 2097152 },
+          "replace_existing": { "type": "boolean" }
+        },
+        "required": ["item_id", "transcript_json"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-transcript-project.js"
+    },
+    {
+      "name": "get_project_panel_selection",
+      "category": "official-transcript-project",
+      "description": "Read bounded Project panel selections from the active project or all open project views through Adobe ProjectUtils. Native paths are intentionally omitted.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "scope": { "type": "string", "enum": ["active_project", "all_views"] }
+        },
+        "required": ["scope"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-transcript-project.js"
+    },
+    {
+      "name": "get_app_preference",
+      "category": "official-transcript-project",
+      "description": "Read one of Adobe's three officially exposed Premiere application preferences: automatic peak generation, workspace import, or Quick Start display.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": ["auto_peak_generation", "import_workspace", "show_quickstart_dialog"]
+          }
+        },
+        "required": ["key"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-transcript-project.js"
+    },
+    {
+      "name": "set_app_preference",
+      "category": "official-transcript-project",
+      "description": "Set one of Adobe's three officially exposed Premiere application preferences with session or persistent scope and read it back. This is application-global and not undoable.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": ["auto_peak_generation", "import_workspace", "show_quickstart_dialog"]
+          },
+          "value": { "type": "boolean" },
+          "persistence": { "type": "string", "enum": ["persistent", "session"] }
+        },
+        "required": ["key", "value"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-transcript-project.js"
+    },
+    {
+      "name": "get_active_production_scratch_disks",
+      "category": "official-transcript-project",
+      "description": "Read all six official scratch-disk categories from the active Premiere Production, or report that no Production is active.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-transcript-project.js"
+    },
+    {
+      "name": "is_after_effects_installed",
+      "category": "official-transcript-project",
+      "description": "Report whether After Effects is installed according to Adobe's official Premiere UXP utility API.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-transcript-project.js"
+    },
+    {
+      "name": "get_custom_properties",
+      "category": "official-transcript-project",
+      "description": "Read one exact official custom property from a project or sequence. Premiere 26.3 has no property-ID enumeration API, so omitting property_id returns that limitation explicitly.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "owner": { "type": "string", "enum": ["project", "sequence"] },
+          "sequence_id": { "type": "string", "minLength": 1 },
+          "property_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+          "value_type": { "type": "string", "enum": ["string", "integer", "float", "boolean"] }
+        },
+        "required": ["owner"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-transcript-project.js"
+    },
+    {
+      "name": "clear_custom_property",
+      "category": "official-transcript-project",
+      "description": "Clear one exact custom property from a project or sequence using an official undoable Action and verify that it no longer exists.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "owner": { "type": "string", "enum": ["project", "sequence"] },
+          "sequence_id": { "type": "string", "minLength": 1 },
+          "property_id": { "type": "string", "minLength": 1, "maxLength": 256 }
+        },
+        "required": ["owner", "property_id"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/official-transcript-project.js"
+    },
+    {
+      "name": "get_project_item_lut_info",
+      "category": "media",
+      "description": "Read the exact input and embedded LUT IDs from one clip project item using Adobe's official GUID-based LUT APIs.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "item_id": { "type": "string", "minLength": 1 }
+        },
+        "required": ["item_id"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/media.js"
+    },
+    {
+      "name": "set_project_item_input_lut_id",
+      "category": "media",
+      "description": "Set or clear a clip project item's exact Adobe input LUT ID with an official undoable Action and normalized read-back. This accepts LUT IDs, not LUT file paths.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "item_id": { "type": "string", "minLength": 1 },
+          "input_lut_id": { "type": "string", "maxLength": 1024 }
+        },
+        "required": ["item_id", "input_lut_id"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/media.js"
+    },
+    {
+      "name": "open_file_in_source_monitor",
+      "category": "source-monitor",
+      "description": "Open an absolute Windows media-file path directly in Premiere's Source Monitor without importing it into the project. Premiere host acceptance is the existence/readability check under plugin-scoped filesystem permissions.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "file_path": { "type": "string", "minLength": 1, "maxLength": 32767 }
+        },
+        "required": ["file_path"],
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/source-monitor.js"
+    },
+    {
+      "name": "is_done_analyzing_video_effects",
+      "category": "sequence",
+      "description": "Report whether Premiere has finished analyzing video effects for the active or specified sequence. Callers should use bounded polling rather than a blocking wait.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sequence_id": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      },
+      "declaration": "local:handlers/sequence.js"
+    }
+  ],
+  "overrides": [
+    {
+      "name": "scene_edit_detection",
+      "reason": "Premiere 26.3 officially supports three scene-detection operations on the current clip selection; the operation must be explicit and limited to Adobe's constants.",
+      "description": "Run Adobe Scene Edit Detection on the current non-empty clip selection and either apply cuts, create markers, or create subclips. This direct operation is not exposed as undoable and remains dangerous.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "operation": {
+            "type": "string",
+            "enum": ["apply_cuts", "create_markers", "create_subclips"]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "capture_frame",
+      "reason": "UXP exports a sequence frame to a temporary JPEG; it cannot capture the full Premiere window like the CEP PrintWindow fallback.",
+      "description": "Export the current sequence frame as a temporary JPEG and return it as inline image data. This is a Program Monitor frame equivalent, not a full Premiere-window screenshot.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "time_seconds": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Sequence time in seconds. Uses the current playhead when omitted."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "add_transition",
+      "reason": "TransitionFactory exposes matchName values, not localized CEP display names.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "transition_name": {
+            "type": "string",
+            "description": "Exact UXP transition matchName returned by list_available_transitions."
+          },
+          "track_index": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Video track index (0-based)."
+          },
+          "cut_point_seconds": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Exact clip boundary in sequence seconds."
+          },
+          "duration_seconds": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Transition duration in seconds (default: 1)."
+          }
+        },
+        "required": ["transition_name", "track_index", "cut_point_seconds"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "add_transition_to_clip",
+      "reason": "TransitionFactory exposes matchName values, not localized CEP display names.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "description": "Synthetic UXP video TrackItem ID returned by a read tool."
+          },
+          "transition_name": {
+            "type": "string",
+            "description": "Exact UXP transition matchName returned by list_available_transitions."
+          },
+          "position": {
+            "type": "string",
+            "enum": ["start", "end", "both"],
+            "description": "Clip edge to receive the transition (default: end)."
+          },
+          "duration_seconds": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Transition duration in seconds (default: 1)."
+          }
+        },
+        "required": ["node_id", "transition_name"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "set_sequence_display_format",
+      "reason": "UXP 26.3 exposes official constants for only a subset of the upstream CEP video display codes.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "video_display_format": {
+            "type": "number",
+            "enum": [1, 2, 3, 9, 10, 11],
+            "description": "Supported upstream video code: 1=25, 2=29.97 drop, 3=29.97 non-drop, 9=frames, 10=16mm, 11=35mm. Codes 0 and 4-8 have no equivalent official UXP constant."
+          },
+          "audio_display_format": {
+            "type": "number",
+            "enum": [0, 1],
+            "description": "Audio code: 0=samples, 1=milliseconds."
+          }
+        },
+        "anyOf": [
+          { "required": ["video_display_format"] },
+          { "required": ["audio_display_format"] }
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "set_sequence_pixel_aspect_ratio",
+      "reason": "SequenceSettings accepts only its official named pixel-aspect constants, not arbitrary numeric ratios.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "ratio": {
+            "type": "number",
+            "enum": [1, 0.9091, 1.2121, 1.094, 1.4587, 2, 1.333, 1.5],
+            "description": "One of the official UXP ratios: square, DV NTSC, DV NTSC wide, DV PAL, DV PAL wide, anamorphic, HD anamorphic 1080, or DVCPRO HD."
+          }
+        },
+        "required": ["ratio"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "add_marker",
+      "reason": "Marker color can only be set after creation, which would require a second Undo transaction; the atomic UXP port therefore does not advertise color-on-create.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "time_seconds": { "type": "number", "minimum": 0 },
+          "name": { "type": "string" },
+          "comments": { "type": "string" },
+          "duration_seconds": { "type": "number", "minimum": 0 },
+          "node_id": {
+            "type": "string",
+            "description": "Optional synthetic UXP TrackItem ID; writes a source-clip marker when present."
+          }
+        },
+        "required": ["time_seconds"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "add_marker_to_project_item",
+      "reason": "Marker color can only be set after creation, which would require a second Undo transaction; the atomic UXP port therefore does not advertise color-on-create.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "item_id": { "type": "string" },
+          "time_seconds": { "type": "number", "minimum": 0 },
+          "name": { "type": "string" },
+          "comments": { "type": "string" },
+          "duration_seconds": { "type": "number", "minimum": 0 },
+          "type": {
+            "type": "string",
+            "enum": ["Comment", "Chapter", "Segmentation", "WebLink"]
+          }
+        },
+        "required": ["item_id", "time_seconds"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "clear_item_in_out",
+      "reason": "UXP 26.3 provides only createClearInOutPointsAction(), so partial in-only or out-only clearing is unavailable.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "item_id": { "type": "string" },
+          "clear_in": {
+            "type": "boolean",
+            "const": true,
+            "description": "Must be true when supplied; UXP clears in and out together."
+          },
+          "clear_out": {
+            "type": "boolean",
+            "const": true,
+            "description": "Must be true when supplied; UXP clears in and out together."
+          }
+        },
+        "required": ["item_id"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "set_item_in_out",
+      "reason": "UXP project-item in/out Actions do not take MediaType; media_type is therefore omitted instead of pretending per-media writes are supported.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "item_id": { "type": "string" },
+          "in_seconds": { "type": "number", "minimum": 0 },
+          "out_seconds": { "type": "number", "minimum": 0 }
+        },
+        "required": ["item_id"],
+        "anyOf": [
+          { "required": ["in_seconds"] },
+          { "required": ["out_seconds"] }
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "list_available_effects",
+      "reason": "UXP uses VideoFilterFactory rather than QE and exposes authoritative matchNames separately from unpaired display names.",
+      "description": "List official UXP video-effect matchNames plus a separate, non-index-paired display-name list.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "apply_effect",
+      "reason": "VideoFilterFactory.createComponent() accepts an exact matchName and official component-chain Actions support append or a bounded explicit insertion index.",
+      "description": "Apply a video effect by exact UXP matchName, appending by default or inserting at an explicit full-chain index.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "description": "Synthetic UXP video TrackItem ID returned by a read tool."
+          },
+          "effect_name": {
+            "type": "string",
+            "description": "Exact UXP effect matchName returned by list_available_effects."
+          },
+          "insert_index": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Optional insertion index across the full component chain, including intrinsic components."
+          }
+        },
+        "required": ["node_id", "effect_name"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "apply_audio_effect",
+      "reason": "AudioFilterFactory accepts an official displayName and the audio component-chain Action supports append or a bounded explicit insertion index.",
+      "description": "Apply an audio effect by official displayName, appending by default or inserting at an explicit full-chain index.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "node_id": { "type": "string", "minLength": 1 },
+          "effect_name": { "type": "string", "minLength": 1 },
+          "insert_index": { "type": "integer", "minimum": 0 }
+        },
+        "required": ["node_id", "effect_name"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "batch_apply_effect",
+      "reason": "The stable UXP component-chain Actions can apply one official video matchName or audio displayName to a fully preflighted bounded target set in one transaction.",
+      "description": "Apply one official effect to 1-20 selected, track, or sequence clips in one undoable transaction after every target and component has passed preflight.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "media_type": { "type": "string", "enum": ["video", "audio"] },
+          "effect_match_name": { "type": "string", "minLength": 1 },
+          "target": { "type": "string", "enum": ["selected", "track", "all"] },
+          "track_index": { "type": "integer", "minimum": 0 },
+          "insert_index": { "type": "integer", "minimum": 0 }
+        },
+        "required": ["media_type", "effect_match_name", "target"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "adjust_audio_levels",
+      "reason": "The official audio component chain is exposed on AudioClipTrackItem; safely resolving a linked audio item from an arbitrary video node is not available.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "description": "Synthetic UXP audio TrackItem ID returned by a read tool."
+          },
+          "level_db": {
+            "type": "number",
+            "description": "Audio level in dB (0 = unity)."
+          }
+        },
+        "required": ["node_id", "level_db"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "export_aaf",
+      "reason": "Adobe AAFExportOptions exposes bounded official audio, source-trimming, handle, video-mixdown, effects, interleave, and folder-preservation settings that the upstream schema omitted.",
+      "description": "Export the active sequence to an absolute .aaf path with Adobe's official AAF options. This writes an external file, is not undoable, and remains separately approval-gated.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "output_path": { "type": "string", "minLength": 1 },
+          "mix_down_video": { "type": "boolean" },
+          "explode_to_mono": { "type": "boolean" },
+          "sample_rate": { "type": "integer", "minimum": 8000, "maximum": 384000 },
+          "bits_per_sample": { "type": "integer", "minimum": 8, "maximum": 32 },
+          "embed_audio": { "type": "boolean" },
+          "audio_file_format": { "type": "string", "enum": ["aiff", "wav"] },
+          "trim_sources": { "type": "boolean" },
+          "handle_frames": { "type": "integer", "minimum": 0, "maximum": 1000000 },
+          "video_mixdown_preset_path": { "type": "string", "minLength": 1 },
+          "render_audio_effects": { "type": "boolean" },
+          "interleave_without_effects": { "type": "boolean" },
+          "preserve_parent_folder": { "type": "boolean" }
+        },
+        "required": ["output_path"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "export_sequence",
+      "reason": "EncoderManager does not promise H.264 when preset_path is omitted; it uses applied export settings or Premiere standard export rules.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "output_path": { "type": "string" },
+          "preset_path": {
+            "type": "string",
+            "description": "Optional AME preset path. If omitted, Premiere uses applied export settings or its standard export rules; H.264 is not guaranteed."
+          },
+          "work_area_only": {
+            "type": "boolean",
+            "description": "Export only the work area (default: false)."
+          },
+          "destination": {
+            "type": "string",
+            "enum": ["immediate", "ame", "app"],
+            "description": "Official export destination: immediate export, Adobe Media Encoder queue, or Premiere app queue (default: immediate)."
+          }
+        },
+        "required": ["output_path"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "add_to_render_queue",
+      "reason": "EncoderManager can queue the active sequence to AME with optional output and preset paths; work-area scope is also explicit.",
+      "description": "Queue the active sequence in Adobe Media Encoder through EncoderManager. This does not start the existing AME batch queue.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "output_path": { "type": "string", "minLength": 1 },
+          "preset_path": { "type": "string", "minLength": 1 },
+          "work_area_only": {
+            "type": "boolean",
+            "description": "Queue only the sequence work area (default: false)."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "encode_project_item",
+      "reason": "The official EncoderManager supports queue admission without immediately starting the AME queue.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "item_id": { "type": "string", "minLength": 1 },
+          "output_path": { "type": "string", "minLength": 1 },
+          "preset_path": { "type": "string", "minLength": 1 },
+          "remove_on_completion": { "type": "boolean" },
+          "start_queue_immediately": {
+            "type": "boolean",
+            "description": "Start AME immediately after queueing (default: true)."
+          }
+        },
+        "required": ["item_id", "output_path", "preset_path"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "encode_file",
+      "reason": "The official EncoderManager supports queue admission without immediately starting the AME queue.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "input_path": { "type": "string", "minLength": 1 },
+          "output_path": { "type": "string", "minLength": 1 },
+          "preset_path": { "type": "string", "minLength": 1 },
+          "in_seconds": { "type": "number", "minimum": 0 },
+          "out_seconds": { "type": "number", "minimum": 0 },
+          "remove_on_completion": { "type": "boolean" },
+          "start_queue_immediately": {
+            "type": "boolean",
+            "description": "Start AME immediately after queueing (default: true)."
+          }
+        },
+        "required": ["input_path", "output_path", "preset_path"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "import_mogrt_from_library",
+      "reason": "The official API requires both an Adobe Library name and an element name; the upstream mogrt_name-only contract is not actionable.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "library_name": { "type": "string", "minLength": 1 },
+          "element_name": { "type": "string", "minLength": 1 },
+          "track_index": { "type": "integer", "minimum": 0 },
+          "start_seconds": { "type": "number", "minimum": 0 },
+          "duration_seconds": { "type": "number", "exclusiveMinimum": 0 }
+        },
+        "required": ["library_name", "element_name"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "start_batch_encode",
+      "reason": "The official command takes no arguments and starts the entire existing AME batch queue.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "move_clip",
+      "reason": "Premiere 26.3 exposes horizontal time-offset movement only; vertical track movement is not advertised.",
+      "description": "Move one timeline clip to an absolute new start time on its current track using the official TrackItem move Action.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "node_id": { "type": "string", "minLength": 1 },
+          "new_start_seconds": { "type": "number", "minimum": 0 }
+        },
+        "required": ["node_id", "new_start_seconds"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "manage_proxies",
+      "reason": "Official UXP exposes attachProxy but no proxy create, detach, generate, or toggle API.",
+      "description": "Attach an existing proxy file to a clip project item. Only action=attach is supported and the direct write is not undoable.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "item_id": { "type": "string", "minLength": 1 },
+          "action": { "type": "string", "const": "attach" },
+          "proxy_path": { "type": "string", "minLength": 1 }
+        },
+        "required": ["item_id", "action", "proxy_path"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "remove_selected_clips",
+      "reason": "The official bounded port removes only TrackItems explicitly present in the current UXP selection and rejects more than 20 targets before mutation.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "ripple": { "type": "boolean", "description": "Close gaps after removal (default: false)." }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "batch_enable_disable",
+      "reason": "The official bounded port preflights one to 20 clips and commits all disabled-state Actions in one transaction.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "enabled": { "type": "boolean" },
+          "target": { "type": "string", "enum": ["selected", "track", "all"] },
+          "track_type": { "type": "string", "enum": ["video", "audio"] },
+          "track_index": { "type": "integer", "minimum": 0 }
+        },
+        "required": ["enabled", "target"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "batch_rename_clips",
+      "reason": "The official bounded port deterministically sorts and preflights at most 20 clips before a single rename transaction.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "pattern": { "type": "string", "minLength": 1 },
+          "track_type": { "type": "string", "enum": ["video", "audio"] },
+          "track_index": { "type": "integer", "minimum": 0 },
+          "selected_only": { "type": "boolean" },
+          "start_number": { "type": "integer", "minimum": 0 }
+        },
+        "required": ["pattern", "track_type", "track_index"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "move_items_to_bin",
+      "reason": "The official bounded port resolves every item and the destination bin before one transaction and rejects cycles or more than 20 targets.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "item_ids": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "target_bin": { "type": "string", "minLength": 1 }
+        },
+        "required": ["item_ids", "target_bin"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "delete_multiple_project_items",
+      "reason": "The official bounded port resolves one to 20 unique project items before one dangerous remove transaction.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "item_ids": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1 }
+          }
+        },
+        "required": ["item_ids"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "set_sequence_audio_settings",
+      "reason": "Premiere 26.3 exposes an audio sample-rate setter but no audio channel-count or channel-type setter.",
+      "description": "Set the active sequence audio sample rate through the official SequenceSettings Action.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sample_rate": { "type": "number", "exclusiveMinimum": 0 }
+        },
+        "required": ["sample_rate"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "create_subclip",
+      "reason": "Premiere 26.3 exposes hard-boundary and video/audio inclusion options; at least one media type must be retained.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "item_id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "in_seconds": { "type": "number", "minimum": 0 },
+          "out_seconds": { "type": "number", "exclusiveMinimum": 0 },
+          "hard_boundaries": { "type": "boolean" },
+          "take_video": { "type": "boolean" },
+          "take_audio": { "type": "boolean" }
+        },
+        "required": ["item_id", "name", "in_seconds", "out_seconds"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "remove_effect",
+      "reason": "The UXP handler must identify exactly one removable component by either index or name; node_id alone is not actionable.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "node_id": { "type": "string" },
+          "effect_index": { "type": "integer", "minimum": 0 },
+          "effect_name": { "type": "string" }
+        },
+        "required": ["node_id"],
+        "oneOf": [
+          { "required": ["effect_index"] },
+          { "required": ["effect_name"] }
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "set_sequence_settings",
+      "reason": "The official UXP settings Action accepts a bounded patch of stable 26.3 setters and rejects an empty update; audio channel type/count remain read-only.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sequence_id": { "type": "string" },
+          "width": { "type": "number", "exclusiveMinimum": 0 },
+          "height": { "type": "number", "exclusiveMinimum": 0 },
+          "max_render_quality": { "type": "boolean" },
+          "maximum_bit_depth": { "type": "boolean" },
+          "composite_in_linear_color": { "type": "boolean" },
+          "audio_sample_rate": { "type": "number", "exclusiveMinimum": 0 },
+          "audio_display_format": { "type": "integer", "enum": [0, 1] },
+          "preview_width": { "type": "number", "exclusiveMinimum": 0 },
+          "preview_height": { "type": "number", "exclusiveMinimum": 0 },
+          "preview_codec": { "type": "string", "minLength": 1 },
+          "preview_file_format": { "type": "string", "minLength": 1 },
+          "editing_mode": { "type": "string", "minLength": 1 }
+        },
+        "anyOf": [
+          { "required": ["width"] },
+          { "required": ["height"] },
+          { "required": ["max_render_quality"] },
+          { "required": ["maximum_bit_depth"] },
+          { "required": ["composite_in_linear_color"] },
+          { "required": ["audio_sample_rate"] },
+          { "required": ["audio_display_format"] },
+          { "required": ["preview_width"] },
+          { "required": ["preview_height"] },
+          { "required": ["preview_codec"] },
+          { "required": ["preview_file_format"] },
+          { "required": ["editing_mode"] }
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "set_source_in_out",
+      "reason": "The UXP source-item Action needs at least one in/out value; an empty update is rejected.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "in_seconds": { "type": "number", "minimum": 0 },
+          "out_seconds": { "type": "number", "minimum": 0 }
+        },
+        "anyOf": [
+          { "required": ["in_seconds"] },
+          { "required": ["out_seconds"] }
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "trim_clip",
+      "reason": "The UXP source-range trim needs at least one new source in/out value; an empty update is rejected.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "node_id": { "type": "string" },
+          "new_in_seconds": { "type": "number", "minimum": 0 },
+          "new_out_seconds": { "type": "number", "minimum": 0 }
+        },
+        "required": ["node_id"],
+        "anyOf": [
+          { "required": ["new_in_seconds"] },
+          { "required": ["new_out_seconds"] }
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "set_footage_interpretation",
+      "reason": "The official FootageInterpretation Action supports a bounded 26.3 patch across frame, field, alpha, VR, and input-LUT settings; an empty update is rejected.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "item_id": { "type": "string" },
+          "frame_rate": { "type": "number", "exclusiveMinimum": 0 },
+          "pixel_aspect_ratio": { "type": "number", "exclusiveMinimum": 0 },
+          "field_type": { "type": "integer" },
+          "remove_pull_down": { "type": "boolean" },
+          "alpha_usage": { "type": "integer" },
+          "ignore_alpha": { "type": "boolean" },
+          "invert_alpha": { "type": "boolean" },
+          "vr_conform": { "type": "integer" },
+          "vr_layout": { "type": "integer" },
+          "vr_horz_view": { "type": "number" },
+          "vr_vert_view": { "type": "number" },
+          "input_lut_id": { "type": "string", "maxLength": 1024 }
+        },
+        "required": ["item_id"],
+        "anyOf": [
+          { "required": ["frame_rate"] },
+          { "required": ["pixel_aspect_ratio"] },
+          { "required": ["field_type"] },
+          { "required": ["remove_pull_down"] },
+          { "required": ["alpha_usage"] },
+          { "required": ["ignore_alpha"] },
+          { "required": ["invert_alpha"] },
+          { "required": ["vr_conform"] },
+          { "required": ["vr_layout"] },
+          { "required": ["vr_horz_view"] },
+          { "required": ["vr_vert_view"] },
+          { "required": ["input_lut_id"] }
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "update_marker",
+      "reason": "Stable 26.3 Marker Actions can atomically change text, color, time, duration, and marker type; URL and target remain read-only and are preserved.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "time_seconds": { "type": "number", "minimum": 0 },
+          "name": { "type": "string" },
+          "comments": { "type": "string" },
+          "color": { "type": "number", "minimum": 0, "maximum": 7 },
+          "new_time_seconds": { "type": "number", "minimum": 0 },
+          "duration_seconds": { "type": "number", "minimum": 0 },
+          "marker_type": {
+            "type": "string",
+            "enum": ["comment", "chapter", "flv_cue_point", "web_link"]
+          }
+        },
+        "required": ["time_seconds"],
+        "anyOf": [
+          { "required": ["name"] },
+          { "required": ["comments"] },
+          { "required": ["color"] },
+          { "required": ["new_time_seconds"] },
+          { "required": ["duration_seconds"] },
+          { "required": ["marker_type"] }
+        ],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

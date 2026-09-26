@@ -1,0 +1,14 @@
+{
+  "name": "deno-premiere-control-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "deno-premiere-control-mcp": "./index.mjs"
+  },
+  "scripts": {
+    "start": "node index.mjs",
+    "call": "node call-tool.mjs",
+    "self-test": "node self-test.mjs"
+  }
+}

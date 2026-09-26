@@ -1,0 +1,30 @@
+{
+  "video_slug": "example-video_2026-06-09",
+  "mode": "longform",
+  "video_file": "D:\\path\\to\\final_video.mp4",
+  "thumbnail_file": "D:\\path\\to\\thumbnail.png",
+  "final_korean_srt": "D:\\path\\to\\final_korean.srt",
+  "korean_title": "한국어 최종 제목",
+  "korean_description": "한국어 최종 설명",
+  "chapters": [
+    "00:00 인트로",
+    "01:20 핵심 설명",
+    "10:00 마무리"
+  ],
+  "tags": [
+    "ComfyUI",
+    "AI video",
+    "Deno"
+  ],
+  "selected_languages": [
+    "en",
+    "ja",
+    "zh-Hans",
+    "ru",
+    "es-419",
+    "id"
+  ],
+  "visibility": "private",
+  "category_id": "27",
+  "notes": "사용자가 최종 확인한 업로드 요청 예시"
+}

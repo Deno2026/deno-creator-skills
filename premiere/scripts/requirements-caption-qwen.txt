@@ -1,0 +1,10 @@
+# .venv-caption-qwen — 통파일 문장 단위 컷(scripts/editorial_cuts.py)·파형 정렬(align_premiere_captions_to_waveform.py)의 로컬 Qwen3 ASR·ForcedAligner.
+# torch는 CUDA 12.8 빌드를 PyTorch 공식 인덱스에서 받는다(수 GB). GPU가 없으면 아래 인덱스 줄을 지우고 CPU 빌드로 설치할 수 있다(느리다).
+--extra-index-url https://download.pytorch.org/whl/cu128
+torch==2.11.0
+qwen-asr==0.0.6
+transformers==4.57.6
+soundfile==0.14.0
+librosa==1.0.0
+numpy>=2.0
+av>=15

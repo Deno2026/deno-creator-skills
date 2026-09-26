@@ -1,0 +1,6 @@
+{
+  "accessToken": "REPLACE_WITH_CONSOLE_ACCESS_TOKEN",
+  "refreshToken": "REPLACE_WITH_CONSOLE_REFRESH_TOKEN",
+  "expiresAt": "2030-01-01T00:00:00Z",
+  "scope": "tweet.read tweet.write users.read media.write offline.access"
+}

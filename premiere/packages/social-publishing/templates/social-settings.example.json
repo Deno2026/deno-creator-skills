@@ -1,0 +1,5 @@
+{
+  "youtube": { "expectedChannelId": "" },
+  "schedule": { "leadMinutes": 10, "timezone": "Asia/Seoul" },
+  "instagram": { "apiVersion": "v26.0" }
+}

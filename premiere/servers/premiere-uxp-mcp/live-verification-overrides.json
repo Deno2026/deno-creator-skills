@@ -1,0 +1,438 @@
+{
+  "schemaVersion": 1,
+  "evidence": "reports/premiere/premiere-uxp-read-promotion-2026-07-25.json",
+  "overrides": {
+    "add_transition": {
+      "uxpStatus": "ported",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-write-promotion-2026-08-24.json",
+      "note": "Disposable-project UXP write succeeded at an exact cut point; sequence-frame captures confirmed the visible Cross Dissolve. The independently gated remove_transition command also passed a later add/remove/visual-restore roundtrip."
+    },
+    "capture_frame": {
+      "uxpStatus": "ported",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-write-promotion-2026-08-24.json",
+      "note": "Disposable-project UXP sequence-frame export returned verified 1280x720 JPEG images; this remains a Program Monitor frame, not a full-window capture."
+    },
+    "check_offline_media": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "create_caption_track": {
+      "cepStatus": "live-verified",
+      "preferredRoute": "cep",
+      "evidence": "reports/premiere/premiere-no-cu-caption-pipeline-2026-08-25.json",
+      "note": "Premiere 26.3.2 test-project roundtrip created one native 16-item caption track from an imported SRT. Caption range, all V/A tracks and clips, sequence duration, and three representative sequence-frame renders were verified; UXP remains blocked for caption creation."
+    },
+    "create_sequence_from_clips": {
+      "uxpStatus": "ported",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-write-promotion-2026-08-24.json",
+      "note": "Disposable-project UXP write created a 10-second two-clip sequence with matching video and audio structure. The direct sequence creation API is not undoable."
+    },
+    "delete_marker": {
+      "uxpStatus": "ported",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-write-promotion-2026-08-24.json",
+      "note": "Disposable-project UXP marker deletion succeeded and list_markers confirmed the exact marker was removed."
+    },
+    "get_active_sequence": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_all_project_paths": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_app_preference": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-read-promotion-2026-08-25.json",
+      "note": "Premiere 26.3.2 live read returned typed values for all three stable preference keys without changing application state."
+    },
+    "get_bin_contents": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-062-installed-live-verification-2026-08-25.json",
+      "note": "Premiere 26.3.2 and installed UXP 0.6.2 resolved the virtual project root by project GUID and returned the exact two root items. Recursive nested-bin and large-bin fixtures remain untested."
+    },
+    "get_clip_at_playhead": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_clip_adjustment_layer": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "Premiere 26.3.2 live read returned false for the normal video clip; a positive adjustment-layer fixture remains untested."
+    },
+    "get_clip_at_position": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "A bounded V1 lookup at 30 seconds resolved the exact third clip and returned matching timeline and source timing."
+    },
+    "get_clip_markers": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "The source-marker collection read completed and returned an empty array; a positive source-marker fixture remains untested."
+    },
+    "get_clip_properties": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "Live UXP returned the selected third V1 clip's exact timeline/source timing, speed, selection, project-item ID, and media path."
+    },
+    "get_clip_speed": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "Live UXP returned multiplier 1, 100 percent, and non-reversed state for the selected video clip."
+    },
+    "get_color_label": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "Live UXP returned color-label index 1 for the exact project item."
+    },
+    "get_duplicate_media": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_effect_properties": {
+      "uxpStatus": "ported",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-write-promotion-2026-08-24.json",
+      "note": "Live UXP reads returned the localized Opacity, Motion, and mono Volume components with current values and keyframe metadata."
+    },
+    "get_full_project_overview": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_full_clip_info": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "Live UXP returned the complete clip snapshot plus localized Opacity and Motion components and their current values."
+    },
+    "get_full_sequence_info": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_footage_interpretation": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "Live UXP returned 24 fps, square pixels, alpha/field/VR values, and the zero-GUID input-LUT sentinel for the source clip."
+    },
+    "get_caption_tracks": {
+      "note": "Phase B-1 live read verified caption timing windows. Premiere Pro UXP 26.3 does not expose user-edited caption copy: every item returns text:null and textAvailable:false, while getName() is preserved only as kind metadata."
+    },
+    "get_graphics_white_luminance": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_insertion_bin": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_item_info": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "Live UXP resolved the exact project item and returned its media path, online/proxy state, label, and footage interpretation."
+    },
+    "get_installed_mogrt_path": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-read-promotion-2026-08-25.json",
+      "note": "Premiere 26.3.2 returned the installed Motion Graphics Templates directory and the native directory existed."
+    },
+    "get_media_encoder_info": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-read-promotion-2026-08-25.json",
+      "note": "Premiere 26.3.2 live read confirmed that Adobe Media Encoder is installed."
+    },
+    "get_metadata": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "Live UXP returned non-empty project metadata, columns metadata, and XMP payloads in the documented raw-XML response."
+    },
+    "get_next_edit_point": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_offline_media": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_playhead_position": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_project_info": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_project_item_info": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "Live UXP returned the exact project-item snapshot and explicitly marked codec and color-space fields as unsupported."
+    },
+    "get_project_item_lut_info": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-062-installed-live-verification-2026-08-25.json",
+      "note": "Installed UXP 0.6.2 returned the requested project-item ID and correctly normalized Premiere's zero-GUID input and embedded LUT sentinels to hasInputLut false and hasEmbeddedLut false."
+    },
+    "get_project_ingest_settings": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-promotion-2026-08-25.json",
+      "note": "Premiere 26.3.2 live read returned the active test project's ingest-disabled state."
+    },
+    "get_project_panel_selection": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-promotion-2026-08-25.json",
+      "note": "Premiere 26.3.2 completed both active-project and all-view bounded selection reads; the current Project panel selection was empty."
+    },
+    "get_project_panel_metadata": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_project_scratch_disks": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_selected_clips": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_sequence_count": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_sequence_in_out_points": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_sequence_settings": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_sequence_markers_by_type": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-062-installed-live-verification-2026-08-25.json",
+      "note": "Installed UXP 0.6.2 read the active sequence's empty Comment-marker collection without the Premiere 26.3 nullptr failure. A positive typed-marker fixture remains untested."
+    },
+    "get_source_monitor_info": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_source_monitor_position": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_track_info": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "Both V1 and A1 live reads returned three clips with exact start/end values; lock and targeting stay null because official UXP exposes neither getter."
+    },
+    "get_timeline_gaps": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_total_clip_count": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_unused_media": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_used_media_report": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "get_value_at_time": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "Using the actual Korean Motion and Scale display names, live UXP returned value 100 at 30 seconds."
+    },
+    "get_version_info": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "list_available_audio_effects": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "list_available_effects": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "list_available_transitions": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-write-promotion-2026-08-24.json",
+      "note": "Live UXP read returned 118 official video-transition matchNames. These are stable API identities rather than localized display names."
+    },
+    "list_clip_effects": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "Live UXP returned the localized Opacity and Motion components, matchNames, property values, and keyframe metadata."
+    },
+    "list_premiere_events": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-promotion-2026-08-25.json",
+      "note": "Premiere 26.3.2 returned a bounded journal while all six official event groups had 38 active listeners; the journal correctly stated that it was not a state snapshot."
+    },
+    "open_project": {
+      "uxpStatus": "ported",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-promotion-2026-08-25.json",
+      "note": "With current-turn user approval, official Project.open() opened the existing test .prproj once. The project disk hash, mtime, sequence duration, and all V/A track structure remained unchanged; no save was called."
+    },
+    "find_items_by_media_path": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "A unique filename query found exactly the expected online source item and native media path."
+    },
+    "get_export_file_extension": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "EncoderManager returned mp4 for Adobe's installed High Quality 1080 HD EPR; no export or AME job was started."
+    },
+    "get_keyframes": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "Using the actual Korean Motion and Scale display names, live UXP returned the valid empty-keyframe path."
+    },
+    "get_linked_items": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "Live UXP found all six timeline items that reference the same project item. This is same-source discovery, not Premiere's hidden A/V link-group identity."
+    },
+    "get_xmp_metadata": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "Live UXP returned the source clip's non-empty raw XMP packet."
+    },
+    "has_proxy": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "Live UXP returned no attached proxy and canProxy true; a positive attached-proxy fixture remains untested."
+    },
+    "has_transcript": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-062-installed-live-verification-2026-08-25.json",
+      "note": "Installed UXP 0.6.2 returned the exact requested project-item ID, source name, and hasTranscript true for the approved test media."
+    },
+    "match_frame": {
+      "uxpStatus": "live-read-caveat",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-expansion-2026-08-25.json",
+      "note": "At playhead 52.1667 seconds, live UXP mapped the selected V1 clip to source time 59.9583 seconds. It reports data only and cannot invoke the Match Frame UI command."
+    },
+    "remove_transition": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-write-promotion-2026-08-24.json",
+      "note": "User-confirmed disposable test project: added a 0.5-second Cross Dissolve at 25.375 seconds, captured the blended cut, removed the left clip end transition through createRemoveVideoTransitionAction(), and reproduced the exact pre-transition JPEG SHA-256. Full V/A structure, sequence duration, and disk project hash remained unchanged. The public schema accepts position=end only; start/both are rejected until separately verified."
+    },
+    "list_project_items": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "list_sequence_tracks": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "list_sequences": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "search_project_items": {
+      "uxpStatus": "live-read-caveat"
+    },
+    "rename_caption_track": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-caption-timing-repair-2026-08-25.json",
+      "note": "Premiere 26.3.2 renamed three existing caption tracks in separate bounded official Action transactions. Every call and the final get_caption_tracks read-back returned the exact requested Korean name; cue timing and all V/A structure were preserved."
+    },
+    "set_caption_track_mute": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-caption-timing-repair-2026-08-25.json",
+      "note": "Premiere 26.3.2 changed two existing caption tracks from unmuted to muted in separate bounded calls, and both calls plus the final get_caption_tracks read-back returned the exact requested values. Caption text and cue timing were unchanged; this direct mute write is not undoable."
+    },
+    "set_clip_opacity": {
+      "uxpStatus": "ported",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-write-promotion-2026-08-24.json",
+      "note": "Disposable-project UXP write changed Opacity from 100 to 99 and restored it to 100 with property readback."
+    },
+    "set_clip_scale": {
+      "uxpStatus": "ported",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-write-promotion-2026-08-24.json",
+      "note": "Disposable-project UXP write changed Motion Scale from 100 to 110 and restored it to 100 with property readback."
+    },
+    "set_clip_volume": {
+      "uxpStatus": "ported",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-write-promotion-2026-08-24.json",
+      "note": "Disposable-project UXP write changed mono clip level from 0 dB to -6 dB and restored 0 dB; raw-amplitude readback matched the conversion."
+    },
+    "set_effect_property": {
+      "uxpStatus": "ported",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-write-promotion-2026-08-24.json",
+      "note": "Disposable-project UXP write changed localized Opacity from 100 to 90 and restored it to 100 with property readback."
+    },
+    "undo": {
+      "cepStatus": "runtime-failed",
+      "evidence": "reports/premiere/premiere-uxp-live-write-promotion-2026-08-24.json",
+      "note": "Premiere 26.3.2 CEP returned ReferenceError because app.project.undo is not a function. Keep unavailable until a real supported code API exists."
+    },
+    "get_work_area": {
+      "uxpStatus": "runtime-failed",
+      "cepStatus": "runtime-failed"
+    },
+    "is_after_effects_installed": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-read-promotion-2026-08-25.json",
+      "note": "Premiere 26.3.2 live read confirmed that After Effects is installed."
+    },
+    "has_object_mask": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-promotion-2026-08-25.json",
+      "note": "Premiere 26.3.2 completed both project and active-sequence object-mask reads; neither contained an object mask."
+    },
+    "is_done_analyzing_video_effects": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-promotion-2026-08-25.json",
+      "note": "Premiere 26.3.2 reported that video-effect analysis for the active sequence was complete."
+    },
+    "is_premiere_project": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-read-promotion-2026-08-25.json",
+      "note": "Premiere 26.3.2 returned true for the existing test .prproj and false for an existing non-project file."
+    },
+    "list_media_encoder_events": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-read-promotion-2026-08-25.json",
+      "note": "Premiere 26.3.2 returned a bounded empty AME event journal and explicitly reported that no current queue snapshot is available."
+    },
+    "list_transcription_languages": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-live-read-promotion-2026-08-25.json",
+      "note": "Premiere 26.3.2 returned 18 transcription languages, including Korean ko-kr."
+    },
+    "subscribe_premiere_events": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-promotion-2026-08-25.json",
+      "note": "Premiere 26.3.2 registered all six official event groups against the active test sequence and its six tracks, yielding 38 exact listeners."
+    },
+    "unsubscribe_premiere_events": {
+      "uxpStatus": "local-live-verified",
+      "preferredRoute": "uxp",
+      "evidence": "reports/premiere/premiere-uxp-project-read-promotion-2026-08-25.json",
+      "note": "Premiere 26.3.2 removed all 38 listeners registered by the all-group verification and returned zero active listeners."
+    }
+  }
+}

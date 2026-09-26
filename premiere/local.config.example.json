@@ -1,0 +1,7 @@
+{
+  "_note": "이 PC에만 있는 경로. 환경변수가 우선하고, 없으면 여기, 그것도 없으면 %LOCALAPPDATA%\\DenoCreatorSkills 아래 기본값.",
+  "uploadRuntimeRoot": "C:\\Users\\<me>\\AppData\\Local\\DenoCreatorSkills\\youtube-upload-helper",
+  "socialRuntimeRoot": "C:\\Users\\<me>\\AppData\\Local\\DenoCreatorSkills\\social-publishing",
+  "creativeUpstreamRoot": "",
+  "thumbnailWorkspaceRoot": ""
+}

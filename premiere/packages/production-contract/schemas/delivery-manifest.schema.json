@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.deno.video/schemas/delivery-manifest.v1.json",
+  "title": "DENO master delivery manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "production", "createdAt", "ready", "revisions", "video", "captions"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "production": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "ready": {"const": true},
+    "revisions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["edit", "audio", "motion", "captions", "render"],
+      "properties": {
+        "edit": {"type": "string"},
+        "audio": {"type": "string"},
+        "motion": {"type": "string"},
+        "captions": {"type": "string"},
+        "render": {"type": "string"}
+      }
+    },
+    "video": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "bytes", "durationSeconds", "captionEmbedding"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+        "bytes": {"type": "integer", "minimum": 1},
+        "durationSeconds": {"type": "number", "exclusiveMinimum": 0},
+        "captionEmbedding": {"enum": ["none", "burned", "sidecar"]},
+        "codec": {"type": ["string", "null"]},
+        "loudnessReport": {"type": ["string", "null"]}
+      }
+    },
+    "captions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["finalKoreanPath", "sha256", "timelineSha256", "cueCount"],
+      "properties": {
+        "finalKoreanPath": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+        "timelineSha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+        "cueCount": {"type": "integer", "minimum": 1},
+        "syncReport": {"type": ["string", "null"]}
+      }
+    }
+  }
+}
