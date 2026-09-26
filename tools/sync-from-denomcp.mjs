@@ -71,9 +71,15 @@ function removeEmptyDirs(dir) {
   if (fs.readdirSync(dir).length === 0) fs.rmdirSync(dir);
 }
 
+const TEXT_EXT = new Set([".json", ".md", ".txt", ".py", ".ps1", ".js", ".mjs", ".sh", ".bat", ".cmd", ".yml", ".yaml", ".csv"]);
 function sameContent(file, content) {
   if (!fs.existsSync(file)) return false;
-  if (Buffer.isBuffer(content)) return fs.readFileSync(file).equals(content);
+  if (Buffer.isBuffer(content)) {
+    const cur = fs.readFileSync(file);
+    if (cur.equals(content)) return true;
+    // 글 파일은 줄끝만 다르면 같은 것으로 본다(Windows 작업 사본은 Git이 CRLF로 꺼내 준다)
+    return TEXT_EXT.has(path.extname(file).toLowerCase()) && lf(cur.toString("utf8")) === lf(content.toString("utf8"));
+  }
   return lf(fs.readFileSync(file, "utf8")) === content;
 }
 

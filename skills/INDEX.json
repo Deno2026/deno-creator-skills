@@ -245,14 +245,14 @@
         "KJNodes"
       ],
       "summary": "LTX 2.5 공식 ComfyUI 템플릿(글→영상, 이미지→영상, 음성→영상 진행자, 글→오디오, 영상→영상 IC-LoRA)을 손대지 않고 실행 사본에만 네 가지를 고정해 돌리는 순서 — Conv 영상 VAE, 일반 VAEDecode, 디코드 전 VRAM Debug(모델 내리기), 일반 샘플러 기본. LTX 프롬프트 규격과 검수 자리. 길이·해상도는 사용자 GPU에서 찾는다.",
-      "updated_at": "2026-09-26T23:47:20.954Z",
+      "updated_at": "2026-09-26T23:51:10.208Z",
       "file": "skills/ltx25-official-defaults.md",
       "sha256": "21ade8cf862e966c3020ab3aff00ed1b4e7d7ee8e1476882eebd37352b5b9ac4",
       "files": [
         {
           "path": "DENO_LTX25_A2V_1088p.api.json",
-          "size": 13205,
-          "sha256": "ef73e714888e76b55e895447a2ba09f8f3fc9e654a2dc654ea5abad6d028382c",
+          "size": 12542,
+          "sha256": "33ed6dd85667e6788cdc44969930d591f7767352bd9770664564e245324a4852",
           "url": "https://denomcp.com/api/v1/knowhow/ltx25-official-defaults/files/DENO_LTX25_A2V_1088p.api.json",
           "repo_path": "workflows/ltx25-official-defaults/DENO_LTX25_A2V_1088p.api.json"
         }
@@ -299,7 +299,7 @@
         "KJNodes"
       ],
       "summary": "참고물(캐릭터 시트·장소 판·스타일 키·목소리 견본)로 새 장면을 만드는 R2V와, 독립 시작(·끝) 이미지를 정확한 첫 프레임으로 삼는 FL2VA를 같은 그래프 계약으로 돌리는 디노의 현행 워크플로. 한 번의 생성이 영상+스테레오 소리(대사·효과음)를 같이 낸다. 모드별 디퓨전·로라 한 쌍, 공통 체인, 화질 단계(초안·기본, R2V 1088p급 기본 7+1·액션 8+1), API 그래프 전문, 모델 배포처, 실측으로 확인된 함정.",
-      "updated_at": "2026-09-26T23:47:23.756Z",
+      "updated_at": "2026-09-26T23:51:11.022Z",
       "file": "skills/minimax-h3-r2v-deno.md",
       "sha256": "7af8a49e4a67305e3d8063452e2841b72c9016c6d82d1235359e2a8bc7eb716b",
       "files": [
@@ -319,8 +319,8 @@
         },
         {
           "path": "minimax_h3_ref2va_pruned_vdn8_action8plus1.api.json",
-          "size": 7196,
-          "sha256": "83cc7c32aab9d14636ecc54933f72e373963a864fc2e073a01f45c13156df44c",
+          "size": 6807,
+          "sha256": "a0999182d0b4714e4a151df0cf617542037b11d07c81840cbfd67580c27fdb09",
           "url": "https://denomcp.com/api/v1/knowhow/minimax-h3-r2v-deno/files/minimax_h3_ref2va_pruned_vdn8_action8plus1.api.json",
           "repo_path": "workflows/minimax-h3-r2v-deno/minimax_h3_ref2va_pruned_vdn8_action8plus1.api.json"
         },
@@ -333,8 +333,8 @@
         },
         {
           "path": "minimax_h3_ref2va_pruned_vdn8_general7plus1.api.json",
-          "size": 6378,
-          "sha256": "f23b2a25e528406520bd3a4ee624fe162c4006c8b2f9c5fe52b5f66119b8016a",
+          "size": 6030,
+          "sha256": "35f2206e16c4282c1a59681a3cb0df3043e0c061e01a11861d47f3a47fec7c2a",
           "url": "https://denomcp.com/api/v1/knowhow/minimax-h3-r2v-deno/files/minimax_h3_ref2va_pruned_vdn8_general7plus1.api.json",
           "repo_path": "workflows/minimax-h3-r2v-deno/minimax_h3_ref2va_pruned_vdn8_general7plus1.api.json"
         },
@@ -546,21 +546,21 @@
         "Qwen3-VL 8B"
       ],
       "summary": "로컬 오픈 웨이트 Qwen-Image 2.1(int8)로 글→이미지와 편집(참고 1~10장 합성·부분 편집·배경 제거·투명 PNG)을 한 그래프로 돌리는 순서 — 참고 칸을 비우면 생성, 채우면 편집. 크기·CFG·부정 프롬프트는 사진마다 사용자가 정하고, 프롬프트는 꾸러미 qwen-image-21-prompting으로 쓴다. API 그래프 전문과 모델 배포처.",
-      "updated_at": "2026-09-26T23:47:24.891Z",
+      "updated_at": "2026-09-26T23:51:12.115Z",
       "file": "skills/qwen-image-21-t2i-edit.md",
       "sha256": "ae4560fd53fb90970a483d37f6a58d86c5ff45ff0f2ed89ea522c32d4c0c41d7",
       "files": [
         {
           "path": "Deno Qwen-Image 2.1 T2I + Edit.json",
-          "size": 18184,
-          "sha256": "7a0c8c3ee2f22a96259511b0f7a2a686020ea032076d9d89c969db7075cff321",
+          "size": 17257,
+          "sha256": "042efcb80737de65e2304ea9e50734d86e5d74ae1c98c1a637db82d2fc03d82e",
           "url": "https://denomcp.com/api/v1/knowhow/qwen-image-21-t2i-edit/files/Deno%20Qwen-Image%202.1%20T2I%20%2B%20Edit.json",
           "repo_path": "workflows/qwen-image-21-t2i-edit/Deno Qwen-Image 2.1 T2I + Edit.json"
         },
         {
           "path": "qwen_image21_t2i_edit.api.json",
-          "size": 4996,
-          "sha256": "4942c6a70d82b5f168de2702fc0bcb2881f8305b2176202f064d75db1ae033ec",
+          "size": 4847,
+          "sha256": "c90cf0ac95536fdec9c5e1fd99657df996dcd7824557785f0d99e16dd367c05e",
           "url": "https://denomcp.com/api/v1/knowhow/qwen-image-21-t2i-edit/files/qwen_image21_t2i_edit.api.json",
           "repo_path": "workflows/qwen-image-21-t2i-edit/qwen_image21_t2i_edit.api.json"
         }
