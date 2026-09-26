@@ -35,7 +35,8 @@
       "summary": "에이전트가 사용자 PC(또는 같은 네트워크의 다른 PC)의 ComfyUI를 화면 조작 없이 API로 부리는 순서 — 서버 확인 → 그래프 준비·대조 → 참조 업로드 → 큐 비우기·메모리 내리기 → 접수 → 진행 → 회수 → 실제 파일 검수 → 정리. 이 창고의 모든 로컬 갈래(H3·LTX·Qwen)가 이 절차 위에서 돈다. 접수를 완료로 착각하는 것, 앞 판 잔여 메모리에 걸려 기어가는 것, 사용자 워크플로 폴더를 건드리는 것을 막는다.",
       "updated_at": "2026-09-26T13:38:54.929Z",
       "file": "skills/comfyui-agent-basics.md",
-      "sha256": "6edf22748f46d8bd951b25019cfc8ec8a8439458ceb09410581cc245c07a29d4"
+      "sha256": "6edf22748f46d8bd951b25019cfc8ec8a8439458ceb09410581cc245c07a29d4",
+      "files": []
     },
     {
       "slug": "comfyui-desktop-agent-launch",
@@ -70,7 +71,8 @@
       "summary": "ComfyUI 데스크탑 앱(Comfy Desktop)은 앱 껍데기가 서버 실행을 쥐고 있어 에이전트가 첫 단계에서 막힌다. 밖에서 서버를 켜는 실행 옵션·링크·헤드리스·제어 API가 없고, 유일한 공식 길은 설정 「Auto-launch on startup」에 로컬 설치본을 지정해 두는 것이다. 사람이 설치 때 설정 한 번, 에이전트는 「떠 있나 → 목록 화면이면 정상 종료 → 꺼져 있으면 실행 → 로그·포트로 준비 확인 → 주소」 절차 한 번. 포트는 짐작하지 않고 앱 로그에서 읽는다.",
       "updated_at": "2026-09-26T15:17:13.310Z",
       "file": "skills/comfyui-desktop-agent-launch.md",
-      "sha256": "c5f3234dcc4c231b37b6941d691bf08d67846260beed768c0f7277de6ed26c5c"
+      "sha256": "c5f3234dcc4c231b37b6941d691bf08d67846260beed768c0f7277de6ed26c5c",
+      "files": []
     },
     {
       "slug": "comfyui-fit-my-pc",
@@ -106,7 +108,8 @@
       "summary": "디노 꾸러미의 수치는 디노 PC(RTX PRO 6000 96GB) 기준의 최고 품질 권장값이다. 에이전트는 사용자 PC에서 스모크 테스트(영상 MiniMax H3는 5초·초안 크기, 사진 Qwen-Image 2.1은 1080p급)로 시작해 되는 값을 한 단계씩 올리거나 내리며 찾고, 2~3안을 사용자에게 물어 정한 값을 프로젝트 파일 MY-PC.md에 고정한 뒤 그 값으로만 돌린다.",
       "updated_at": "2026-09-26T16:49:36.396Z",
       "file": "skills/comfyui-fit-my-pc.md",
-      "sha256": "834bf70b61db0a7f33e26dc1cc3cf0233bc9fb2b4383af3387b6ff1985c69684"
+      "sha256": "834bf70b61db0a7f33e26dc1cc3cf0233bc9fb2b4383af3387b6ff1985c69684",
+      "files": []
     },
     {
       "slug": "deno-comfyui-workflows",
@@ -143,7 +146,8 @@
       "summary": "디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 한 장에 — 어떤 결과를 만들 때 어느 꾸러미를 열고, 어떤 모델이 필요하고, 내 ComfyUI(포터블·데스크탑)로 어떻게 켜고 돌리는지. 현행·실험·은퇴를 가른다. 각 줄의 세부는 그 꾸러미가 소유한다.",
       "updated_at": "2026-09-26T23:47:19.908Z",
       "file": "skills/deno-comfyui-workflows.md",
-      "sha256": "db5a6dba1327690ca5a9149bf550ccfc8604ce5d0fa8d52388784a8c4bb0f4fb"
+      "sha256": "db5a6dba1327690ca5a9149bf550ccfc8604ce5d0fa8d52388784a8c4bb0f4fb",
+      "files": []
     },
     {
       "slug": "education-shorts",
@@ -175,7 +179,8 @@
       "summary": "기술·원리 하나를 시청자가 이해하는 60~90초 세로 숏츠로 반복 제작하는 순서 — 대본 승인 → 목소리 승인 → 화풍 승인 → 자율 제작. 단계마다 사용자와 무엇을 정하는지가 본문이고, 표현·호흡·화풍·목소리는 사용자가 정한다. 디노의 선택은 「디노는 이렇게 한다」 상자에 예시로만 붙였다.",
       "updated_at": "2026-09-26T12:37:13.461Z",
       "file": "skills/education-shorts.md",
-      "sha256": "decf310861c8edc14e1338c32605e706654513e4dcf94f6cfcb5db6bdcd6eaf1"
+      "sha256": "decf310861c8edc14e1338c32605e706654513e4dcf94f6cfcb5db6bdcd6eaf1",
+      "files": []
     },
     {
       "slug": "h3-prompt-six-fields",
@@ -201,7 +206,8 @@
       "summary": "H3 참고→영상 프롬프트를 공식 6칸(subject_definitions·summary·retention_analysis·detailed_description·overall_soundscape·non_diegetic_music)으로 쓰는 법, 샷 시각·대사 태그·화자 8항목·립싱크 밀도·긍정문 원칙·대사 없는 판의 소리 배타 선언·참고물 번호, 큐잉 전 검사 항목과 합격 예시 한 편.",
       "updated_at": "2026-09-26T14:42:04.751Z",
       "file": "skills/h3-prompt-six-fields.md",
-      "sha256": "98d78b7309a7ee62836a79a5ed5c1d4f3162aeb6aff1e9fa94c0f99ee675e1bc"
+      "sha256": "98d78b7309a7ee62836a79a5ed5c1d4f3162aeb6aff1e9fa94c0f99ee675e1bc",
+      "files": []
     },
     {
       "slug": "ltx25-official-defaults",
@@ -241,7 +247,16 @@
       "summary": "LTX 2.5 공식 ComfyUI 템플릿(글→영상, 이미지→영상, 음성→영상 진행자, 글→오디오, 영상→영상 IC-LoRA)을 손대지 않고 실행 사본에만 네 가지를 고정해 돌리는 순서 — Conv 영상 VAE, 일반 VAEDecode, 디코드 전 VRAM Debug(모델 내리기), 일반 샘플러 기본. LTX 프롬프트 규격과 검수 자리. 길이·해상도는 사용자 GPU에서 찾는다.",
       "updated_at": "2026-09-26T23:47:20.954Z",
       "file": "skills/ltx25-official-defaults.md",
-      "sha256": "21ade8cf862e966c3020ab3aff00ed1b4e7d7ee8e1476882eebd37352b5b9ac4"
+      "sha256": "21ade8cf862e966c3020ab3aff00ed1b4e7d7ee8e1476882eebd37352b5b9ac4",
+      "files": [
+        {
+          "path": "DENO_LTX25_A2V_1088p.api.json",
+          "size": 13205,
+          "sha256": "ef73e714888e76b55e895447a2ba09f8f3fc9e654a2dc654ea5abad6d028382c",
+          "url": "https://denomcp.com/api/v1/knowhow/ltx25-official-defaults/files/DENO_LTX25_A2V_1088p.api.json",
+          "repo_path": "workflows/ltx25-official-defaults/DENO_LTX25_A2V_1088p.api.json"
+        }
+      ]
     },
     {
       "slug": "minimax-h3-r2v-deno",
@@ -286,7 +301,51 @@
       "summary": "참고물(캐릭터 시트·장소 판·스타일 키·목소리 견본)로 새 장면을 만드는 R2V와, 독립 시작(·끝) 이미지를 정확한 첫 프레임으로 삼는 FL2VA를 같은 그래프 계약으로 돌리는 디노의 현행 워크플로. 한 번의 생성이 영상+스테레오 소리(대사·효과음)를 같이 낸다. 모드별 디퓨전·로라 한 쌍, 공통 체인, 화질 단계(초안·기본, R2V 1088p급 기본 7+1·액션 8+1), API 그래프 전문, 모델 배포처, 실측으로 확인된 함정.",
       "updated_at": "2026-09-26T23:47:23.756Z",
       "file": "skills/minimax-h3-r2v-deno.md",
-      "sha256": "7af8a49e4a67305e3d8063452e2841b72c9016c6d82d1235359e2a8bc7eb716b"
+      "sha256": "7af8a49e4a67305e3d8063452e2841b72c9016c6d82d1235359e2a8bc7eb716b",
+      "files": [
+        {
+          "path": "minimax_h3_fl2va_pruned_vdn8_draft.api.json",
+          "size": 4457,
+          "sha256": "e3405b90f53d4fc651d1b00dc9aa134020ec357b8cd188d6efce53d667f67b73",
+          "url": "https://denomcp.com/api/v1/knowhow/minimax-h3-r2v-deno/files/minimax_h3_fl2va_pruned_vdn8_draft.api.json",
+          "repo_path": "workflows/minimax-h3-r2v-deno/minimax_h3_fl2va_pruned_vdn8_draft.api.json"
+        },
+        {
+          "path": "minimax_h3_fl2va_pruned_vdn8_native.api.json",
+          "size": 4459,
+          "sha256": "fbe242280833acea69775537b4329866580329c2bf8cc7da7c7538e30285380f",
+          "url": "https://denomcp.com/api/v1/knowhow/minimax-h3-r2v-deno/files/minimax_h3_fl2va_pruned_vdn8_native.api.json",
+          "repo_path": "workflows/minimax-h3-r2v-deno/minimax_h3_fl2va_pruned_vdn8_native.api.json"
+        },
+        {
+          "path": "minimax_h3_ref2va_pruned_vdn8_action8plus1.api.json",
+          "size": 7196,
+          "sha256": "83cc7c32aab9d14636ecc54933f72e373963a864fc2e073a01f45c13156df44c",
+          "url": "https://denomcp.com/api/v1/knowhow/minimax-h3-r2v-deno/files/minimax_h3_ref2va_pruned_vdn8_action8plus1.api.json",
+          "repo_path": "workflows/minimax-h3-r2v-deno/minimax_h3_ref2va_pruned_vdn8_action8plus1.api.json"
+        },
+        {
+          "path": "minimax_h3_ref2va_pruned_vdn8_draft.api.json",
+          "size": 4517,
+          "sha256": "6b68aa41e9f7ede88aa675ed5a1240daae2145b067f0e85579bc6165ce1b3d5a",
+          "url": "https://denomcp.com/api/v1/knowhow/minimax-h3-r2v-deno/files/minimax_h3_ref2va_pruned_vdn8_draft.api.json",
+          "repo_path": "workflows/minimax-h3-r2v-deno/minimax_h3_ref2va_pruned_vdn8_draft.api.json"
+        },
+        {
+          "path": "minimax_h3_ref2va_pruned_vdn8_general7plus1.api.json",
+          "size": 6378,
+          "sha256": "f23b2a25e528406520bd3a4ee624fe162c4006c8b2f9c5fe52b5f66119b8016a",
+          "url": "https://denomcp.com/api/v1/knowhow/minimax-h3-r2v-deno/files/minimax_h3_ref2va_pruned_vdn8_general7plus1.api.json",
+          "repo_path": "workflows/minimax-h3-r2v-deno/minimax_h3_ref2va_pruned_vdn8_general7plus1.api.json"
+        },
+        {
+          "path": "minimax_h3_ref2va_pruned_vdn8_native.api.json",
+          "size": 4519,
+          "sha256": "d9305256a7e261a627a210866aa637104898146f0472246b495359182fd65ec2",
+          "url": "https://denomcp.com/api/v1/knowhow/minimax-h3-r2v-deno/files/minimax_h3_ref2va_pruned_vdn8_native.api.json",
+          "repo_path": "workflows/minimax-h3-r2v-deno/minimax_h3_ref2va_pruned_vdn8_native.api.json"
+        }
+      ]
     },
     {
       "slug": "premiere-audio-balance",
@@ -314,7 +373,8 @@
       "summary": "컷이 끝난 Premiere 시퀀스의 나레이션·삽입 영상·BGM·효과음을 역할별 목표 음량에 맞추는 법 — 타임라인의 실제 사용 구간을 측정해 정적 gain을 볼륨 레벨로 주고, 순간 피크만 하드 리미터(천장 절대값)로 제한하며, 검증용 오디오를 실제로 내보내 LUFS·true peak로 판정한다. Premiere가 레벨을 효과보다 먼저 적용한다는 사실과 거기서 나온 함정들.",
       "updated_at": "2026-09-26T21:53:24.127Z",
       "file": "skills/premiere-audio-balance.md",
-      "sha256": "a2ae05c1025ef4125ed353ae27e23bbc9b8e0f0149bf6a6476afe8b4bd6dbd40"
+      "sha256": "a2ae05c1025ef4125ed353ae27e23bbc9b8e0f0149bf6a6476afe8b4bd6dbd40",
+      "files": []
     },
     {
       "slug": "premiere-captions-two-stage",
@@ -344,7 +404,8 @@
       "summary": "Premiere 받아쓰기로 사용자가 내보낸 SRT의 발화 envelope(각 cue의 시작·종료)을 싱크 정본으로 삼고, 1단계에서 타임코드를 고정한 채 문구만 교정(Whisper large-v3 전체 전사와 글자 단위 전수 대조 + 한국어 자연스러움 직접 판정), 2단계에서 인접 cue를 envelope 안에서 합쳐 최대 2줄로 읽히는 병합본을 만들어 캡션 트랙에 반영하는 법. 재전사·재타이밍은 사용자가 명시할 때만. 검증 도구와 함정.",
       "updated_at": "2026-09-26T21:53:24.203Z",
       "file": "skills/premiere-captions-two-stage.md",
-      "sha256": "d00971e2447e6af38fafd40c3d1158db5a360a71243c0d15f5a135715ece9be3"
+      "sha256": "d00971e2447e6af38fafd40c3d1158db5a360a71243c0d15f5a135715ece9be3",
+      "files": []
     },
     {
       "slug": "premiere-kit-setup",
@@ -379,7 +440,8 @@
       "summary": "공개 키트 deno-creator-skills/premiere를 내 PC에 설치해 에이전트가 Premiere Pro를 조종하고 유튜브에 올리게 하는 순서. 준비물(Windows·Premiere 26.3+·Creative Cloud·Node 22·Python 3.11·ffmpeg·GPU 권장), 설치 스크립트가 하는 일과 하지 않는 일, 사용자가 직접 해야 하는 일(Google Cloud OAuth 클라이언트·채널 설정·플러그인 설치 승인), 확인 방법, 설정 파일 셋, 자주 막히는 곳.",
       "updated_at": "2026-09-26T21:53:24.276Z",
       "file": "skills/premiere-kit-setup.md",
-      "sha256": "406af57dbe1ef75eb8605aff53cd0ec2ecbead59b663d181ce504494933fa7fe"
+      "sha256": "406af57dbe1ef75eb8605aff53cd0ec2ecbead59b663d181ce504494933fa7fe",
+      "files": []
     },
     {
       "slug": "premiere-post-production",
@@ -417,7 +479,8 @@
       "summary": "디노가 Premiere Pro로 유튜브 롱폼을 마무리하는 후반 흐름 전체 — 통파일 무음 컷과 문장 단위 다듬기, 구간별 오디오 밸런스와 리미터, 사용자가 내보낸 SRT를 정본으로 하는 2단계 자막, Remotion 알파 오버레이, 4K 마스터, 업로드 헬퍼로 제목·설명·챕터 확정 뒤 unlisted 업로드와 한국어·영어 자막·80여 개 언어 현지화, 숏폼 4플랫폼 예약 게시. 어디서 사용자가 결정하고 어디서 에이전트가 하는지, 넘지 않는 선. 실행 도구는 공개 키트(Deno Creator Skills / premiere).",
       "updated_at": "2026-09-26T21:53:24.348Z",
       "file": "skills/premiere-post-production.md",
-      "sha256": "2358ca5e2e6396c02c0270e8cb3282cc297540fe23b2c07ebe0fe95a228efc7e"
+      "sha256": "2358ca5e2e6396c02c0270e8cb3282cc297540fe23b2c07ebe0fe95a228efc7e",
+      "files": []
     },
     {
       "slug": "qwen-image-21-prompting",
@@ -450,7 +513,8 @@
       "summary": "Qwen-Image 2.1 프롬프트를 쓰는 LLM용 영어 지시문 전문 — 통째로 시스템 프롬프트로 넣으면 모드 고르기(글→이미지/편집), 공통 규칙, 글→이미지 뼈대(카메라 거리·프레임 채움 틀 문장 포함), 판면(포스터·인포그래픽·앱 화면), 편집 여섯 갈래, 투명(RGBA), 비율·크기표, 점검표대로 프롬프트를 써 준다. 근거는 공식 보강 모델 지시문·공식 데모 37개·ComfyUI 공식 템플릿 3개와 디노 A/B.",
       "updated_at": "2026-09-26T11:41:17.189Z",
       "file": "skills/qwen-image-21-prompting.md",
-      "sha256": "ddbb01f0f0fde3956c2a078e3ddefac1f565d299bb31db874dc8ac8c973ddc79"
+      "sha256": "ddbb01f0f0fde3956c2a078e3ddefac1f565d299bb31db874dc8ac8c973ddc79",
+      "files": []
     },
     {
       "slug": "qwen-image-21-t2i-edit",
@@ -484,7 +548,23 @@
       "summary": "로컬 오픈 웨이트 Qwen-Image 2.1(int8)로 글→이미지와 편집(참고 1~10장 합성·부분 편집·배경 제거·투명 PNG)을 한 그래프로 돌리는 순서 — 참고 칸을 비우면 생성, 채우면 편집. 크기·CFG·부정 프롬프트는 사진마다 사용자가 정하고, 프롬프트는 꾸러미 qwen-image-21-prompting으로 쓴다. API 그래프 전문과 모델 배포처.",
       "updated_at": "2026-09-26T23:47:24.891Z",
       "file": "skills/qwen-image-21-t2i-edit.md",
-      "sha256": "ae4560fd53fb90970a483d37f6a58d86c5ff45ff0f2ed89ea522c32d4c0c41d7"
+      "sha256": "ae4560fd53fb90970a483d37f6a58d86c5ff45ff0f2ed89ea522c32d4c0c41d7",
+      "files": [
+        {
+          "path": "Deno Qwen-Image 2.1 T2I + Edit.json",
+          "size": 18184,
+          "sha256": "7a0c8c3ee2f22a96259511b0f7a2a686020ea032076d9d89c969db7075cff321",
+          "url": "https://denomcp.com/api/v1/knowhow/qwen-image-21-t2i-edit/files/Deno%20Qwen-Image%202.1%20T2I%20%2B%20Edit.json",
+          "repo_path": "workflows/qwen-image-21-t2i-edit/Deno Qwen-Image 2.1 T2I + Edit.json"
+        },
+        {
+          "path": "qwen_image21_t2i_edit.api.json",
+          "size": 4996,
+          "sha256": "4942c6a70d82b5f168de2702fc0bcb2881f8305b2176202f064d75db1ae033ec",
+          "url": "https://denomcp.com/api/v1/knowhow/qwen-image-21-t2i-edit/files/qwen_image21_t2i_edit.api.json",
+          "repo_path": "workflows/qwen-image-21-t2i-edit/qwen_image21_t2i_edit.api.json"
+        }
+      ]
     },
     {
       "slug": "stable-audio-3-bgm",
@@ -512,7 +592,23 @@
       "summary": "디노가 로컬에서 연주곡 배경음·인트로·앰비언트를 만드는 방법. Stable Audio 3 Medium(증류판, 8스텝·CFG 1 — base 판은 쓰지 않는다)을 ComfyUI 공식 템플릿 값 그대로 API로 돌린다. 프롬프트 한 문단 문법(TrackType·VocalType 태그 + 장르·악기·분위기·BPM), 길이 잡기, 후보 여러 개 뽑아 고르기, MP3 저장, 무보컬 오염 회피, 16GB 카드 길이 사다리 실측. 프롬프트 작법 전문과 실수 목록은 짝 편 stable-audio-3-prompting.",
       "updated_at": "2026-09-26T23:47:25.728Z",
       "file": "skills/stable-audio-3-bgm.md",
-      "sha256": "d1d4f53b148a5c7b65048e4dbca27418249e4718ca9bdc29c04ffdc0785de750"
+      "sha256": "d1d4f53b148a5c7b65048e4dbca27418249e4718ca9bdc29c04ffdc0785de750",
+      "files": [
+        {
+          "path": "Deno Stable Audio 3 Medium BGM.json",
+          "size": 9238,
+          "sha256": "a968d2c43481f0ec90eab3fff67c6b957d546f61b85f60720075f3869e6f6f51",
+          "url": "https://denomcp.com/api/v1/knowhow/stable-audio-3-bgm/files/Deno%20Stable%20Audio%203%20Medium%20BGM.json",
+          "repo_path": "workflows/stable-audio-3-bgm/Deno Stable Audio 3 Medium BGM.json"
+        },
+        {
+          "path": "stable_audio3_medium_bgm.api.json",
+          "size": 1497,
+          "sha256": "6ea09546bf7ec0720ece55d7c41aad69e284e760090c133703ae880f63747d91",
+          "url": "https://denomcp.com/api/v1/knowhow/stable-audio-3-bgm/files/stable_audio3_medium_bgm.api.json",
+          "repo_path": "workflows/stable-audio-3-bgm/stable_audio3_medium_bgm.api.json"
+        }
+      ]
     },
     {
       "slug": "stable-audio-3-prompting",
@@ -546,7 +642,8 @@
       "summary": "Stable Audio 3 Medium(증류판) 프롬프트를 쓰는 LLM용 영어 지시문 전문 + 에이전트가 부르는 순서와 실수 목록. Stability 공식 프롬프팅 가이드(모드별 TrackType 태그, 장르·악기·분위기·BPM 네 요소, 공식 예시)에 디노 규칙(구조·길이 문장, 부정문 금지, 여유 길이, 후보 2~4개)을 [Deno]로 표시해 합쳤다. 하지 말 것 — 가사·보컬, 부정문, 스텝·CFG 변경, 한국어, 태그 누락, 딱 맞춘 길이, 380초 초과, 아티스트명, 한 판만, 바로 최종본.",
       "updated_at": "2026-09-26T18:58:15.789Z",
       "file": "skills/stable-audio-3-prompting.md",
-      "sha256": "3197fa2995c48f5ae42b59727c3b27cb49c1719b1e42994218e0a2b65eee999a"
+      "sha256": "3197fa2995c48f5ae42b59727c3b27cb49c1719b1e42994218e0a2b65eee999a",
+      "files": []
     },
     {
       "slug": "upscale-h3-4mp-5plus3",
@@ -578,7 +675,23 @@
       "summary": "만든 영상의 해상도·디테일을 올리는 디노의 두 방법. ① 같은 생성 안에서 앞 단계 → 3D 잠재 업스케일(기본 ×2·액션 ×1.5) → 같은 8스텝 일정의 마지막 1스텝(H3 R2V, 오디오 잠재가 함께 간다) ② 이미 있는 mp4를 LTX 2.5가 1.5배로 다시 그리는 리파인(참조 시트로 인물을 붙잡고 오디오는 원본 트랙). 언제 무엇을 쓰는지, 배선 계약, 모델 배포처.",
       "updated_at": "2026-09-26T23:47:26.649Z",
       "file": "skills/upscale-h3-4mp-5plus3.md",
-      "sha256": "4e8c1ae4e2918d74fb2e416387de6276f6ab914a4a1183cc6be943d2baeda68e"
+      "sha256": "4e8c1ae4e2918d74fb2e416387de6276f6ab914a4a1183cc6be943d2baeda68e",
+      "files": [
+        {
+          "path": "Deno LTX2.5 MSR Refine.json",
+          "size": 43336,
+          "sha256": "508fa1f936e0a97c1b8cd933d33f0f7fa926841483c028ed0c09848c645d776f",
+          "url": "https://denomcp.com/api/v1/knowhow/upscale-h3-4mp-5plus3/files/Deno%20LTX2.5%20MSR%20Refine.json",
+          "repo_path": "skills/upscale-h3-4mp-5plus3/Deno LTX2.5 MSR Refine.json"
+        },
+        {
+          "path": "ltx25_msr_refine.api.json",
+          "size": 8885,
+          "sha256": "6075c1d59624854f7ee9690c54e61f5fbbd16783822ce6ccd0f113a9fbfe7112",
+          "url": "https://denomcp.com/api/v1/knowhow/upscale-h3-4mp-5plus3/files/ltx25_msr_refine.api.json",
+          "repo_path": "skills/upscale-h3-4mp-5plus3/ltx25_msr_refine.api.json"
+        }
+      ]
     }
   ]
 }

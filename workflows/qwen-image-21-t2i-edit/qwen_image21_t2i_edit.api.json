@@ -1,0 +1,149 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+   "weight_dtype": "default"
+  }
+ },
+ "3": {
+  "class_type": "QwenImage21Cache",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "device": "auto",
+   "dtype": "default"
+  }
+ },
+ "4": {
+  "class_type": "ModelSamplingFlux",
+  "inputs": {
+   "model": [
+    "3",
+    0
+   ],
+   "max_shift": 0.693548,
+   "base_shift": 0.5,
+   "width": [
+    "10",
+    1
+   ],
+   "height": [
+    "10",
+    2
+   ]
+  }
+ },
+ "5": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+   "type": "qwen_image",
+   "device": "default"
+  }
+ },
+ "6": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+  }
+ },
+ "10": {
+  "class_type": "DenoResolutionSetup",
+  "inputs": {
+   "mode": "Manual Input",
+   "ratio_preset": "1:1",
+   "megapixels": 4.194304,
+   "width": 2048,
+   "height": 2048,
+   "divisible_by": "32",
+   "resize_method": "Center Crop (Fill)",
+   "interpolation": "lanczos",
+   "crop_x": 0.5,
+   "crop_y": 0.5,
+   "crop_zoom": 1
+  }
+ },
+ "11": {
+  "class_type": "EmptyLatentImage",
+  "inputs": {
+   "width": [
+    "10",
+    1
+   ],
+   "height": [
+    "10",
+    2
+   ],
+   "batch_size": 1
+  }
+ },
+ "16": {
+  "class_type": "TextEncodeQwenImage21",
+  "inputs": {
+   "clip": [
+    "5",
+    0
+   ],
+   "vae": [
+    "6",
+    0
+   ],
+   "prompt": "The image is a square high-fashion editorial photograph of an adult Korean woman wearing sculptural black couture in a pale limestone quarry. The camera stands three meters away at waist height, and her complete figure occupies almost nine tenths of the image height. At the center, she stands with her weight on one straight leg and the other knee gently bent, her torso turned slightly away while her eyes meet the lens. Her short jet-black bob ends in a sharp horizontal line beneath her cheekbones, exposing one ear and a single polished silver ear cuff. Her face has natural skin texture, softly defined brows, a precise dark lip, and a composed expression that feels assured and remote. Across the upper center, a gigantic folded collar of black silk taffeta rises behind her shoulders like an asymmetric sail, its crisp edge cutting diagonally across the pale stone. The couture coat narrows at her waist before expanding into broad, stiff panels that frame her legs in an architectural silhouette. Along the left side, one panel bows outward in a controlled curve, revealing a darker matte lining beneath the lustrous outer cloth. On the right, the other panel falls almost vertically and ends just above her angular black leather ankle boots. Her right hand rests naturally beside the coat opening, with her fingers gently separated and their tips visible against the light stone behind them. Her left hand lightly holds a narrow fold at hip level, its wrist angled comfortably beneath a smooth silver cuff. In the upper left corner, a clean horizontal ledge divides the rough limestone into two large planes, while a thin wedge of pale sky appears above it. Behind her head, the stone stays simple and uninterrupted, giving the black collar a clear outline. On the lower left, a few chalky fragments lie close to the quarry wall and remain much smaller than the model. At the lower center, both boot soles meet the dry stone ground, and a strong continuous shadow runs diagonally toward the right edge. A narrow beam of late afternoon sunlight enters from the upper left, drawing sharp highlights along the folded taffeta and leaving the inner coat panels in rich shadow. The silk shows fine directional weave and small tension creases where the hand holds it, while the stone carries pale granular texture. The restrained styling combines an experimental silhouette with a believable physical location and a poised, unmistakably adult model. The overall composition is graphic and monumental, balancing the deep black garment against luminous mineral whites with the deliberate severity of a couture campaign.",
+   "negative_prompt": "blurry hands, blurred fingers, fused fingers, extra fingers, missing fingers, malformed hands, twisted finger joints, melted fingertips",
+   "resolution": 1024
+  }
+ },
+ "20": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "4",
+    0
+   ],
+   "seed": 0,
+   "steps": 40,
+   "cfg": 2.0,
+   "sampler_name": "euler",
+   "scheduler": "simple",
+   "positive": [
+    "16",
+    0
+   ],
+   "negative": [
+    "16",
+    1
+   ],
+   "latent_image": [
+    "11",
+    0
+   ],
+   "denoise": 1.0
+  }
+ },
+ "21": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "20",
+    0
+   ],
+   "vae": [
+    "6",
+    0
+   ]
+  }
+ },
+ "22": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "21",
+    0
+   ],
+   "filename_prefix": "Qwen_image_2.1"
+  }
+ }
+}

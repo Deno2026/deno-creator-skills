@@ -1,3 +1,15 @@
-# ComfyUI 워크플로
+# ComfyUI 워크플로 배포판
 
-(작성 중)
+DenoMCP 노하우 창고의 워크플로 편에 첨부된 정본 파일(ComfyUI UI 워크플로 `.json`, 에이전트용 API 그래프 `.api.json`)이다. 편 본문(`../skills/<slug>.md`)이
+무엇을 어떻게 돌리는지 설명하고, 여기 파일은 그 편의 판과 함께 바뀐다. 이 폴더는 `tools/sync-from-denomcp.mjs`가 공개 API(`GET /v1/knowhow/<slug>/files`)에서
+받아 적는다 — 손으로 고치지 않는다.
+
+| 편 | 판 | 파일 | 갱신 |
+|---|---|---|---|
+| [`deno-comfyui-workflows`](../skills/deno-comfyui-workflows.md) | 9 | (첨부 없음 — 본문의 그래프를 쓴다) | 2026-09-26 |
+| [`education-shorts`](../skills/education-shorts.md) | 2 | (첨부 없음 — 본문의 그래프를 쓴다) | 2026-09-26 |
+| [`ltx25-official-defaults`](../skills/ltx25-official-defaults.md) | 3 | [`DENO_LTX25_A2V_1088p.api.json`](ltx25-official-defaults/DENO_LTX25_A2V_1088p.api.json) | 2026-09-26 |
+| [`minimax-h3-r2v-deno`](../skills/minimax-h3-r2v-deno.md) | 9 | [`minimax_h3_fl2va_pruned_vdn8_draft.api.json`](minimax-h3-r2v-deno/minimax_h3_fl2va_pruned_vdn8_draft.api.json) · [`minimax_h3_fl2va_pruned_vdn8_native.api.json`](minimax-h3-r2v-deno/minimax_h3_fl2va_pruned_vdn8_native.api.json) · [`minimax_h3_ref2va_pruned_vdn8_action8plus1.api.json`](minimax-h3-r2v-deno/minimax_h3_ref2va_pruned_vdn8_action8plus1.api.json) · [`minimax_h3_ref2va_pruned_vdn8_draft.api.json`](minimax-h3-r2v-deno/minimax_h3_ref2va_pruned_vdn8_draft.api.json) · [`minimax_h3_ref2va_pruned_vdn8_general7plus1.api.json`](minimax-h3-r2v-deno/minimax_h3_ref2va_pruned_vdn8_general7plus1.api.json) · [`minimax_h3_ref2va_pruned_vdn8_native.api.json`](minimax-h3-r2v-deno/minimax_h3_ref2va_pruned_vdn8_native.api.json) | 2026-09-26 |
+| [`premiere-post-production`](../skills/premiere-post-production.md) | 1 | (첨부 없음 — 본문의 그래프를 쓴다) | 2026-09-26 |
+| [`qwen-image-21-t2i-edit`](../skills/qwen-image-21-t2i-edit.md) | 6 | [`Deno Qwen-Image 2.1 T2I + Edit.json`](qwen-image-21-t2i-edit/Deno%20Qwen-Image%202.1%20T2I%20%2B%20Edit.json) · [`qwen_image21_t2i_edit.api.json`](qwen-image-21-t2i-edit/qwen_image21_t2i_edit.api.json) | 2026-09-26 |
+| [`stable-audio-3-bgm`](../skills/stable-audio-3-bgm.md) | 3 | [`Deno Stable Audio 3 Medium BGM.json`](stable-audio-3-bgm/Deno%20Stable%20Audio%203%20Medium%20BGM.json) · [`stable_audio3_medium_bgm.api.json`](stable-audio-3-bgm/stable_audio3_medium_bgm.api.json) | 2026-09-26 |

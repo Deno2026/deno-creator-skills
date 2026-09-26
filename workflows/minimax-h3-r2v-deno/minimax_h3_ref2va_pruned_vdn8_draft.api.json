@@ -1,0 +1,261 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "weight_dtype": "default",
+      "unet_name": "Minimax-h3_Singularity_ref2va_Pruned_v1.3_int8.safetensors"
+    }
+  },
+  "3": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "type": "minimax",
+      "device": "default",
+      "clip_name": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    }
+  },
+  "7": {
+    "class_type": "MiniMaxH3ReferenceToVideo",
+    "inputs": {
+      "prompt": "REPLACE_WITH_VALID_H3_SIX_SECTION_PROMPT",
+      "ref_image_size": "max",
+      "clip": [
+        "3",
+        0
+      ],
+      "length": 243,
+      "width": [
+        "140",
+        1
+      ],
+      "vae": [
+        "4",
+        0
+      ],
+      "audio_vae": [
+        "5",
+        0
+      ],
+      "height": [
+        "140",
+        2
+      ],
+      "ref_images.ref_image_0": [
+        "6",
+        0
+      ]
+    }
+  },
+  "8": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 1
+    }
+  },
+  "9": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "conditioning": [
+        "220",
+        0
+      ],
+      "model": [
+        "104",
+        0
+      ]
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "latent_image": [
+        "7",
+        1
+      ],
+      "sampler": [
+        "102",
+        0
+      ],
+      "sigmas": [
+        "103",
+        0
+      ],
+      "noise": [
+        "8",
+        0
+      ],
+      "guider": [
+        "9",
+        0
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "vae": [
+        "4",
+        0
+      ],
+      "samples": [
+        "130",
+        0
+      ]
+    }
+  },
+  "12": {
+    "class_type": "VAEDecodeAudio",
+    "inputs": {
+      "vae": [
+        "5",
+        0
+      ],
+      "samples": [
+        "130",
+        0
+      ]
+    }
+  },
+  "100": {
+    "class_type": "ModelAttentionBackend",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "attention": "comfy kitchen attention"
+    }
+  },
+  "102": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "euler"
+    }
+  },
+  "103": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "104",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 8,
+      "denoise": 1.0
+    }
+  },
+  "120": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "audio": [
+        "12",
+        0
+      ],
+      "frame_rate": 24.0,
+      "loop_count": 0,
+      "filename_prefix": "H3_VDN/ref2va_draft",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 15,
+      "save_metadata": true,
+      "trim_to_audio": false,
+      "pingpong": false,
+      "save_output": true
+    }
+  },
+  "130": {
+    "class_type": "VRAM_Debug",
+    "inputs": {
+      "any_input": [
+        "10",
+        1
+      ],
+      "empty_cache": true,
+      "gc_collect": true,
+      "unload_all_models": true
+    }
+  },
+  "2": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "100",
+        0
+      ],
+      "lora_name": "H3_R2V_AB\\minimax_h3_dmd_ref2va_8step_turbo_pruned.safetensors",
+      "strength_model": 1.0
+    }
+  },
+  "104": {
+    "class_type": "MiniMaxH3SigmaShift",
+    "inputs": {
+      "model": [
+        "2",
+        0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+    }
+  },
+  "6": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "REPLACE_REFERENCE.png"
+    }
+  },
+  "140": {
+    "class_type": "DenoResolutionSetup",
+    "inputs": {
+      "mode": "Manual Input",
+      "ratio_preset": "16:9",
+      "megapixels": 1.0,
+      "width": 864,
+      "height": 480,
+      "divisible_by": "32",
+      "resize_method": "Center Crop (Fill)",
+      "interpolation": "lanczos"
+    }
+  },
+  "160": {
+    "class_type": "VHS_PruneOutputs",
+    "inputs": {
+      "filenames": [
+        "120",
+        0
+      ],
+      "options": "Intermediate and Utility"
+    }
+  },
+  "220": {
+    "class_type": "DenoTextEncoderUnload",
+    "inputs": {
+      "positive_conditioning": [
+        "7",
+        0
+      ],
+      "text_encoder": [
+        "3",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Unload H3 Text Encoder Before Sampling"
+    }
+  }
+}

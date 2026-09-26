@@ -1,0 +1,927 @@
+{
+ "id": "28c2a224-7df2-4ab6-882f-9e5a22111870",
+ "revision": 0,
+ "last_node_id": 30,
+ "last_link_id": 17,
+ "nodes": [
+  {
+   "id": 30,
+   "type": "MarkdownNote",
+   "pos": [
+    -500,
+    60
+   ],
+   "size": [
+    460,
+    900
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "properties": {},
+   "widgets_values": [
+    "## 모델 링크\n\n- [Hugging Face: Comfy-Org/Qwen-Image-2.1](https://huggingface.co/Comfy-Org/Qwen-Image-2.1)\n- [ModelScope: Comfy-Org/Qwen-Image-2.1](https://modelscope.cn/models/Comfy-Org/Qwen-Image-2.1)\n\n**diffusion_models**\n\n- [qwen_image_2.1_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/diffusion_models/qwen_image_2.1_int8_convrot.safetensors) — 7.26 GB (이 워크플로 기본)\n- [qwen_image_2.1_bf16.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/diffusion_models/qwen_image_2.1_bf16.safetensors) — 14.23 GB\n\n**text_encoders**\n\n- [qwen3vl_8b_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/text_encoders/qwen3vl_8b_int8_convrot.safetensors) — 9.35 GB (이 워크플로 기본)\n- [qwen3vl_8b_bf16.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/text_encoders/qwen3vl_8b_bf16.safetensors) — 17.53 GB\n\n**vae**\n\n- [qwen_image_2.1_vae_bf16.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/vae/qwen_image_2.1_vae_bf16.safetensors) — 0.68 GB\n\n## 모델 넣는 위치\n\n```\n📂 ComfyUI/\n├── 📂 models/\n│   ├── 📂 diffusion_models/\n│   │   └── qwen_image_2.1_int8_convrot.safetensors\n│   ├── 📂 text_encoders/\n│   │   └── qwen3vl_8b_int8_convrot.safetensors\n│   └── 📂 vae/\n│       └── qwen_image_2.1_vae_bf16.safetensors\n```\n\n## 필요한 것\n\n- ComfyUI v0.37.0 이상\n- 커스텀 노드 [Deno Custom Nodes](https://registry.comfy.org/nodes/deno-custom-nodes) — `(Deno) Resize Box` ([GitHub](https://github.com/Deno2026/comfyui-deno-custom-nodes))\n\n## 크기\n\n기본은 네이티브 2K(1:1 2048×2048), CFG 2, 40스텝입니다. 비율은 `(Deno) Resize Box`에서 바꿉니다.\n\n## 라이선스\n\nQwen Research License — 연구·평가 목적입니다. 상업적 이용은 별도 라이선스가 필요합니다([LICENSE](https://huggingface.co/Qwen/Qwen-Image-2.1/blob/main/LICENSE)).\n"
+   ]
+  },
+  {
+   "id": 1,
+   "type": "UNETLoader",
+   "pos": [
+    20,
+    60
+   ],
+   "size": [
+    400,
+    82
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "localized_name": "MODEL",
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      1
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "UNETLoader"
+   },
+   "widgets_values": [
+    "qwen_image_2.1_int8_convrot.safetensors",
+    "default"
+   ]
+  },
+  {
+   "id": 3,
+   "type": "QwenImage21Cache",
+   "pos": [
+    20,
+    192
+   ],
+   "size": [
+    400,
+    82
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "model",
+     "name": "model",
+     "type": "MODEL",
+     "link": 1
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "MODEL",
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      2
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "QwenImage21Cache"
+   },
+   "widgets_values": [
+    "auto",
+    "default"
+   ]
+  },
+  {
+   "id": 4,
+   "type": "ModelSamplingFlux",
+   "pos": [
+    20,
+    324
+   ],
+   "size": [
+    400,
+    130
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "model",
+     "name": "model",
+     "type": "MODEL",
+     "link": 2
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "widget": {
+      "name": "width"
+     },
+     "link": 6
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "widget": {
+      "name": "height"
+     },
+     "link": 7
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "MODEL",
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      3
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "ModelSamplingFlux"
+   },
+   "widgets_values": [
+    0.693548,
+    0.5,
+    2048,
+    2048
+   ]
+  },
+  {
+   "id": 5,
+   "type": "CLIPLoader",
+   "pos": [
+    20,
+    494
+   ],
+   "size": [
+    400,
+    106
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "localized_name": "CLIP",
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      8
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "CLIPLoader"
+   },
+   "widgets_values": [
+    "qwen3vl_8b_int8_convrot.safetensors",
+    "qwen_image",
+    "default"
+   ]
+  },
+  {
+   "id": 6,
+   "type": "VAELoader",
+   "pos": [
+    20,
+    640
+   ],
+   "size": [
+    400,
+    58
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "localized_name": "VAE",
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      9,
+      16
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "VAELoader"
+   },
+   "widgets_values": [
+    "qwen_image_2.1_vae_bf16.safetensors"
+   ]
+  },
+  {
+   "id": 10,
+   "type": "DenoResolutionSetup",
+   "pos": [
+    490,
+    60
+   ],
+   "size": [
+    400,
+    470
+   ],
+   "flags": {},
+   "order": 6,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": null
+    },
+    {
+     "localized_name": "mode",
+     "name": "mode",
+     "type": "COMBO",
+     "widget": {
+      "name": "mode"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "ratio_preset",
+     "name": "ratio_preset",
+     "type": "COMBO",
+     "widget": {
+      "name": "ratio_preset"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "megapixels",
+     "name": "megapixels",
+     "type": "FLOAT",
+     "widget": {
+      "name": "megapixels"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "widget": {
+      "name": "width"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "widget": {
+      "name": "height"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "divisible_by",
+     "name": "divisible_by",
+     "type": "COMBO",
+     "widget": {
+      "name": "divisible_by"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "resize_method",
+     "name": "resize_method",
+     "type": "COMBO",
+     "widget": {
+      "name": "resize_method"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "interpolation",
+     "name": "interpolation",
+     "type": "COMBO",
+     "widget": {
+      "name": "interpolation"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "links": []
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "links": [
+      4,
+      6
+     ]
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "links": [
+      5,
+      7
+     ]
+    }
+   ],
+   "properties": {
+    "cnr_id": "deno-custom-nodes",
+    "ver": "0.7.106",
+    "Node name for S&R": "DenoResolutionSetup"
+   },
+   "widgets_values": [
+    "Manual Input",
+    "1:1",
+    4.194304,
+    2048,
+    2048,
+    "32",
+    "Center Crop (Fill)",
+    "lanczos"
+   ]
+  },
+  {
+   "id": 11,
+   "type": "EmptyLatentImage",
+   "pos": [
+    490,
+    570
+   ],
+   "size": [
+    400,
+    106
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "widget": {
+      "name": "width"
+     },
+     "link": 4
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "widget": {
+      "name": "height"
+     },
+     "link": 5
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "LATENT",
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      14
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "EmptyLatentImage"
+   },
+   "widgets_values": [
+    2048,
+    2048,
+    1
+   ]
+  },
+  {
+   "id": 16,
+   "type": "TextEncodeQwenImage21",
+   "pos": [
+    980,
+    60
+   ],
+   "size": [
+    440,
+    520
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "clip",
+     "name": "clip",
+     "type": "CLIP",
+     "link": 8
+    },
+    {
+     "localized_name": "image_1",
+     "name": "images.image_1",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 10
+    },
+    {
+     "localized_name": "image_2",
+     "name": "images.image_2",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": 11
+    },
+    {
+     "localized_name": "image_3",
+     "name": "images.image_3",
+     "type": "IMAGE",
+     "shape": 7,
+     "link": null
+    },
+    {
+     "localized_name": "vae",
+     "name": "vae",
+     "type": "VAE",
+     "shape": 7,
+     "link": 9
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "positive",
+     "name": "positive",
+     "type": "CONDITIONING",
+     "links": [
+      12
+     ]
+    },
+    {
+     "localized_name": "negative",
+     "name": "negative",
+     "type": "CONDITIONING",
+     "links": [
+      13
+     ]
+    },
+    {
+     "localized_name": "latent",
+     "name": "latent",
+     "type": "LATENT",
+     "links": []
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "TextEncodeQwenImage21"
+   },
+   "widgets_values": [
+    "The image is a square high-fashion editorial photograph of an adult Korean woman wearing sculptural black couture in a pale limestone quarry. The camera stands three meters away at waist height, and her complete figure occupies almost nine tenths of the image height. At the center, she stands with her weight on one straight leg and the other knee gently bent, her torso turned slightly away while her eyes meet the lens. Her short jet-black bob ends in a sharp horizontal line beneath her cheekbones, exposing one ear and a single polished silver ear cuff. Her face has natural skin texture, softly defined brows, a precise dark lip, and a composed expression that feels assured and remote. Across the upper center, a gigantic folded collar of black silk taffeta rises behind her shoulders like an asymmetric sail, its crisp edge cutting diagonally across the pale stone. The couture coat narrows at her waist before expanding into broad, stiff panels that frame her legs in an architectural silhouette. Along the left side, one panel bows outward in a controlled curve, revealing a darker matte lining beneath the lustrous outer cloth. On the right, the other panel falls almost vertically and ends just above her angular black leather ankle boots. Her right hand rests naturally beside the coat opening, with her fingers gently separated and their tips visible against the light stone behind them. Her left hand lightly holds a narrow fold at hip level, its wrist angled comfortably beneath a smooth silver cuff. In the upper left corner, a clean horizontal ledge divides the rough limestone into two large planes, while a thin wedge of pale sky appears above it. Behind her head, the stone stays simple and uninterrupted, giving the black collar a clear outline. On the lower left, a few chalky fragments lie close to the quarry wall and remain much smaller than the model. At the lower center, both boot soles meet the dry stone ground, and a strong continuous shadow runs diagonally toward the right edge. A narrow beam of late afternoon sunlight enters from the upper left, drawing sharp highlights along the folded taffeta and leaving the inner coat panels in rich shadow. The silk shows fine directional weave and small tension creases where the hand holds it, while the stone carries pale granular texture. The restrained styling combines an experimental silhouette with a believable physical location and a poised, unmistakably adult model. The overall composition is graphic and monumental, balancing the deep black garment against luminous mineral whites with the deliberate severity of a couture campaign.",
+    "blurry hands, blurred fingers, fused fingers, extra fingers, missing fingers, malformed hands, twisted finger joints, melted fingertips",
+    1024
+   ]
+  },
+  {
+   "id": 7,
+   "type": "LoadImage",
+   "pos": [
+    980,
+    710
+   ],
+   "size": [
+    400,
+    330
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 4,
+   "inputs": [],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      10
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "links": []
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "reference_1.png",
+    "image"
+   ]
+  },
+  {
+   "id": 8,
+   "type": "LoadImage",
+   "pos": [
+    1400,
+    710
+   ],
+   "size": [
+    400,
+    330
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 4,
+   "inputs": [],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      11
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "links": []
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "reference_2.png",
+    "image"
+   ]
+  },
+  {
+   "id": 20,
+   "type": "KSampler",
+   "pos": [
+    1490,
+    60
+   ],
+   "size": [
+    340,
+    262
+   ],
+   "flags": {},
+   "order": 11,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "model",
+     "name": "model",
+     "type": "MODEL",
+     "link": 3
+    },
+    {
+     "localized_name": "positive",
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 12
+    },
+    {
+     "localized_name": "negative",
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 13
+    },
+    {
+     "localized_name": "latent_image",
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 14
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "LATENT",
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      15
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    0,
+    "randomize",
+    40,
+    2.0,
+    "euler",
+    "simple",
+    1
+   ]
+  },
+  {
+   "id": 21,
+   "type": "VAEDecode",
+   "pos": [
+    1490,
+    362
+   ],
+   "size": [
+    340,
+    46
+   ],
+   "flags": {},
+   "order": 12,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "samples",
+     "name": "samples",
+     "type": "LATENT",
+     "link": 15
+    },
+    {
+     "localized_name": "vae",
+     "name": "vae",
+     "type": "VAE",
+     "link": 16
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      17
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 22,
+   "type": "SaveImage",
+   "pos": [
+    1860,
+    60
+   ],
+   "size": [
+    440,
+    520
+   ],
+   "flags": {},
+   "order": 13,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "link": 17
+    }
+   ],
+   "outputs": [],
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "Qwen_image_2.1"
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   1,
+   0,
+   3,
+   0,
+   "MODEL"
+  ],
+  [
+   2,
+   3,
+   0,
+   4,
+   0,
+   "MODEL"
+  ],
+  [
+   3,
+   4,
+   0,
+   20,
+   0,
+   "MODEL"
+  ],
+  [
+   4,
+   10,
+   1,
+   11,
+   0,
+   "INT"
+  ],
+  [
+   5,
+   10,
+   2,
+   11,
+   1,
+   "INT"
+  ],
+  [
+   6,
+   10,
+   1,
+   4,
+   1,
+   "INT"
+  ],
+  [
+   7,
+   10,
+   2,
+   4,
+   2,
+   "INT"
+  ],
+  [
+   8,
+   5,
+   0,
+   16,
+   0,
+   "CLIP"
+  ],
+  [
+   9,
+   6,
+   0,
+   16,
+   4,
+   "VAE"
+  ],
+  [
+   10,
+   7,
+   0,
+   16,
+   1,
+   "IMAGE"
+  ],
+  [
+   11,
+   8,
+   0,
+   16,
+   2,
+   "IMAGE"
+  ],
+  [
+   12,
+   16,
+   0,
+   20,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   13,
+   16,
+   1,
+   20,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   14,
+   11,
+   0,
+   20,
+   3,
+   "LATENT"
+  ],
+  [
+   15,
+   20,
+   0,
+   21,
+   0,
+   "LATENT"
+  ],
+  [
+   16,
+   6,
+   0,
+   21,
+   1,
+   "VAE"
+  ],
+  [
+   17,
+   21,
+   0,
+   22,
+   0,
+   "IMAGE"
+  ]
+ ],
+ "groups": [
+  {
+   "id": 1,
+   "title": "Models",
+   "bounding": [
+    0,
+    0,
+    440,
+    730
+   ],
+   "color": "#3f789e",
+   "flags": {}
+  },
+  {
+   "id": 2,
+   "title": "Image Size",
+   "bounding": [
+    470,
+    0,
+    470,
+    700
+   ],
+   "color": "#3f789e",
+   "flags": {}
+  },
+  {
+   "id": 3,
+   "title": "Conditioning",
+   "bounding": [
+    960,
+    0,
+    480,
+    620
+   ],
+   "color": "#3f789e",
+   "flags": {}
+  },
+  {
+   "id": 4,
+   "title": "Reference Images",
+   "bounding": [
+    960,
+    650,
+    880,
+    420
+   ],
+   "color": "#3f789e",
+   "flags": {}
+  },
+  {
+   "id": 5,
+   "title": "Sampling",
+   "bounding": [
+    1470,
+    0,
+    850,
+    620
+   ],
+   "color": "#3f789e",
+   "flags": {}
+  }
+ ],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.5,
+   "offset": [
+    560,
+    120
+   ]
+  }
+ },
+ "version": 0.4
+}

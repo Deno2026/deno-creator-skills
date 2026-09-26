@@ -1,0 +1,490 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "ltx-2.5-22b-dev-transformer-bf16.safetensors",
+   "weight_dtype": "default"
+  },
+  "_meta": {
+   "title": "LTX 2.5 dev 트랜스포머"
+  }
+ },
+ "2": {
+  "class_type": "LoraLoaderModelOnly",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "lora_name": "ltx-2.5-22b-distilled-lora-450-bf16.safetensors",
+   "strength_model": 0.5
+  },
+  "_meta": {
+   "title": "디스틸 LoRA 0.5"
+  }
+ },
+ "3": {
+  "class_type": "ComfyUILTX25MSRICLoRALoader",
+  "inputs": {
+   "model": [
+    "2",
+    0
+   ],
+   "lora_name": "LTX-2.5-Licon-MSR-V1.safetensors",
+   "strength_model": 1.0
+  },
+  "_meta": {
+   "title": "MSR IC-LoRA 로더"
+  }
+ },
+ "4": {
+  "class_type": "ModelAttentionBackend",
+  "inputs": {
+   "model": [
+    "3",
+    0
+   ],
+   "attention": "comfy kitchen attention"
+  }
+ },
+ "5": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+   "type": "ltxv",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "텍스트 인코더 (Gemma 4 12B)"
+  }
+ },
+ "6": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "ltx-2.5-video-vae-conv-bf16.safetensors"
+  },
+  "_meta": {
+   "title": "영상 VAE"
+  }
+ },
+ "7": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "ltx-2.5-audio-vae-bf16.safetensors"
+  },
+  "_meta": {
+   "title": "오디오 VAE"
+  }
+ },
+ "8": {
+  "class_type": "LoadVideo",
+  "inputs": {
+   "file": "input_clip.mp4"
+  },
+  "_meta": {
+   "title": "① 입력 영상 (오디오 포함)"
+  }
+ },
+ "9": {
+  "class_type": "GetVideoComponents",
+  "inputs": {
+   "video": [
+    "8",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "영상·오디오 분리"
+  }
+ },
+ "10": {
+  "class_type": "ImageFromBatch",
+  "inputs": {
+   "image": [
+    "9",
+    0
+   ],
+   "batch_index": 0,
+   "length": 241
+  },
+  "_meta": {
+   "title": "② 프레임 수 = 8n+1 (10초=241)"
+  }
+ },
+ "11": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "10",
+    0
+   ],
+   "vae": [
+    "6",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "영상 인코드"
+  }
+ },
+ "12": {
+  "class_type": "LTXVAudioVAEEncode",
+  "inputs": {
+   "audio": [
+    "9",
+    1
+   ],
+   "audio_vae": [
+    "7",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "오디오 인코드 (모델 입력용)"
+  }
+ },
+ "13": {
+  "class_type": "LatentUpscaleModelLoader",
+  "inputs": {
+   "model_name": "ltx-2.3-spatial-upscaler-x1.5-1.0.safetensors"
+  },
+  "_meta": {
+   "title": "잠재 업스케일러 1.5배"
+  }
+ },
+ "14": {
+  "class_type": "LTXVLatentUpsampler",
+  "inputs": {
+   "samples": [
+    "11",
+    0
+   ],
+   "upscale_model": [
+    "13",
+    0
+   ],
+   "vae": [
+    "6",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "잠재 1.5배 업스케일"
+  }
+ },
+ "15": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "clip": [
+    "5",
+    0
+   ],
+   "text": "Image 1: East Asian, 22 years old, woman, long dark-brown wavy hair past the shoulders, clear luminous skin, a small dark beauty mark on her left cheek, thin gold hoop earrings, cream ribbed-knit cropped long-sleeve top, high-waisted light-blue denim jeans, warm unguarded aura, photorealistic natural texture. Image 1 provides the woman's face, hair and clothing for the whole clip.\n\nAmusement park carousel at night, foreground the carved painted horses and brass poles sweeping past the lens, midground the woman riding, background the ride's mirrored centre column and hundreds of small warm bulbs against black night; camera axis riding with her on the turning platform, fixed relative to her; Figure 1 holds the centre of the frame in medium shot on the horse. Medium shot from the front, locked to the platform about 15%, the world turning behind at speed; she rides the rising and falling horse with one hand high on the brass pole, grin fixed (Chubbuck: unembarrassed delight). Cut — next shot: close-up just off her cheek, slow push-in about 30%, bulb light sweeping across her face in a warm pulse as she leans into the turn with her hair swinging wide. Figure 1 (excited, quick, slightly breathless voice): \"이거 어릴 때 이후로 처음 타요.\" Cut — next shot: medium shot, the ride slowing, slow pull-back about 35%, the streaking bulbs resolving back into points as she settles onto the saddle and looks into the lens still laughing. A mechanical carousel organ playing a bright looping waltz, the deep rumble of the platform bearing, the creak of the pole, distant park crowd, her laughter close in."
+  },
+  "_meta": {
+   "title": "⑤ 프롬프트 (LTX 문법 — ✍️ 노트)"
+  }
+ },
+ "16": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "clip": [
+    "5",
+    0
+   ],
+   "text": "subtitles, watermark, worst quality, blurry, jittery, distorted, inconsistent appearance"
+  },
+  "_meta": {
+   "title": "부정 프롬프트 (비우지 말 것)"
+  }
+ },
+ "17": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "reference_pic1.png"
+  },
+  "_meta": {
+   "title": "④ 참조 pic1 (인물 시트)"
+  }
+ },
+ "18": {
+  "class_type": "ComfyUILTX25MSRMultiReferenceGuide",
+  "inputs": {
+   "positive": [
+    "15",
+    0
+   ],
+   "negative": [
+    "16",
+    0
+   ],
+   "vae": [
+    "6",
+    0
+   ],
+   "latent": [
+    "14",
+    0
+   ],
+   "pic1": [
+    "17",
+    0
+   ],
+   "msr_parameters": [
+    "3",
+    1
+   ],
+   "strength": 1.0,
+   "reference_frames": "33",
+   "use_tiled_encode": false,
+   "tile_size": 256,
+   "tile_overlap": 64
+  },
+  "_meta": {
+   "title": "MSR 다중 참조 가이드 (pic2~4·background 선택)"
+  }
+ },
+ "19": {
+  "class_type": "SolidMask",
+  "inputs": {
+   "value": 0.0,
+   "width": 64,
+   "height": 64
+  },
+  "_meta": {
+   "title": "오디오 고정용 마스크 0"
+  }
+ },
+ "20": {
+  "class_type": "SetLatentNoiseMask",
+  "inputs": {
+   "samples": [
+    "12",
+    0
+   ],
+   "mask": [
+    "19",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "오디오 잠재 디노이즈 금지"
+  }
+ },
+ "21": {
+  "class_type": "LTXVConditioning",
+  "inputs": {
+   "positive": [
+    "18",
+    0
+   ],
+   "negative": [
+    "18",
+    1
+   ],
+   "frame_rate": 24.0
+  },
+  "_meta": {
+   "title": "LTX 조건 (24fps)"
+  }
+ },
+ "22": {
+  "class_type": "LTXVDualCFGGuider",
+  "inputs": {
+   "model": [
+    "4",
+    0
+   ],
+   "positive": [
+    "21",
+    0
+   ],
+   "negative": [
+    "21",
+    1
+   ],
+   "video_cfg": 1.0,
+   "audio_cfg": 1.0
+  },
+  "_meta": {
+   "title": "가이더 CFG 1/1 (디스틸)"
+  }
+ },
+ "23": {
+  "class_type": "LTXVConcatAVLatent",
+  "inputs": {
+   "video_latent": [
+    "18",
+    2
+   ],
+   "audio_latent": [
+    "20",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "영상+오디오 잠재 결합"
+  }
+ },
+ "24": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 260910108
+  },
+  "_meta": {
+   "title": "시드"
+  }
+ },
+ "25": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "샘플러 euler 고정"
+  }
+ },
+ "26": {
+  "class_type": "ManualSigmas",
+  "inputs": {
+   "sigmas": "0.85, 0.7250, 0.4219, 0.0"
+  },
+  "_meta": {
+   "title": "시그마 3스텝 (2스텝: 0.7250, 0.4219, 0.0)"
+  }
+ },
+ "27": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "24",
+    0
+   ],
+   "guider": [
+    "22",
+    0
+   ],
+   "sampler": [
+    "25",
+    0
+   ],
+   "sigmas": [
+    "26",
+    0
+   ],
+   "latent_image": [
+    "23",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "샘플링"
+  }
+ },
+ "28": {
+  "class_type": "LTXVSeparateAVLatent",
+  "inputs": {
+   "av_latent": [
+    "deno_predecode_cleanup",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "영상·오디오 잠재 분리"
+  }
+ },
+ "29": {
+  "class_type": "LTXVCropGuides",
+  "inputs": {
+   "positive": [
+    "21",
+    0
+   ],
+   "negative": [
+    "21",
+    1
+   ],
+   "latent": [
+    "28",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "참조 프레임 잘라내기"
+  }
+ },
+ "30": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "29",
+    2
+   ],
+   "vae": [
+    "6",
+    0
+   ]
+  }
+ },
+ "31": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "9",
+    1
+   ],
+   "start_index": 0.0,
+   "duration": 10.041667
+  },
+  "_meta": {
+   "title": "③ 원본 오디오 = 프레임수 ÷ 24 초"
+  }
+ },
+ "32": {
+  "class_type": "CreateVideo",
+  "inputs": {
+   "images": [
+    "30",
+    0
+   ],
+   "audio": [
+    "31",
+    0
+   ],
+   "fps": 24.0
+  },
+  "_meta": {
+   "title": "영상 + 원본 오디오"
+  }
+ },
+ "33": {
+  "class_type": "SaveVideo",
+  "inputs": {
+   "video": [
+    "32",
+    0
+   ],
+   "filename_prefix": "video/LTX25_MSR_refine",
+   "format": "auto",
+   "format.codec": "auto"
+  },
+  "_meta": {
+   "title": "저장"
+  }
+ },
+ "deno_predecode_cleanup": {
+  "class_type": "VRAM_Debug",
+  "inputs": {
+   "any_input": [
+    "27",
+    0
+   ],
+   "empty_cache": true,
+   "gc_collect": true,
+   "unload_all_models": true
+  },
+  "_meta": {
+   "title": "VRAM Debug"
+  }
+ }
+}
