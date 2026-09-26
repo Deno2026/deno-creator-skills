@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "bash",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/tools/agent-hooks/compact_reminder.py\" 2>/dev/null || python \"$CLAUDE_PROJECT_DIR/tools/agent-hooks/compact_reminder.py\"",
+            "timeout": 15,
+            "statusMessage": "압축 뒤 문서 다시 읽기 알림"
+          }
+        ]
+      }
+    ]
+  }
+}

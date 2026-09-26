@@ -1,0 +1,6 @@
+{
+  "kit_version": "7",
+  "installed_at": "",
+  "packages": [],
+  "_how": "꾸러미를 들이면 packages에 {slug, version, installed_at, mode: whole|partial, note}를 한 줄 더한다. 킷·꾸러미 업데이트 확인은 이 판을 서버의 판(deno_starter_kit·deno_knowhow_get)과 비교한다."
+}

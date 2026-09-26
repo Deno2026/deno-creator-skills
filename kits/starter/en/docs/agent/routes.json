@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "note": "Task type → documents to read first. For tasks not listed, read AGENTS.md and start.",
+  "tasks": {
+    "start": {
+      "read": [
+        "AGENTS.md",
+        "productions/README.md"
+      ],
+      "note": "A new production starts by deciding purpose and direction with the user in BRIEF.md. Progress goes to STATE.md"
+    },
+    "generate": {
+      "read": [
+        "AGENTS.md",
+        "skills/README.md"
+      ],
+      "note": "Before paid generation: deno_estimate → user confirmation → generate"
+    },
+    "recipe": {
+      "read": [
+        "skills/README.md",
+        "skills/deno-kit.json"
+      ],
+      "note": "Follow the package's purpose and order; expression and pacing are the user's. The user also picks local or commercial execution"
+    },
+    "review": {
+      "read": [
+        "AGENTS.md"
+      ],
+      "note": "Collect outputs in productions/<title>/renders/; the user judges them"
+    }
+  }
+}

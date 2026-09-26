@@ -1,0 +1,19 @@
+{
+  "description": "DenoMCP 스타터 킷 - 대화 압축 직후 문서 다시 읽기 알림(tools/agent-hooks/compact_reminder.py)",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/tools/agent-hooks/compact_reminder.py\"",
+            "commandWindows": "powershell -NoProfile -Command \"python (Join-Path (git rev-parse --show-toplevel) 'tools/agent-hooks/compact_reminder.py')\"",
+            "statusMessage": "압축 뒤 문서 다시 읽기 알림",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}
