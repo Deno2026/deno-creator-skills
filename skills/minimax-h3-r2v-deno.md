@@ -5,7 +5,7 @@ kind: workflow
 tags: 미니맥스, minimax, h3, hailuo, r2v, ref2va, fl2va, flf2v, i2v, 참고 이미지, 시작 이미지, 캐릭터 시트, 영상 생성, comfyui, 오디오, 립싱크, 대사, vdn, 터보, 8스텝, int8, 워크플로, 화질, 초안, 1088p
 models: MiniMax H3 Singularity Ref2VA Pruned v1.3 INT8, MiniMax H3 FL2VA pruned INT8, VDN 8-step turbo LoRA, Qwen3-VL 32B(H3), KJNodes
 execution: local
-version: 8
+version: 9
 summary: 참고물(캐릭터 시트·장소 판·스타일 키·목소리 견본)로 새 장면을 만드는 R2V와, 독립 시작(·끝) 이미지를 정확한 첫 프레임으로 삼는 FL2VA를 같은 그래프 계약으로 돌리는 디노의 현행 워크플로. 한 번의 생성이 영상+스테레오 소리(대사·효과음)를 같이 낸다. 모드별 디퓨전·로라 한 쌍, 공통 체인, 화질 단계(초안·기본, R2V 1088p급 기본 7+1·액션 8+1), API 그래프 전문, 모델 배포처, 실측으로 확인된 함정.
 ---
 
@@ -118,6 +118,8 @@ UNETLoader → ModelAttentionBackend(comfy kitchen attention) → LoraLoaderMode
 
 ## 실행 — 로컬(내 ComfyUI)
 
+**첨부 — 디노 정본 API 그래프 여섯**(같은 배선·같은 값, `REPLACE_`로 시작하는 자리표시자만 채운다): `minimax_h3_ref2va_pruned_vdn8_draft.api.json`(R2V 480p 초안) · `minimax_h3_ref2va_pruned_vdn8_native.api.json`(R2V 768 기본) · `minimax_h3_ref2va_pruned_vdn8_general7plus1.api.json`(R2V 1088p급 기본 7+1) · `minimax_h3_ref2va_pruned_vdn8_action8plus1.api.json`(R2V 1088p급 액션 8+1) · `minimax_h3_fl2va_pruned_vdn8_draft.api.json`(FL2VA 480p 초안) · `minimax_h3_fl2va_pruned_vdn8_native.api.json`(FL2VA 768 기본). `deno_knowhow_get`의 `files` 칸 주소로 받는다(로그인 없음, 판이 바뀌면 sha256도 바뀐다). 공개 리포 `Deno2026/deno-creator-skills`의 `workflows/minimax-h3-r2v-deno/`에 같은 파일이 거울로 있다(창고를 그대로 따라온다). 아래 본문의 그래프는 그중 R2V 기본을 풀어 쓴 것이고, 1088p급 둘의 배선 설명은 `upscale-h3-4mp-5plus3`에 있다.
+
 
 | 종류 | 파일 | 넣는 곳 | 받는 곳(2026-09-26 파일 목록 확인) |
 |---|---|---|---|
@@ -191,11 +193,12 @@ API 그래프 — R2V 기본(참고 1장, 자리표시자 셋: 프롬프트·참
 
 ## 포함되지 않은 것
 
-- 디노의 빌더·큐·회수·형식 검사 스크립트, 1088p급(7+1·8+1) API 그래프 파일 — 배선은 이 문서와 `upscale-h3-4mp-5plus3`에 글로 있고, 파일은 다음 판에 첨부한다.
+- 디노의 빌더·큐·회수·형식 검사 스크립트 — 다음 판에 첨부한다(도구는 `comfyui-agent-basics` 편의 첨부로 모은다).
 - 스타일 로라 파일, 디노 작품의 프롬프트·참고물.
 
 ## 바뀐 점
 
+- v9 (2026-09-27): 정본 API 그래프 여섯(초안·기본·1088p급 7+1·액션 8+1·FL2VA 둘)을 첨부로 실었다(`files`). 공개 리포 `workflows/minimax-h3-r2v-deno/`가 거울 — 디노 「공개 리포와 MCP 가이드는 항상 동기화」.
 - v8 (2026-09-27): 5+3 은퇴(디노 확정) — 화질은 초안·기본(두 모드)과 R2V 1088p급 기본 7+1·액션 8+1. 고품질 5+3 줄, FL2VA 5+3 재인코딩 안내, 5+3 실측을 빼고 7+1·8+1 실측을 넣었다.
 - v7 (2026-09-27): 텍스트 인코더 선제 해제(`DenoTextEncoderUnload` 220)를 그래프에 넣음 — 디노 정본 8개 전부의 고정값(디노 승인). 체인·API 그래프·노드 설명 갱신.
 - v6 (2026-09-27): 잠재 업스케일의 두 손잡이(시작 해상도·배수) — 768 근처 시작이 최고 품질, 낮은 시작은 업스케일 효과 저하, 1스텝 업스케일 단계의 VRAM은 최종 크기×프레임에 비례하니 PC마다 배수 조절(디노 확정).

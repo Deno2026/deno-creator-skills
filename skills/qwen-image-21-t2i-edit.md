@@ -5,7 +5,7 @@ kind: workflow
 tags: qwen, qwen-image, qwen image 2.1, 이미지 생성, 사진, 편집, 합성, 배경 제거, 투명, rgba, 포스터, 인포그래픽, 판면, t2i, edit, comfyui, int8
 models: Qwen-Image 2.1, Qwen3-VL 8B
 execution: local
-version: 5
+version: 6
 summary: 로컬 오픈 웨이트 Qwen-Image 2.1(int8)로 글→이미지와 편집(참고 1~10장 합성·부분 편집·배경 제거·투명 PNG)을 한 그래프로 돌리는 순서 — 참고 칸을 비우면 생성, 채우면 편집. 크기·CFG·부정 프롬프트는 사진마다 사용자가 정하고, 프롬프트는 꾸러미 qwen-image-21-prompting으로 쓴다. API 그래프 전문과 모델 배포처.
 ---
 
@@ -75,6 +75,8 @@ summary: 로컬 오픈 웨이트 Qwen-Image 2.1(int8)로 글→이미지와 편�
 
 ## 실행 — 로컬(내 ComfyUI)
 
+**첨부 —** `Deno Qwen-Image 2.1 T2I + Edit.json`(배포용 UI 워크플로, 모델 링크 노트 한 장 포함 — ComfyUI 화면에 끌어다 놓는다) · `qwen_image21_t2i_edit.api.json`(에이전트용 API 그래프, 같은 배선·같은 값). `deno_knowhow_get`의 `files` 칸 주소로 받는다(로그인 없음, 판이 바뀌면 sha256도 바뀐다). 공개 리포 `Deno2026/deno-creator-skills`의 `workflows/qwen-image-21-t2i-edit/`에 같은 파일이 거울로 있다(창고를 그대로 따라온다).
+
 
 | 종류 | 파일 | 크기 | 받는 곳 |
 |---|---|---|---|
@@ -129,11 +131,11 @@ API 그래프(글→이미지 기본, 프롬프트 자리는 예시 문장 대�
 
 ## 포함되지 않은 것
 
-- 배포용 UI 워크플로 파일(모델 링크 노트 한 장 포함) — 다음 판에 첨부한다. 위 API 그래프와 같은 배선·같은 값이다.
 - 디노의 화풍·소품·색 체계.
 
 ## 바뀐 점
 
+- v6 (2026-09-27): 배포용 UI 워크플로와 API 그래프를 첨부로 실었다(`files`). 공개 리포 `workflows/qwen-image-21-t2i-edit/`가 거울.
 - v5 (2026-09-27): 사용 노하우 — 스모크는 1080p급부터, 되면 2K·안 되면 1MP, 사용자와 정해 `MY-PC.md`에 고정(`comfyui-fit-my-pc`).
 - v4 (2026-09-27): Kitchen 전역 인자 아래 Qwen 화질 A/B는 불필요(디노 — 예전에 검사 끝). 기본값은 그대로 네이티브 2K·CFG 2.0·40스텝·Euler/simple.
 - v3 (2026-09-26 밤): 어텐션 규칙 문장 갱신(세이지 은퇴, Kitchen 전역 인자 아래 Qwen 화질은 A/B 대기).

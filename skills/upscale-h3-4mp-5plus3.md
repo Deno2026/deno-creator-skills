@@ -5,7 +5,7 @@ kind: technique
 tags: 업스케일, upscale, 잠재, latent, 1088p, 7+1, 8+1, LTX, MSR, 리파인, 디테일, 해상도, 오디오 보존
 models: MiniMax H3 Ref2VA, MinimaxH3LatentUpscaler3D, LTX 2.5, LTX-2.5 MSR IC-LoRA
 execution: local
-version: 6
+version: 7
 summary: 만든 영상의 해상도·디테일을 올리는 디노의 두 방법. ① 같은 생성 안에서 앞 단계 → 3D 잠재 업스케일(기본 ×2·액션 ×1.5) → 같은 8스텝 일정의 마지막 1스텝(H3 R2V, 오디오 잠재가 함께 간다) ② 이미 있는 mp4를 LTX 2.5가 1.5배로 다시 그리는 리파인(참조 시트로 인물을 붙잡고 오디오는 원본 트랙). 언제 무엇을 쓰는지, 배선 계약, 모델 배포처.
 ---
 
@@ -89,6 +89,8 @@ GetVideoComponents.audio → TrimAudioDuration(length ÷ 24) → CreateVideo(ima
 
 ## 실행 — 로컬(내 ComfyUI)
 
+**첨부 —** ② `Deno LTX2.5 MSR Refine.json`(배포용 UI 워크플로) · `ltx25_msr_refine.api.json`(에이전트용 API 그래프). ①의 1088p급 7+1·8+1 API 그래프는 `minimax-h3-r2v-deno` 편의 첨부에 있다. `deno_knowhow_get`의 `files` 칸 주소로 받는다(로그인 없음, 판이 바뀌면 sha256도 바뀐다). 공개 리포 `Deno2026/deno-creator-skills`의 `workflows/upscale-h3-4mp-5plus3/`에 같은 파일이 거울로 있다(창고를 그대로 따라온다).
+
 
 | 종류 | 파일 | 받는 곳 |
 |---|---|---|
@@ -108,6 +110,7 @@ GetVideoComponents.audio → TrimAudioDuration(length ÷ 24) → CreateVideo(ima
 
 ## 바뀐 점
 
+- v7 (2026-09-27): ② MSR 리파인의 UI 워크플로·API 그래프를 첨부로 실었다(`files`); ①의 그래프는 H3 편 첨부를 가리킨다. 공개 리포 `workflows/upscale-h3-4mp-5plus3/`가 거울.
 - v6 (2026-09-27): ①을 5+3(1280×736 → 2560×1472)에서 디노 현행 1088p급 두 구성(기본 7+1·액션 8+1)으로 바꿨다 — 5+3 은퇴(디노 확정). FL2VA 재인코딩 안내를 뺐다(디노 정본의 ①은 R2V 전용). 꾸러미 이름(slug)은 그대로.
 - v5 (2026-09-27): 두 손잡이(시작 해상도·배수) 갈림길 추가 — PC마다 배수 조절(디노 확정).
 - v4 (2026-09-26 밤): 어텐션을 Comfy Kitchen으로 통일 — ①·② 배선의 세이지 노드를 코어 `ModelAttentionBackend`로.

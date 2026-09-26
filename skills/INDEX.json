@@ -112,7 +112,7 @@
       "slug": "deno-comfyui-workflows",
       "title": "디노의 ComfyUI 워크플로 목록 — 무엇을 만들 때 어느 워크플로·어느 모델을 쓰나(2026-09-26 기준)",
       "kind": "workflow",
-      "version": "8",
+      "version": "9",
       "execution": "local",
       "tags": [
         "목록",
@@ -141,9 +141,9 @@
         "Whisper large-v3"
       ],
       "summary": "디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 한 장에 — 어떤 결과를 만들 때 어느 꾸러미를 열고, 어떤 모델이 필요하고, 내 ComfyUI(포터블·데스크탑)로 어떻게 켜고 돌리는지. 현행·실험·은퇴를 가른다. 각 줄의 세부는 그 꾸러미가 소유한다.",
-      "updated_at": "2026-09-26T18:58:15.462Z",
+      "updated_at": "2026-09-26T23:47:19.908Z",
       "file": "skills/deno-comfyui-workflows.md",
-      "sha256": "35ecba83ff4557f1dbd226e5f249dc97d547b2919515196604f009c6e60b4162"
+      "sha256": "db5a6dba1327690ca5a9149bf550ccfc8604ce5d0fa8d52388784a8c4bb0f4fb"
     },
     {
       "slug": "education-shorts",
@@ -207,7 +207,7 @@
       "slug": "ltx25-official-defaults",
       "title": "LTX 2.5 로컬 실행본 — 공식 템플릿(T2V·I2V·A2V·T2A·V2V·IC-LoRA)을 돌릴 때 디노가 실행 사본에 고정하는 것",
       "kind": "workflow",
-      "version": "2",
+      "version": "3",
       "execution": "local",
       "tags": [
         "ltx",
@@ -239,15 +239,15 @@
         "KJNodes"
       ],
       "summary": "LTX 2.5 공식 ComfyUI 템플릿(글→영상, 이미지→영상, 음성→영상 진행자, 글→오디오, 영상→영상 IC-LoRA)을 손대지 않고 실행 사본에만 네 가지를 고정해 돌리는 순서 — Conv 영상 VAE, 일반 VAEDecode, 디코드 전 VRAM Debug(모델 내리기), 일반 샘플러 기본. LTX 프롬프트 규격과 검수 자리. 길이·해상도는 사용자 GPU에서 찾는다.",
-      "updated_at": "2026-09-26T12:37:13.595Z",
+      "updated_at": "2026-09-26T23:47:20.954Z",
       "file": "skills/ltx25-official-defaults.md",
-      "sha256": "4a878ade689d8fab214dc61089130f81bf8df193dbcb7de07b1b83f069883678"
+      "sha256": "21ade8cf862e966c3020ab3aff00ed1b4e7d7ee8e1476882eebd37352b5b9ac4"
     },
     {
       "slug": "minimax-h3-r2v-deno",
       "title": "MiniMax H3 참고→영상(R2V)·시작 이미지→영상(FL2VA) — 디노의 현행 ComfyUI 워크플로(INT8 pruned + VDN 8스텝)",
       "kind": "workflow",
-      "version": "8",
+      "version": "9",
       "execution": "local",
       "tags": [
         "미니맥스",
@@ -284,9 +284,9 @@
         "KJNodes"
       ],
       "summary": "참고물(캐릭터 시트·장소 판·스타일 키·목소리 견본)로 새 장면을 만드는 R2V와, 독립 시작(·끝) 이미지를 정확한 첫 프레임으로 삼는 FL2VA를 같은 그래프 계약으로 돌리는 디노의 현행 워크플로. 한 번의 생성이 영상+스테레오 소리(대사·효과음)를 같이 낸다. 모드별 디퓨전·로라 한 쌍, 공통 체인, 화질 단계(초안·기본, R2V 1088p급 기본 7+1·액션 8+1), API 그래프 전문, 모델 배포처, 실측으로 확인된 함정.",
-      "updated_at": "2026-09-26T16:49:36.649Z",
+      "updated_at": "2026-09-26T23:47:23.756Z",
       "file": "skills/minimax-h3-r2v-deno.md",
-      "sha256": "3a56c4f9a7e169607344666b7029257ae70a48d82878227ab95b54bf956d282a"
+      "sha256": "7af8a49e4a67305e3d8063452e2841b72c9016c6d82d1235359e2a8bc7eb716b"
     },
     {
       "slug": "premiere-audio-balance",
@@ -456,7 +456,7 @@
       "slug": "qwen-image-21-t2i-edit",
       "title": "Qwen-Image 2.1 글→이미지 + 편집 — 한 그래프로 사진 생성·편집하는 디노 워크플로",
       "kind": "workflow",
-      "version": "5",
+      "version": "6",
       "execution": "local",
       "tags": [
         "qwen",
@@ -482,15 +482,15 @@
         "Qwen3-VL 8B"
       ],
       "summary": "로컬 오픈 웨이트 Qwen-Image 2.1(int8)로 글→이미지와 편집(참고 1~10장 합성·부분 편집·배경 제거·투명 PNG)을 한 그래프로 돌리는 순서 — 참고 칸을 비우면 생성, 채우면 편집. 크기·CFG·부정 프롬프트는 사진마다 사용자가 정하고, 프롬프트는 꾸러미 qwen-image-21-prompting으로 쓴다. API 그래프 전문과 모델 배포처.",
-      "updated_at": "2026-09-26T15:52:37.960Z",
+      "updated_at": "2026-09-26T23:47:24.891Z",
       "file": "skills/qwen-image-21-t2i-edit.md",
-      "sha256": "5b5f05b0802259623a9ca92870ada47800aa619584cc9fbb1b26fa029d053fe8"
+      "sha256": "ae4560fd53fb90970a483d37f6a58d86c5ff45ff0f2ed89ea522c32d4c0c41d7"
     },
     {
       "slug": "stable-audio-3-bgm",
       "title": "로컬 배경음 — Stable Audio 3 Medium(증류판)으로 연주곡·앰비언트 만들기",
       "kind": "workflow",
-      "version": "2",
+      "version": "3",
       "execution": "local",
       "tags": [
         "음악",
@@ -510,9 +510,9 @@
         "Stable Audio 3 Medium"
       ],
       "summary": "디노가 로컬에서 연주곡 배경음·인트로·앰비언트를 만드는 방법. Stable Audio 3 Medium(증류판, 8스텝·CFG 1 — base 판은 쓰지 않는다)을 ComfyUI 공식 템플릿 값 그대로 API로 돌린다. 프롬프트 한 문단 문법(TrackType·VocalType 태그 + 장르·악기·분위기·BPM), 길이 잡기, 후보 여러 개 뽑아 고르기, MP3 저장, 무보컬 오염 회피, 16GB 카드 길이 사다리 실측. 프롬프트 작법 전문과 실수 목록은 짝 편 stable-audio-3-prompting.",
-      "updated_at": "2026-09-26T22:41:29.888Z",
+      "updated_at": "2026-09-26T23:47:25.728Z",
       "file": "skills/stable-audio-3-bgm.md",
-      "sha256": "a0cbfe4f39f173c40277192af1ccf30989c4746777e6ada5baea5cc7d3748350"
+      "sha256": "d1d4f53b148a5c7b65048e4dbca27418249e4718ca9bdc29c04ffdc0785de750"
     },
     {
       "slug": "stable-audio-3-prompting",
@@ -552,7 +552,7 @@
       "slug": "upscale-h3-4mp-5plus3",
       "title": "업스케일 두 방법 — H3 1088p급 잠재 업스케일(7+1·8+1)과 LTX 2.5 MSR 리파인(×1.5)",
       "kind": "technique",
-      "version": "6",
+      "version": "7",
       "execution": "local",
       "tags": [
         "업스케일",
@@ -576,9 +576,9 @@
         "LTX-2.5 MSR IC-LoRA"
       ],
       "summary": "만든 영상의 해상도·디테일을 올리는 디노의 두 방법. ① 같은 생성 안에서 앞 단계 → 3D 잠재 업스케일(기본 ×2·액션 ×1.5) → 같은 8스텝 일정의 마지막 1스텝(H3 R2V, 오디오 잠재가 함께 간다) ② 이미 있는 mp4를 LTX 2.5가 1.5배로 다시 그리는 리파인(참조 시트로 인물을 붙잡고 오디오는 원본 트랙). 언제 무엇을 쓰는지, 배선 계약, 모델 배포처.",
-      "updated_at": "2026-09-26T16:49:36.800Z",
+      "updated_at": "2026-09-26T23:47:26.649Z",
       "file": "skills/upscale-h3-4mp-5plus3.md",
-      "sha256": "7e2e2118633ff13872631a1dca135cdcf6d73e83af1845172aef908dbd8767e0"
+      "sha256": "4e8c1ae4e2918d74fb2e416387de6276f6ab914a4a1183cc6be943d2baeda68e"
     }
   ]
 }
