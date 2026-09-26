@@ -165,18 +165,18 @@ const checks = [
     "PrintWindow",
     "Sequence.exportFramePNG is unavailable",
   ]),
+  // Codex에 상시 MCP를 등록해 둔 PC에서만 뜻이 있는 검사. 등록이 없으면(키트 기본) 통과 — 평소 운용은 on-demand CLI다.
   {
-    name: "Codex premiere_pro registration preserved",
+    name: "Codex premiere_pro registration (optional)",
     ok:
-      premiereProConfig.includes("[mcp_servers.premiere_pro]") &&
-      premiereProConfig.includes("premiere-pro-mcp") &&
-      codexConfig.includes("PREMIERE_TEMP_DIR"),
-    details: options.codexConfig,
+      premiereProConfig.length === 0 ||
+      (premiereProConfig.includes("premiere-pro-mcp") && codexConfig.includes("PREMIERE_TEMP_DIR")),
+    details: premiereProConfig.length === 0 ? "no standing registration — on-demand CLI only" : options.codexConfig,
   },
   {
     name: "standing premiere_pro MCP disabled",
     ok:
-      premiereProConfig.length > 0 &&
+      premiereProConfig.length === 0 ||
       /^enabled\s*=\s*false\s*$/im.test(premiereProConfig),
     details: "Normal operation uses the repo on-demand CLI and exits after each call.",
   },

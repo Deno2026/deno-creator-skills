@@ -26,3 +26,4 @@ premiere/local.config.json
 **/.next/
 **/.local/
 premiere/dist/
+premiere/reports/
