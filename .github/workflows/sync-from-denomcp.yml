@@ -1,0 +1,39 @@
+# DenoMCP를 그대로 따라온다 — 노하우 창고 편 → skills/, 스타터 킷 → kits/starter/.
+# 매시 한 번(UTC 17분) 공개 API를 받아 적고, 바뀐 것이 있을 때만 커밋한다. 손으로 돌리려면 Actions 탭의 「Run workflow」
+# 또는 `gh workflow run sync-from-denomcp.yml -R Deno2026/deno-creator-skills`.
+# GitHub는 저장소에 60일 동안 커밋이 없으면 예약 실행을 멈춘다 — 그때는 Actions 탭에서 다시 켠다.
+name: sync-from-denomcp
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-from-denomcp
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: DenoMCP에서 받아 적기
+        id: sync
+        run: node tools/sync-from-denomcp.mjs
+
+      - name: 바뀐 것이 있으면 커밋·푸시
+        run: |
+          if [ -z "$(git status --porcelain -- skills kits/starter)" ]; then
+            echo "바뀐 것 없음"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- skills kits/starter
+          git commit -m "sync: DenoMCP 따라오기 — ${{ steps.sync.outputs.summary }}"
+          git push
