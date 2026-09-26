@@ -510,9 +510,9 @@
         "Stable Audio 3 Medium"
       ],
       "summary": "디노가 로컬에서 연주곡 배경음·인트로·앰비언트를 만드는 방법. Stable Audio 3 Medium(증류판, 8스텝·CFG 1 — base 판은 쓰지 않는다)을 ComfyUI 공식 템플릿 값 그대로 API로 돌린다. 프롬프트 한 문단 문법(TrackType·VocalType 태그 + 장르·악기·분위기·BPM), 길이 잡기, 후보 여러 개 뽑아 고르기, MP3 저장, 무보컬 오염 회피, 16GB 카드 길이 사다리 실측. 프롬프트 작법 전문과 실수 목록은 짝 편 stable-audio-3-prompting.",
-      "updated_at": "2026-09-26T18:58:15.706Z",
+      "updated_at": "2026-09-26T22:41:29.888Z",
       "file": "skills/stable-audio-3-bgm.md",
-      "sha256": "2eee6aaedb7dc0c61908733843241603f6469c7d2a07ec41e01f72b3455ec438"
+      "sha256": "a0cbfe4f39f173c40277192af1ccf30989c4746777e6ada5baea5cc7d3748350"
     },
     {
       "slug": "stable-audio-3-prompting",
