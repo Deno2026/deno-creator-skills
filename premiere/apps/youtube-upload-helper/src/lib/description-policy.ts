@@ -56,6 +56,18 @@ function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+const HASHTAG_LINE = /^\s*#[^\s#]+(?:\s+#[^\s#]+)*\s*$/u;
+
+/** 고정 블록을 붙이되 설명 끝의 해시태그 줄은 맨 끝에 남긴다(게시 문구 기준: 챕터 → HUB → PC Spec → ComfyUI → Discord → 해시태그, 2026-09-27). */
+function appendBeforeTrailingHashtags(value: string, block: string) {
+  const lines = value.split("\n");
+  let start = lines.length;
+  while (start > 0 && HASHTAG_LINE.test(lines[start - 1])) start -= 1;
+  const body = lines.slice(0, start).join("\n").trim();
+  if (start === lines.length || !body) return [value, block].filter(Boolean).join("\n\n");
+  return [body, block, lines.slice(start).join("\n").trim()].filter(Boolean).join("\n\n");
+}
+
 /** 설정된 URL(스킴·www 무시)을 찾는 패턴. URL이 비어 있으면 null. */
 function urlPattern(url: string, anchored = false) {
   const bare = url.replace(/^https?:\/\/(?:www\.)?/iu, "").replace(/\/+$/u, "");
@@ -121,7 +133,7 @@ export function ensureComfyReferralBlock(
   const normalized = stripKnownComfyReferralBlocks(value, blocks);
   if (!blocks.comfyReferral.url) return normalized;
   if (hasComfyReferralUrl(normalized, blocks)) return normalized;
-  return [normalized, block ?? comfyReferralBlock("ko", blocks)].filter(Boolean).join("\n\n");
+  return appendBeforeTrailingHashtags(normalized, block ?? comfyReferralBlock("ko", blocks));
 }
 
 export function hasDenoDiscordUrl(value: string, blocks: DescriptionBlocksConfig = activeBlocks) {
@@ -146,7 +158,7 @@ export function ensureDenoDiscordBlock(
   const normalized = stripKnownDenoDiscordBlocks(value, blocks);
   if (!blocks.discord.url) return normalized;
   if (hasDenoDiscordUrl(normalized, blocks)) return normalized;
-  return [normalized, block ?? discordBlock("ko", blocks)].filter(Boolean).join("\n\n");
+  return appendBeforeTrailingHashtags(normalized, block ?? discordBlock("ko", blocks));
 }
 
 export function ensurePermanentDescriptionLinks(

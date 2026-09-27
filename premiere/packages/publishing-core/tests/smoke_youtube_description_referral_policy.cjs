@@ -57,6 +57,25 @@ const sponsoredTutorial = composeDescription(
   "tutorial_with_chapters",
   { includeComfyReferral: false, hashtags: ["#PolloAI #AIVideo"] },
 );
+const campaignTutorial = composeDescription(
+  { summary: "Campaign summary", chapters: ["Start", "Finish"] },
+  ["00:00", "01:00"],
+  "tutorial_with_chapters",
+  { hashtags: ["#Higgsfield #GPT6Astra"] },
+);
+const orderOf = (token) => {
+  const index = campaignTutorial.indexOf(token);
+  assert.notEqual(index, -1, `missing ${token}`);
+  return index;
+};
+// 강의 채널 순서: 요약 → 챕터 → HUB → PC Spec → ComfyUI → Discord → 해시태그(publishing-handoff.md 「게시 문구 기준」).
+const orderedTokens = ["Campaign summary", "00:00 Start", "01:00 Finish", "Creator HUB", "PC Spec", COMFY_REFERRAL_URL, DENO_DISCORD_URL, "#Higgsfield #GPT6Astra"];
+assert.deepEqual(
+  orderedTokens.map(orderOf),
+  [...orderedTokens.map(orderOf)].sort((left, right) => left - right),
+);
+assert.ok(campaignTutorial.trimEnd().endsWith("#Higgsfield #GPT6Astra"));
+
 assert.equal(count(sponsoredTutorial, COMFY_REFERRAL_URL), 0);
 assert.equal(count(sponsoredTutorial, DENO_DISCORD_URL), 1);
 assert.match(sponsoredTutorial, /https:\/\/bit\.ly\/example/u);

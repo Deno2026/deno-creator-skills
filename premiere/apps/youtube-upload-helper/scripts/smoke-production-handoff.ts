@@ -39,6 +39,19 @@ const sponsorDescription = ensurePermanentDescriptionLinks(
 assert.equal(sponsorDescription.includes(COMFY_REFERRAL_URL), false);
 assert.equal(sponsorDescription.includes(DENO_DISCORD_URL), true);
 
+// 캠페인 해시태그 줄은 고정 블록 뒤, 맨 끝에 남는다(챕터 → HUB → PC Spec → ComfyUI → Discord → 해시태그).
+const campaignDescription = ensurePermanentDescriptionLinks(
+  `본문\n\n00:00 시작\n\n💻 PC Spec\nCPU\n\n${COMFY_REFERRAL_URL}\n\n${DENO_DISCORD_URL}\n\n#Higgsfield #GPT6Astra`,
+);
+const campaignOrder = ["00:00 시작", "💻 PC Spec", "☁️ ComfyUI", "💬 Discord", "#Higgsfield #GPT6Astra"]
+  .map((token) => campaignDescription.indexOf(token));
+assert.ok(campaignOrder.every((index) => index >= 0), campaignDescription);
+assert.deepEqual(campaignOrder, [...campaignOrder].sort((left, right) => left - right), campaignDescription);
+assert.ok(campaignDescription.endsWith("#Higgsfield #GPT6Astra"), campaignDescription);
+assert.equal(ensurePermanentDescriptionLinks(campaignDescription), campaignDescription);
+// 해시태그가 없으면 이전처럼 맨 끝에 붙는다.
+assert.ok(ensurePermanentDescriptionLinks("본문만").endsWith(DENO_DISCORD_URL));
+
 const sandbox = await mkdtemp(path.join(os.tmpdir(), "deno-production-handoff-smoke-"));
 const productionRoot = path.join(sandbox, "source");
 const runtimeRoot = path.join(sandbox, "runtime");

@@ -340,6 +340,20 @@ function descriptionBodyOnly(value: string) {
     .trim();
 }
 
+const HASHTAG_LINE = /^\s*#[^\s#]+(?:\s+#[^\s#]+)*\s*$/u;
+
+/** 첫 챕터 줄 뒤의 해시태그 줄(캠페인 키워드). descriptionBodyOnly가 버리는 부분이라 따로 챙겨 맨 끝에 다시 붙인다. */
+function hashtagLinesAfterChapters(value: string) {
+  const lines = value.split(/\r?\n/);
+  const chapterStart = lines.findIndex(isChapterLine);
+  if (chapterStart < 0) return "";
+  return lines
+    .slice(chapterStart)
+    .filter((line) => HASHTAG_LINE.test(line))
+    .map((line) => line.trim())
+    .join("\n");
+}
+
 function ensureCampaignDescriptionLinks(
   value: string,
   noAffiliateLinks = false,
@@ -357,21 +371,29 @@ function composeUploadDescription(
   noAffiliateLinks = false,
   links: ChannelLinkPolicy = DEFAULT_LINK_POLICY,
 ) {
+  const hashtags = hashtagLinesAfterChapters(body);
+  const chapterText = (chapters ?? "")
+    .split(/\r?\n/)
+    .filter((line) => !HASHTAG_LINE.test(line))
+    .join("\n")
+    .trim();
   // DENO PICTURES처럼 강의 채널 블록을 쓰지 않는 채널은 본문과 챕터만 둔다.
   if (!links.tutorialBlocks) {
     return ensureCampaignDescriptionLinks(
-      [descriptionBodyOnly(body), chapters?.trim()].filter(Boolean).join("\n\n"),
+      [descriptionBodyOnly(body), chapterText, hashtags].filter(Boolean).join("\n\n"),
       noAffiliateLinks,
       links,
     );
   }
+  // 강의 채널 순서: 본문 → 챕터 → HUB → PC Spec → ComfyUI → Discord → 해시태그(publishing-handoff.md 「게시 문구 기준」, 2026-09-27).
   return [
     descriptionBodyOnly(body),
+    chapterText,
     tutorialBlock("hub"),
+    tutorialBlock("pcSpec"),
     noAffiliateLinks || !links.comfyReferral ? null : comfyReferralBlock("ko"),
     links.discord ? discordBlock("ko") : null,
-    tutorialBlock("pcSpec"),
-    chapters?.trim(),
+    hashtags,
   ]
     .filter(Boolean)
     .join("\n\n");
@@ -708,6 +730,8 @@ export default function MainUploadPage() {
   // 페이지 마운트 시 fetch하는 가벼운 메타데이터는 페이지 local 유지.
   const [auth, setAuth] = useState<AuthStatus | null>(null);
   const [uploadChannels, setUploadChannels] = useState<UploadChannelSummary[]>([]);
+  // 설명 고정 블록(channels.json) 설정을 받은 뒤에만 준비된 설명을 자동 적용한다 — 먼저 적용하면 ComfyUI·Discord 제목 줄만 빠진다(2026-09-27).
+  const [descriptionBlocksReady, setDescriptionBlocksReady] = useState(false);
   const [channelEpoch, setChannelEpoch] = useState(0);
   const [channelSwitching, setChannelSwitching] = useState(false);
   const channelLinkPolicy = auth?.uploadChannel?.descriptionLinks ?? DEFAULT_LINK_POLICY;
@@ -1101,6 +1125,7 @@ export default function MainUploadPage() {
         if (active && Array.isArray(data.channels)) setUploadChannels(data.channels);
         if (active && data.activeChannelId && !activeUploadChannelIdRef.current) activeUploadChannelIdRef.current = data.activeChannelId;
       } catch {}
+      if (active) setDescriptionBlocksReady(true);
     })();
 
     return () => {
@@ -1196,7 +1221,7 @@ export default function MainUploadPage() {
   );
 
   useEffect(() => {
-    if (!agentProject?.metadata) return;
+    if (!agentProject?.metadata || !descriptionBlocksReady) return;
     if (metadataAutoAppliedSlugRef.current === agentProject.slug) return;
 
     const timer = window.setTimeout(() => {
@@ -1205,7 +1230,7 @@ export default function MainUploadPage() {
     }, 0);
 
     return () => window.clearTimeout(timer);
-  }, [agentProject, applyAgentMetadata]);
+  }, [agentProject, applyAgentMetadata, descriptionBlocksReady]);
 
   // ───── m28: 채널 메타 + 프리셋 초기 fetch ─────
   // 인증 연결 후에만 채널 메타 fetch (재생목록·카테고리·언어는 YouTube 로그인 필요).
@@ -1420,8 +1445,9 @@ export default function MainUploadPage() {
 
   function applySuggestedChapters(value: string) {
     setKoreanDescription((current) => {
-      const body = descriptionBodyOnly(current || agentProject?.metadata?.description || "");
-      return composeUploadDescription(body, value, campaignNoAffiliateLinks, channelLinkPolicy);
+      // 원문 전체를 넘긴다: 본문은 composeUploadDescription이 떼고, 챕터 뒤 해시태그 줄은 그대로 보존한다.
+      const source = current || agentProject?.metadata?.description || "";
+      return composeUploadDescription(source, value, campaignNoAffiliateLinks, channelLinkPolicy);
     });
     setMetadataMode("agent");
   }

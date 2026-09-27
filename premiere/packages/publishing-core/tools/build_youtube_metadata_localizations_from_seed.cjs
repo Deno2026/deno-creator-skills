@@ -100,15 +100,18 @@ function composeDescription(
       ...discordBlock,
     ].join("\n");
   }
+  // 강의 채널 순서는 한국어 설명과 같다: 요약 → 챕터 → HUB → PC Spec → ComfyUI → Discord → 해시태그
+  // (publishing-handoff.md 「게시 문구 기준」, 2026-09-27).
   return [
     entry.summary.trim(),
+    ...(entry.chapters.length
+      ? ["", ...entry.chapters.map((chapter, index) => `${chapterTimes[index]} ${chapter.trim()}`)]
+      : []),
     ...(HUB_BLOCK.length ? ["", ...HUB_BLOCK] : []),
-    ...comfyBlock,
     ...(PC_SPEC_BLOCK.length ? ["", ...PC_SPEC_BLOCK] : []),
-    "",
-    ...entry.chapters.map((chapter, index) => `${chapterTimes[index]} ${chapter.trim()}`),
-    ...hashtagBlock,
+    ...comfyBlock,
     ...discordBlock,
+    ...hashtagBlock,
   ].join("\n");
 }
 
