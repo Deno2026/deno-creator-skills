@@ -43,7 +43,9 @@ def submit_vdn(args, prompt):
         name = upload_image(args.server, args.ref_video) if os.path.isfile(args.ref_video) else args.ref_video
         wf['300'] = {'class_type': 'LoadVideo', 'inputs': {'file': name}}
         wf['301'] = {'class_type': 'GetVideoComponents', 'inputs': {'video': ['300', 0]}}
-        wf['7']['inputs'].update({'ref_videos.ref_video_0': ['301', 0], 'ref_video_audios.ref_video_audio_0': ['301', 1]})
+        wf['7']['inputs']['ref_videos.ref_video_0'] = ['301', 0]
+        if args.ref_video_audio == 'on':
+            wf['7']['inputs']['ref_video_audios.ref_video_audio_0'] = ['301', 1]
     if args.ref_audio:
         name = upload_image(args.server, args.ref_audio) if os.path.isfile(args.ref_audio) else args.ref_audio
         wf['310'] = {'class_type': 'LoadAudio', 'inputs': {'audio': name}}
@@ -96,7 +98,10 @@ def main() -> None:
     ap.add_argument("--ref", action="append", default=[],
                     help="레퍼런스 이미지 (경로 또는 입력함 파일명, 최대 9번)")
     ap.add_argument("--ref-video", default=None,
-                    help="레퍼런스 영상 (경로 또는 입력함 파일명, 2~15초, 소리도 같이 전달됨)")
+                    help="레퍼런스 영상 (경로 또는 입력함 파일명, 2~15초, 소리는 --ref-video-audio로 정함)")
+    ap.add_argument("--ref-video-audio", choices=["on", "off"], default="on",
+                    help="레퍼런스 영상의 소리도 넣을지(기본 on). 앞 채택판 이어 쓰기는 off — 원본 소리를 통째로 넣으면 여러 인물 목소리가 섞인다. "
+                         "목소리가 필요하면 그 인물 대사만 잘라 --ref-audio로 (2026-09-28 실측)")
     ap.add_argument("--ref-audio", default=None,
                     help="독립 레퍼런스 오디오 (경로 또는 입력함 파일명, 2~15초 — 목소리 전이용)")
     ap.add_argument("--seed", type=int, default=None,
@@ -180,7 +185,8 @@ def main() -> None:
         wf["301"] = {"inputs": {"video": ["300", 0]}, "class_type": "GetVideoComponents",
                      "_meta": {"title": "Ref Video 분해"}}
         wf[NODE_MAIN]["inputs"]["ref_videos.ref_video_0"] = ["301", 0]
-        wf[NODE_MAIN]["inputs"]["ref_video_audios.ref_video_audio_0"] = ["301", 1]
+        if args.ref_video_audio == "on":
+            wf[NODE_MAIN]["inputs"]["ref_video_audios.ref_video_audio_0"] = ["301", 1]
 
     if args.ref_audio:
         if os.path.isfile(args.ref_audio):

@@ -38,7 +38,7 @@
       "slug": "comfyui-agent-basics",
       "title": "ComfyUI를 에이전트가 다루는 법 — 디노 방식(API로 접수·확인·회수·검수 한 바퀴)",
       "kind": "technique",
-      "version": "5",
+      "version": "6",
       "execution": "local",
       "tags": [
         "comfyui",
@@ -65,9 +65,9 @@
         "ComfyUI"
       ],
       "summary": "에이전트가 사용자 PC(또는 같은 네트워크의 다른 PC)의 ComfyUI를 화면 조작 없이 API로 부리는 순서 — 서버 확인 → 그래프 준비·대조 → 참조 업로드 → 큐 비우기·메모리 내리기 → 접수 → 진행 → 회수 → 실제 파일 검수 → 정리. 이 창고의 모든 로컬 갈래(H3·LTX)가 이 절차 위에서 돈다. 접수를 완료로 착각하는 것, 앞 판 잔여 메모리에 걸려 기어가는 것, 사용자 워크플로 폴더를 건드리는 것을 막는다.",
-      "updated_at": "2026-09-27T12:44:44.549Z",
+      "updated_at": "2026-09-27T20:06:12.925Z",
       "file": "skills/comfyui-agent-basics.md",
-      "sha256": "45ecd052aca8e4f30642d9a735902c14bddb2ea41616bb5b8f3ef8da3c0ccf22",
+      "sha256": "dac794dcfafb06d0c9ba40458a767e738815c60ee812ecfbb33b76f36b8a959f",
       "files": [
         {
           "path": "fetch.py",
@@ -374,7 +374,7 @@
       "slug": "minimax-h3-r2v-deno",
       "title": "MiniMax H3 참고→영상(R2V)·시작 이미지→영상(FL2VA) — 디노의 현행 ComfyUI 워크플로(INT8 pruned + VDN 8스텝)",
       "kind": "workflow",
-      "version": "11",
+      "version": "12",
       "execution": "local",
       "tags": [
         "미니맥스",
@@ -401,7 +401,11 @@
         "워크플로",
         "화질",
         "초안",
-        "1088p"
+        "1088p",
+        "이어 쓰기",
+        "video continuation",
+        "영상 참고",
+        "연속 장면"
       ],
       "models": [
         "MiniMax H3 Singularity Ref2VA Pruned v1.3 INT8",
@@ -411,9 +415,9 @@
         "KJNodes"
       ],
       "summary": "참고물(캐릭터 시트·장소 판·스타일 키·목소리 견본)로 새 장면을 만드는 R2V와, 독립 시작(·끝) 이미지를 정확한 첫 프레임으로 삼는 FL2VA를 같은 그래프 계약으로 돌리는 디노의 현행 워크플로. 한 번의 생성이 영상+스테레오 소리(대사·효과음)를 같이 낸다. 모드별 디퓨전·로라 한 쌍, 공통 체인, 화질 단계(초안·기본, R2V 1088p급 기본 7+1·액션 8+1), API 그래프 전문, 모델 배포처, 실측으로 확인된 함정.",
-      "updated_at": "2026-09-27T02:36:40.440Z",
+      "updated_at": "2026-09-27T20:06:13.930Z",
       "file": "skills/minimax-h3-r2v-deno.md",
-      "sha256": "1fce0a33e245906ee836add2d5c4c4a99078fb6b8b87889060aff33a30093399",
+      "sha256": "dd2e8b987f3a942a84a89968f9109ad9de882dd52bb1c04076d2cb3950d3bee3",
       "files": [
         {
           "path": "h3_prompt_lint.py",
@@ -480,8 +484,8 @@
         },
         {
           "path": "queue.py",
-          "size": 10617,
-          "sha256": "9eb342e8d32223f37f5ae2fb3da168cd6ee8a9161acffa3acfccf4236befcb59",
+          "size": 11129,
+          "sha256": "8524876f260ebeb4cf39646a0d74ca6784a27dc71f51e99a8ea28238bcf9ae00",
           "url": "https://denomcp.com/api/v1/knowhow/minimax-h3-r2v-deno/files/queue.py",
           "repo_path": "workflows/minimax-h3-r2v-deno/queue.py"
         }
