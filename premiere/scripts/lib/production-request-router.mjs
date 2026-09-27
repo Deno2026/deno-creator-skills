@@ -82,7 +82,7 @@ function requestScope(text) {
     ),
     protectExistingCuts: matches(
       text,
-      /(?:컷(?:은|이|편집은)?\s*(?:끝|완료|확정|건들지|건드리지|유지)|기존\s*컷\s*(?:보존|유지))/iu,
+      /(?:컷(?:은|이|편집은)?\s*(?:끝|완료|확정|건들지|건드리지|유지)|컷\s*편집\s*(?:은\s*)?(?:다\s*)?(?:했|끝냈|마쳤)|기존\s*컷\s*(?:보존|유지))/iu,
     ),
     removeUselessSegments: matches(
       text,
@@ -215,7 +215,8 @@ function isCaption(text) {
 function isAudioFinishing(text) {
   return matches(
     text,
-    /(?:오디오|소리|음성).{0,16}(?:정규화|밸런스|레벨|라우드니스|볼륨\s*맞|마감|보정)|(?:정규화|라우드니스).{0,12}(?:오디오|소리|음성)|리미터|limiter|(?:고점\s*)?피크.{0,12}(?:눌러|제한|잡아|누르)|(?:bgm|배경\s*음(?:악)?|음악|브금).{0,16}(?:크|커|작|줄|올|낮|키|시끄|묻)/iu,
+    // "오디오 파형 조절" = the user's name for the whole-timeline balance (2026-09-27); "파형 컷" stays a cut (isCutEditing).
+    /(?:오디오|소리|음성).{0,16}(?:정규화|밸런스|레벨|라우드니스|볼륨\s*맞|마감|보정)|(?:오디오|소리|음성)\s*(?:파형\s*)?(?:조절|조정)|(?:정규화|라우드니스).{0,12}(?:오디오|소리|음성)|리미터|limiter|(?:고점\s*)?피크.{0,12}(?:눌러|제한|잡아|누르)|(?:bgm|배경\s*음(?:악)?|음악|브금).{0,16}(?:크|커|작|줄|올|낮|키|시끄|묻)/iu,
   );
 }
 
@@ -411,17 +412,27 @@ export function resolveProductionRequest(value) {
     });
   }
 
-  if (isMotion(request) && isAudioFinishing(request)) {
+  // One request can name several finishing stages at once ("오디오 파형 조절이랑 자막 작업이랑 모션작업까지 전부", 2026-09-27):
+  // route every named stage instead of the first match, so the caption hard rule is read with the motion workflows.
+  if (isMotion(request) && (isAudioFinishing(request) || (isCaption(request) && !isRepeatSpeechRemoval(request)))) {
+    const audio = isAudioFinishing(request);
+    const captions = isCaption(request) && !isRepeatSpeechRemoval(request);
     return commonResult(request, {
-      intent: "audio-and-motion-finishing",
+      intent: audio && captions ? "audio-caption-motion-finishing" : audio ? "audio-and-motion-finishing" : "caption-and-motion-finishing",
       mode: "locked-edit-finishing",
       domain: "master",
-      workflows: [WORKFLOWS.audio, WORKFLOWS.motion, WORKFLOWS.motionProfile, WORKFLOWS.motionTypography, WORKFLOWS.premiere],
-      liveReads: ["current sequence, narration, audio map, and established motion direction"],
+      workflows: [
+        ...(audio ? [WORKFLOWS.audio] : []),
+        WORKFLOWS.motion, WORKFLOWS.motionProfile, WORKFLOWS.motionTypography,
+        ...(captions ? [WORKFLOWS.captions] : []),
+        WORKFLOWS.premiere,
+      ],
+      liveReads: [`current sequence, narration${audio ? ", audio map" : ""}${captions ? ", the user's SRT and existing caption track" : ""}, and established motion direction`],
       scope: {...scope, protectExistingCuts: true},
       guidance: [
-        "Apply the requested audio and motion work to the approved live edit.",
+        `Apply the requested ${[audio && "audio", "motion", captions && "caption"].filter(Boolean).join(", ")} work to the approved live edit.`,
         "Use the established channel motion profile.",
+        ...(captions ? ["Captions start from the user's SRT (caption-production.md hard rule); apply them after the overlays are placed."] : []),
       ],
     });
   }

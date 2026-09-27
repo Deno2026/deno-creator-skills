@@ -18,6 +18,19 @@ const frame = (seconds, fps, label) => {
   return rounded;
 };
 
+// A sequence that ends on an off-grid audio clip (a user BGM tail) has an off-grid duration too (2026-09-27: A2 BGM ending at
+// 481.8147 s). Accept it only when an audio clip ends exactly there; every other off-grid duration still fails.
+const sequenceDurationFrames = (seconds, fps, audioTracks) => {
+  const value = finite(seconds, 'sequence.durationSeconds');
+  const exact = value * fps;
+  const rounded = Math.round(exact);
+  if (Math.abs(exact - rounded) / fps <= FRAME_EPSILON_SECONDS) return rounded;
+  const endsOnAudioClip = audioTracks.some((track) => track.clips.some((clip) =>
+    clip.endSeconds !== null && Math.abs(clip.endSeconds - value) <= FRAME_EPSILON_SECONDS));
+  if (!endsOnAudioClip) throw new Error(`sequence.durationSeconds is not frame-aligned at ${fps}fps.`);
+  return Number(exact.toFixed(6));
+};
+
 const optionalSeconds = (value, label) => {
   if (value === undefined || value === null || value === '') return null;
   return Number(finite(value, label).toFixed(9));
@@ -91,14 +104,15 @@ export const normalizePremiereSequenceFingerprint = (structure, fps) => {
   if (Number(structure.audioTrackCount) !== audioTracks.length) {
     throw new Error('audioTrackCount does not match audioTracks.');
   }
+  const normalizedAudioTracks = audioTracks.map((track, index) =>
+    normalizeTrack(track, exactFps, `audioTracks[${index}]`, 'audio'));
   return {
     id: String(structure.id ?? ''),
     name: String(structure.name ?? ''),
-    durationFrames: frame(structure.durationSeconds, exactFps, 'sequence.durationSeconds'),
+    durationFrames: sequenceDurationFrames(structure.durationSeconds, exactFps, normalizedAudioTracks),
     videoTracks: videoTracks.map((track, index) =>
       normalizeTrack(track, exactFps, `videoTracks[${index}]`)),
-    audioTracks: audioTracks.map((track, index) =>
-      normalizeTrack(track, exactFps, `audioTracks[${index}]`, 'audio')),
+    audioTracks: normalizedAudioTracks,
   };
 };
 

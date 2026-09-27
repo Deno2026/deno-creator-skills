@@ -135,6 +135,26 @@ test("motion plus audio selects both workflows", "클로드처럼 모션 다시 
   assert.ok(route.workflows.includes("docs/agent/workflows/motion-production.md"));
 });
 
+// 2026-09-27: this sentence routed to motion only, so the caption and audio workflows were not offered.
+test("audio, captions and motion in one request select all three", "컷편집 다 했어 이제 오디오 파형 조절이랑 자막 작업이랑 모션작업까지 전부 진행해줘", (route) => {
+  assert.equal(route.intent, "audio-caption-motion-finishing");
+  assert.equal(route.scope.protectExistingCuts, true);
+  for (const workflow of ["audio-finishing.md", "caption-production.md", "motion-production.md", "channel-motion-profile.md", "premiere-control.md"]) {
+    assert.ok(route.workflows.includes(`docs/agent/workflows/${workflow}`), workflow);
+  }
+});
+
+test("captions plus motion select both workflows", "자막이랑 모션 같이 넣어줘", (route) => {
+  assert.equal(route.intent, "caption-and-motion-finishing");
+  assert.ok(route.workflows.includes("docs/agent/workflows/caption-production.md"));
+  assert.ok(!route.workflows.includes("docs/agent/workflows/audio-finishing.md"));
+});
+
+test("an audio waveform cut stays a cut", "오디오 파형 컷 해줘", (route) => {
+  assert.notEqual(route.intent, "audio-finishing");
+  assert.ok(!route.workflows.includes("docs/agent/workflows/caption-production.md"));
+});
+
 for (const request of ["기본폰트 쓰지 말고 상황에 맞는 서체 골라줘", "간결한 영어 모션과 굵은 타이포그래피로 가자", "Adobe Fonts 준비해줘"]) {
   test(`typography policy is reachable: ${request}`, request, (route) => {
     assert.equal(route.intent, "motion-production");

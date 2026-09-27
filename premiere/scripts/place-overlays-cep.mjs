@@ -158,6 +158,22 @@ function secondsToFrame(seconds, fps, label) {
   return frame;
 }
 
+// 2026-09-27: a sequence that ends on an off-grid audio clip (the user's BGM tail placed off the video grid) is accepted only
+// when an audio clip ends exactly there; its video-usable length is the last whole frame (floor) — the same rule the placement
+// capture writes (premiere-placement-inputs.mjs sequenceDurationAudioTail). Every other off-grid duration still fails.
+function sequenceDurationFrames(structure, fps, label) {
+  const value = Number(structure?.durationSeconds);
+  if (!Number.isFinite(value)) throw new Error(`${label} must be a finite number.`);
+  const exact = value * fps;
+  const frame = Math.round(exact);
+  if (Math.abs(exact - frame) / fps <= TIME_EPSILON) return frame;
+  const audio = Array.isArray(structure?.audioTracks) ? structure.audioTracks : [];
+  const endsOnAudio = audio.some((track) => Array.isArray(track?.clips)
+    && track.clips.some((clip) => Math.abs(Number(clip?.endSeconds) - value) <= TIME_EPSILON));
+  if (!endsOnAudio) throw new Error(`${label} is not frame-aligned at ${fps}fps.`);
+  return Math.floor(exact);
+}
+
 function stableSeconds(value, label) {
   const parsed = Number(value);
   if (!Number.isFinite(parsed)) throw new Error(`${label} must be a finite number.`);
@@ -247,7 +263,7 @@ function normalizeStructure(structure, fps) {
   return {
     id: String(structure.id ?? ''),
     name: String(structure.name ?? ''),
-    durationFrames: secondsToFrame(structure.durationSeconds, fps, 'sequence.durationSeconds'),
+    durationFrames: sequenceDurationFrames(structure, fps, 'sequence.durationSeconds'),
     videoTracks: videoTracks.map((track, index) => normalizeTrack(track, 'video', index, fps)),
     audioTracks: audioTracks.map((track, index) => normalizeTrack(track, 'audio', index, fps)),
   };
@@ -334,7 +350,9 @@ export function validateOverlayPlacementIdentityGuards({manifest, before, liveCo
   ) {
     throw new Error('Live display format does not match manifest.timingCheck.');
   }
-  const durationFrames = secondsToFrame(before.durationSeconds, fps, 'sequence.durationSeconds');
+  const durationFrames = sequenceDurationFrames(before, fps, 'sequence.durationSeconds');
+  // true only for the accepted audio-tail case (sequenceDurationFrames threw for any other off-grid length)
+  const audioTail = Math.abs(Number(before.durationSeconds) * fps - Math.round(Number(before.durationSeconds) * fps)) / fps > TIME_EPSILON;
   if (
     durationFrames !== Number(manifest.sequenceCheck.durationFrames) ||
     Math.abs(Number(before.durationSeconds) - Number(manifest.sequenceCheck.durationSeconds)) > TIME_EPSILON
@@ -353,7 +371,7 @@ export function validateOverlayPlacementIdentityGuards({manifest, before, liveCo
   if (hasDurationTicks) {
     const durationTicks = BigInt(durationTicksText);
     const ticksPerFrameBigInt = BigInt(ticksPerFrame);
-    if (durationTicks % ticksPerFrameBigInt !== 0n) {
+    if (durationTicks % ticksPerFrameBigInt !== 0n && !audioTail) {
       throw new Error('CEP duration ticks are not aligned to the live frame grid.');
     }
     const liveDurationFrames = Number(durationTicks / ticksPerFrameBigInt);
@@ -648,7 +666,8 @@ function validateManifestItems(manifest, manifestDir) {
 }
 
 function validatePlacementPreflight(items, sourceChecks, before, fps) {
-  const beforeDurationFrame = secondsToFrame(before.durationSeconds, fps, 'sequence.durationSeconds');
+  // Same audio-tail rule as the structure read-back: overlays must end by the last whole frame (floor).
+  const beforeDurationFrame = sequenceDurationFrames(before, fps, 'sequence.durationSeconds');
   for (const item of items) {
     const probe = sourceChecks.get(item.absFile);
     if (!probe) throw new Error(`Missing source probe for ${item.absFile}.`);

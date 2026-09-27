@@ -71,6 +71,22 @@ function secondsToFrame(value, timing, label) {
   return frame;
 }
 
+// A sequence that ends on a sample-accurate audio clip (a BGM tail the user placed off the video frame grid) has an off-grid
+// duration too (2026-09-27: an A2 BGM ending at 481.8147 s stopped the Level applier's preflight). Keep the grid check for every
+// other case and accept an off-grid duration only when an audio clip ends exactly there.
+function sequenceDurationFrames(value, timing, tracks) {
+  const seconds = Number(value);
+  assert(Number.isFinite(seconds), "durationSeconds must be a finite number");
+  const exactFrames = seconds / timing.secondsPerFrame;
+  const frame = Math.round(exactFrames);
+  if (Math.abs(exactFrames - frame) <= timing.gridToleranceFrames) return frame;
+  const fractional = Number(exactFrames.toFixed(6));
+  const endsOnAudioClip = tracks.some((track) => track.kind === "audio"
+    && track.clips.some((clip) => Math.abs(clip.endFrame - fractional) <= 0.001));
+  assert(endsOnAudioClip, `durationSeconds is not frame-aligned (${seconds}s at ${timing.fps}fps)`);
+  return fractional;
+}
+
 function optionalSecondsToFrame(value, timing, label) {
   if (value === undefined || value === null || value === "") return null;
   return secondsToFrame(value, timing, label);
@@ -218,7 +234,7 @@ function normalizeSequenceStructureInternal(snapshot, timingOptions = {}, strict
   return {
     id: String(snapshot.id ?? ""),
     name: String(snapshot.name ?? ""),
-    durationFrames: secondsToFrame(snapshot.durationSeconds, timing, "durationSeconds"),
+    durationFrames: sequenceDurationFrames(snapshot.durationSeconds, timing, tracks),
     tracks,
     timing,
   };
@@ -452,7 +468,7 @@ export function diffSequenceStructures(beforeSnapshot, afterSnapshot, contract =
       frameTiming: timing,
       targetTracks: [],
       expectedDurationDeltaFrames: null,
-      observedDurationDeltaFrames: after.durationFrames - before.durationFrames,
+      observedDurationDeltaFrames: Number((after.durationFrames - before.durationFrames).toFixed(6)),
       changedTracks: [],
       failures: [{kind: "invalid_contract", message: error.message}],
     };
@@ -525,7 +541,8 @@ export function diffSequenceStructures(beforeSnapshot, afterSnapshot, contract =
     }
   }
 
-  const observedDurationDeltaFrames = after.durationFrames - before.durationFrames;
+  // Off-grid (audio-ended) durations are fractional; round the difference so an exact cut still compares equal.
+  const observedDurationDeltaFrames = Number((after.durationFrames - before.durationFrames).toFixed(6));
   if (observedDurationDeltaFrames !== expectedDurationDeltaFrames) {
     failures.push({
       kind: "duration_delta_mismatch",

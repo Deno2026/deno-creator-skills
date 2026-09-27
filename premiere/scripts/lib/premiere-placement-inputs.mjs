@@ -171,12 +171,18 @@ function normalizeCapture(capture) {
   };
 
   const exactDurationFrames = sequenceDurationSeconds * fps;
-  const sequenceDurationFrames = Math.round(exactDurationFrames);
+  const onGrid = Math.abs(exactDurationFrames - Math.round(exactDurationFrames)) <= FRAME_GRID_TOLERANCE;
+  // 2026-09-27: a sequence that ends on a sample-accurate audio clip (the user's BGM tail placed off the video grid) has an
+  // off-grid duration. Accept it only when an audio clip ends exactly there. Overlays are video, so the usable length is the
+  // last whole frame (floor); the capture marks the case with sequenceDurationAudioTail so the placement gate applies the same rule.
+  const audioTail = !onGrid && Array.isArray(structure.audioTracks) && structure.audioTracks.some((track) =>
+    Array.isArray(track?.clips) && track.clips.some((clip) => Math.abs(Number(clip?.endSeconds) - sequenceDurationSeconds) <= 0.0005));
   assert(
-    Math.abs(exactDurationFrames - sequenceDurationFrames) <= FRAME_GRID_TOLERANCE,
+    onGrid || audioTail,
     "structure.durationSeconds is not aligned to the active sequence frame grid",
     "PREMIERE_PLACEMENT_DURATION_NOT_FRAME_ALIGNED",
   );
+  const sequenceDurationFrames = onGrid ? Math.round(exactDurationFrames) : Math.floor(exactDurationFrames);
   const videoTrackIndexes = normalizeTracks(structure, "video");
   const audioTrackIndexes = normalizeTracks(structure, "audio");
 
@@ -188,6 +194,7 @@ function normalizeCapture(capture) {
     sequenceId,
     sequenceDurationSeconds,
     sequenceDurationFrames,
+    ...(audioTail ? {sequenceDurationAudioTail: true} : {}),
     fps,
     ticksPerFrame,
     timing: {
@@ -249,6 +256,7 @@ function sharedOutputBase({identity, generatedAt, captureSha256, structureSha256
     sequenceId: identity.sequenceId,
     sequenceDurationSeconds: identity.sequenceDurationSeconds,
     sequenceDurationFrames: identity.sequenceDurationFrames,
+    ...(identity.sequenceDurationAudioTail ? {sequenceDurationAudioTail: true} : {}),
     fps: identity.fps,
     ticksPerFrame: identity.ticksPerFrame,
     timing: identity.timing,
@@ -280,6 +288,7 @@ function compareSharedMetadata(live, structureDocument) {
     "sequenceId",
     "sequenceDurationSeconds",
     "sequenceDurationFrames",
+    "sequenceDurationAudioTail",
     "fps",
     "ticksPerFrame",
     "structureSha256",

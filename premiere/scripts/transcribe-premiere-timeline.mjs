@@ -225,11 +225,20 @@ function pythonExecutable(explicit) {
   return "python";
 }
 
+// Whisper sometimes emits a real token whose timestamps collapse (start === end, seen at 570.34s in a 2h recording).
+// Give only that exact case one 10ms tick; reversed ranges still fail in normalizeTimedWords.
+function widenCollapsedWord(word) {
+  const start = Number(word?.startSeconds ?? word?.start);
+  const end = Number(word?.endSeconds ?? word?.end);
+  if (!Number.isFinite(start) || end !== start) return word;
+  return { ...word, startSeconds: start, endSeconds: start + 0.01 };
+}
+
 function wordsFromWhisper(payload) {
-  if (Array.isArray(payload?.words) && payload.words.length > 0) return normalizeTimedWords(payload.words);
+  if (Array.isArray(payload?.words) && payload.words.length > 0) return normalizeTimedWords(payload.words.map(widenCollapsedWord));
   const words = [];
   for (const segment of payload?.segments ?? payload?.chunks ?? []) {
-    if (Array.isArray(segment.words) && segment.words.length > 0) words.push(...segment.words);
+    if (Array.isArray(segment.words) && segment.words.length > 0) words.push(...segment.words.map(widenCollapsedWord));
     else if (segment.text && Number.isFinite(Number(segment.start)) && Number.isFinite(Number(segment.end))) {
       words.push({ text: segment.text, startSeconds: Number(segment.start), endSeconds: Number(segment.end) });
     } else if (segment.text && Array.isArray(segment.timestamp)) {

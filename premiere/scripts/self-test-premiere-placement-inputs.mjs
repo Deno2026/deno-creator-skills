@@ -322,9 +322,34 @@ function testCliIsReadOnlyAndHelpNeedsNoPremiere() {
   assert.match(help.stdout, /never binds one media clip/);
 }
 
+// 2026-09-27: the user's BGM tail ends between video frames and the sequence ends with it. The capture accepts that length
+// only when an audio clip ends exactly there, records the last whole frame (floor) and marks sequenceDurationAudioTail.
+function testAudioTailDurationIsAcceptedAsFloor() {
+  const capture = baseCapture();
+  const tailSeconds = secondsAtFrame(360.44, TPF_30);
+  const music = capture.structure.audioTracks[2].clips[0];
+  music.endSeconds = tailSeconds;
+  music.durationSeconds = tailSeconds - music.startSeconds;
+  music.outPointSeconds = music.durationSeconds;
+  capture.structure.durationSeconds = tailSeconds;
+  const bundle = build(capture);
+  assert.equal(bundle.live.sequenceDurationFrames, 360);
+  assert.equal(bundle.live.sequenceDurationAudioTail, true);
+  const validated = validatePremierePlacementInputs({live: clone(bundle.live), structure: clone(bundle.structure)});
+  assert.equal(validated.identity.sequenceDurationFrames, 360);
+
+  const onGrid = build(baseCapture());
+  assert.equal("sequenceDurationAudioTail" in onGrid.live, false);
+
+  const stray = baseCapture();
+  stray.structure.durationSeconds = tailSeconds; // no audio clip ends there
+  expectCode(() => build(stray), "PREMIERE_PLACEMENT_DURATION_NOT_FRAME_ALIGNED");
+}
+
 const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "premiere-placement-inputs-test-"));
 try {
   testMultiFragmentTimelineIsAccepted();
+  testAudioTailDurationIsAcceptedAsFloor();
   testDropFrameTimingIsExact();
   testUxpDisplayEnumIsCanonicalized();
   testDoubleCaptureDriftIsRejected();
@@ -334,10 +359,11 @@ try {
 
   console.log(JSON.stringify({
     ok: true,
-    testCount: 6,
+    testCount: 7,
     livePremiereCalled: false,
     covered: [
       "already-cut multi-fragment full structure capture without target binding",
+      "sequence ending on an off-grid audio tail: floor length + sequenceDurationAudioTail; other off-grid lengths rejected",
       "30fps and 29.97 drop-frame exact timing",
       "project, sequence, settings, and full-structure double-capture drift rejection",
       "changed and corrupt bundle rejection",

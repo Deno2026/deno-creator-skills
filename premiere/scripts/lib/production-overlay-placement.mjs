@@ -196,7 +196,10 @@ const validateIdentityCore = (raw, label) => {
     fail(`${label}의 fps와 ticksPerFrame이 일치하지 않습니다.`);
   }
   const exactDurationFrames = sequenceDurationSeconds * fps;
-  if (Math.abs(exactDurationFrames - Math.round(exactDurationFrames)) > FRAME_TOLERANCE) {
+  const onGrid = Math.abs(exactDurationFrames - Math.round(exactDurationFrames)) <= FRAME_TOLERANCE;
+  // 2026-09-27: the capture marks a sequence that ends on an off-grid audio clip (user BGM tail) with sequenceDurationAudioTail;
+  // only then is an off-grid length accepted, and the usable length for video overlays is the last whole frame (floor).
+  if (!onGrid && raw.sequenceDurationAudioTail !== true) {
     fail(`${label}.sequenceDurationSeconds가 frame grid에 맞지 않습니다.`);
   }
   const display = raw.timecodeDisplay;
@@ -218,7 +221,7 @@ const validateIdentityCore = (raw, label) => {
     fps,
     projectName,
     projectPath,
-    sequenceDurationFrames: Math.round(exactDurationFrames),
+    sequenceDurationFrames: onGrid ? Math.round(exactDurationFrames) : Math.floor(exactDurationFrames),
     sequenceDurationSeconds,
     sequenceId,
     sequenceName,

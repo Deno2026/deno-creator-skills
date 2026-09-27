@@ -7,6 +7,7 @@ import {
   normalizeTargetTracks,
   resolveFrameTiming,
 } from "./lib/sequence-structure-diff.mjs";
+import {normalizePremiereSequenceFingerprint} from "./lib/premiere-sequence-fingerprint.mjs";
 
 const FPS = 30;
 const TIMING = resolveFrameTiming({fps: FPS});
@@ -176,14 +177,43 @@ const strictAfter = normalizeSequenceStructureStrict(strictAfterSnapshot, TIMING
 assert.notDeepEqual(strictAfter, strictBefore);
 assert.equal(strictBefore.tracks.find((item) => item.key === "audio:0").clips[0].index, 0);
 
+// 2026-09-27: a sequence that ends on a sample-accurate BGM tail has an off-grid duration. Both structure libraries accept it only
+// when an audio clip ends exactly there (the Level applier, caption apply, and overlay placement all normalize the live structure).
+const bgmTail = clone(before);
+const tailEndFrames = 300.44;
+bgmTail.audioTracks[1].clips.push({
+  name: "bgm.mp3",
+  startSeconds: seconds(200),
+  endSeconds: tailEndFrames / FPS,
+  durationSeconds: (tailEndFrames - 200) / FPS,
+  inPointSeconds: 0,
+  outPointSeconds: (tailEndFrames - 200) / FPS,
+  mediaType: "Audio",
+});
+bgmTail.audioTracks[1].clipCount = 2;
+bgmTail.durationSeconds = tailEndFrames / FPS;
+assert.equal(normalizeSequenceStructure(bgmTail, TIMING).durationFrames, 300.44);
+const bgmTailStrictA = normalizeSequenceStructureStrict(withStrictClipIdentity(bgmTail), TIMING);
+const bgmTailStrictB = normalizeSequenceStructureStrict(withStrictClipIdentity(clone(bgmTail)), TIMING);
+assert.deepEqual(bgmTailStrictB, bgmTailStrictA);
+assert.equal(normalizePremiereSequenceFingerprint(bgmTail, FPS).durationFrames, 300.44);
+
+const strayDuration = clone(before);
+strayDuration.durationSeconds = tailEndFrames / FPS;
+assert.throws(() => normalizeSequenceStructure(strayDuration, TIMING), /not frame-aligned/);
+assert.throws(() => normalizePremiereSequenceFingerprint(strayDuration, FPS), /not frame-aligned/);
+assert.equal(normalizePremiereSequenceFingerprint(before, FPS).durationFrames, 300);
+
 console.log(JSON.stringify({
   ok: true,
-  fixtureCount: 5,
+  fixtureCount: 7,
   checks: {
     normalCut: normalCut.ok,
     nonTargetAudioVideoChangeRejected: !nonTargetResult.ok,
     oneFrameDurationMismatchRejected: !durationResult.ok,
     clipTimingMismatchRejected: !clipTimingResult.ok,
     strictNodeIdMutationDetected: JSON.stringify(strictBefore) !== JSON.stringify(strictAfter),
+    bgmTailDurationAccepted: true,
+    offGridDurationWithoutAudioEndRejected: true,
   },
 }, null, 2));
