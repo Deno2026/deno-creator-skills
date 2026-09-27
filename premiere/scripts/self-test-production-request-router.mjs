@@ -84,7 +84,7 @@ test("explicit waveform-only wording stays waveform-only", "오디오 파형 기
   assert.equal(route.scope.removeUselessSegments, false);
 });
 
-// 2026-09-28 디노 wording (was routed to editorial-cut).
+// 2026-09-28 user wording (was routed to editorial-cut).
 for (const request of [
   "프리미어프로 타임라인 컷편집 뒷부분에 있는 큰거 2개 파일만 오디오 파형기준으로 컷편집 해주면 좋겠어 맥락까지 확인하고 네가 컷편집 하니까 오히려 내가 편집할때 불편하더라 그래서 그냥 오디오 파형 기준으로 앞뒤 0.15초씩 해서 0.3초 여유 시간 남기고 기계적으로 컷편집 진행해줘",
   "파형 기준으로 기계적으로 컷편집해줘",

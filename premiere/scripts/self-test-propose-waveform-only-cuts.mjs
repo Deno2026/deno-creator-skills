@@ -81,7 +81,7 @@ try {
   assert.notEqual(missingFps.status, 0);
   assert.match(missingFps.stderr, /fps is required/);
 
-  // 디노 2026-09-28: every sound keeps the same fixed air on both sides (0.6s tone | 0.8s silence | click | 0.8s silence | tone).
+  // 2026-09-28: every sound keeps the same fixed air on both sides (0.6s tone | 0.8s silence | click | 0.8s silence | tone).
   const fixedPath = path.join(tempRoot, "cuts-fixed.json");
   run(process.execPath, [
     path.join(repoRoot, "scripts", "propose-waveform-only-cuts.mjs"),
