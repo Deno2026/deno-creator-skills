@@ -41,6 +41,9 @@ function parseArgs(argv) {
     // 통째로 사라진다(2026-07-30 녹화 13:46에서 실제로 -21dB 발화 1.43초를 잃었다).
     // 사용자가 남긴 조각의 음량 하한이 -22dB대이므로 3dB 여유를 둔 값이다.
     keepLoudPeakDb: -25,
+    // 모든 소리 앞뒤에 같은 여유(초)를 남긴다. 쉼 길이별 AIR_TIERS 대신 쓴다. 디노 2026-09-28
+    // 「오디오 파형 기준으로 앞뒤 0.15초씩 … 기계적으로」(문맥 판단 컷이 오히려 편집을 불편하게 했다).
+    fixedAirSeconds: null,
     help: false,
   };
 
@@ -58,6 +61,7 @@ function parseArgs(argv) {
     else if (value === "--min-piece") options.minPieceSeconds = Number(argv[++index]);
     else if (value === "--min-piece-peak-db") options.minPiecePeakDb = Number(argv[++index]);
     else if (value === "--keep-loud-peak-db") options.keepLoudPeakDb = Number(argv[++index]);
+    else if (value === "--fixed-air") options.fixedAirSeconds = Number(argv[++index]);
     else if (value === "--help" || value === "-h") options.help = true;
   }
 
@@ -186,6 +190,12 @@ function pickAirTier(silenceSeconds) {
   return AIR_TIERS[AIR_TIERS.length - 1];
 }
 
+function airTierFor(silenceSeconds, options) {
+  if (options.fixedAirSeconds === null) return pickAirTier(silenceSeconds);
+  const air = options.fixedAirSeconds;
+  return { name: `고정 ${air}s`, maxSilence: Infinity, tail: air, lead: air };
+}
+
 function peakBetween(audio, startSeconds, endSeconds) {
   const from = Math.max(0, Math.floor(startSeconds / audio.frameSeconds));
   const to = Math.min(audio.energies.length, Math.ceil(endSeconds / audio.frameSeconds));
@@ -211,9 +221,17 @@ async function main() {
         "  --min-piece-peak-db <n>   진단용 소리 덩어리 peak 기준, 기본 -32",
         "  --keep-loud-peak-db <n>   진단용 짧은 소리 보존 기준, 기본 -25",
         "  --min-remove <n>          이보다 짧게 잘릴 구간은 두고 넘어간다, 기본 0.3초",
+        "  --fixed-air <n>           모든 소리 앞뒤에 같은 여유(초)를 남긴다(쉼 길이별 기본 대신), 예 0.15",
       ].join("\n"),
     );
     process.exit(options.help ? 0 : 1);
+  }
+
+  if (
+    options.fixedAirSeconds !== null &&
+    !(Number.isFinite(options.fixedAirSeconds) && options.fixedAirSeconds >= 0 && options.fixedAirSeconds <= 1)
+  ) {
+    throw new Error("--fixed-air must be a number of seconds between 0 and 1");
   }
 
   const spec = JSON.parse(fs.readFileSync(options.clips, "utf8"));
@@ -289,7 +307,7 @@ async function main() {
       const runEnd = Math.min(run.endSeconds, sourceEnd);
       if (runEnd <= runStart) continue;
       const silenceSeconds = runEnd - runStart;
-      const tier = pickAirTier(silenceSeconds);
+      const tier = airTierFor(silenceSeconds, options);
       const openEdge = runStart <= sourceIn + 1e-6 || runEnd >= sourceEnd - 1e-6;
       const air = openEdge ? Math.min(tier.tail, tier.lead) : tier.tail + tier.lead;
       if (silenceSeconds - air < options.minRemoveSeconds) continue;
@@ -342,7 +360,7 @@ async function main() {
 
     for (const gap of gaps) {
       const silenceSeconds = gap.end - gap.start;
-      const tier = pickAirTier(silenceSeconds);
+      const tier = airTierFor(silenceSeconds, options);
       // 클립 맨 앞·맨 뒤는 바깥쪽에 소리가 없으므로 그쪽 공기를 남기지 않는다.
       const cutStartSource = gap.headOpen ? gap.start : gap.start + tier.tail;
       const cutEndSource = gap.tailOpen ? gap.end : gap.end - tier.lead;
@@ -478,6 +496,7 @@ async function main() {
       minPieceSeconds: options.minPieceSeconds,
       minPiecePeakDb: options.minPiecePeakDb,
       keepLoudPeakDb: options.keepLoudPeakDb,
+      fixedAirSeconds: options.fixedAirSeconds,
       airTiers: AIR_TIERS.map((tier) => ({
         name: tier.name,
         maxSilence: tier.maxSilence === Infinity ? null : tier.maxSilence,

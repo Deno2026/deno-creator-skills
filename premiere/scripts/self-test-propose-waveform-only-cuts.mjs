@@ -80,6 +80,33 @@ try {
   ], {cwd: repoRoot, encoding: "utf8", windowsHide: true});
   assert.notEqual(missingFps.status, 0);
   assert.match(missingFps.stderr, /fps is required/);
+
+  // 디노 2026-09-28: every sound keeps the same fixed air on both sides (0.6s tone | 0.8s silence | click | 0.8s silence | tone).
+  const fixedPath = path.join(tempRoot, "cuts-fixed.json");
+  run(process.execPath, [
+    path.join(repoRoot, "scripts", "propose-waveform-only-cuts.mjs"),
+    "--clips", clipsPath,
+    "--out", fixedPath,
+    "--fixed-air", "0.15",
+    "--min-remove", "0.1",
+  ]);
+  const fixed = JSON.parse(fs.readFileSync(fixedPath, "utf8"));
+  assert.equal(fixed.options.fixedAirSeconds, 0.15);
+  assert.equal(fixed.cutCount, 2);
+  assert.equal(fixed.cuts.every((cut) => cut.airTier === "고정 0.15s"), true);
+  const frame = 1 / 30;
+  const near = (value, target) => value >= target - frame - 0.02 && value <= target + frame + 0.02;
+  // tone ends 0.6 → cut starts 0.75; click starts 1.4 → cut ends 1.25; click ends 1.5 → 1.65; tone starts 2.3 → 2.15.
+  assert.ok(near(fixed.cuts[0].startSeconds, 0.75) && near(fixed.cuts[0].endSeconds, 1.25), JSON.stringify(fixed.cuts[0]));
+  assert.ok(near(fixed.cuts[1].startSeconds, 1.65) && near(fixed.cuts[1].endSeconds, 2.15), JSON.stringify(fixed.cuts[1]));
+  const badFixed = spawnSync(process.execPath, [
+    path.join(repoRoot, "scripts", "propose-waveform-only-cuts.mjs"),
+    "--clips", clipsPath,
+    "--out", path.join(tempRoot, "bad-fixed.json"),
+    "--fixed-air", "2",
+  ], {cwd: repoRoot, encoding: "utf8", windowsHide: true});
+  assert.notEqual(badFixed.status, 0);
+  assert.match(badFixed.stderr, /--fixed-air/);
   console.log("Waveform-only proposer peak-audit self-test passed.");
 } finally {
   fs.rmSync(tempRoot, {recursive: true, force: true});
