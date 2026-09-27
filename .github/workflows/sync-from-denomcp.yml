@@ -28,12 +28,12 @@ jobs:
 
       - name: 바뀐 것이 있으면 커밋·푸시
         run: |
-          if [ -z "$(git status --porcelain -- skills kits/starter)" ]; then
+          if [ -z "$(git status --porcelain -- skills workflows kits/starter)" ]; then
             echo "바뀐 것 없음"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -- skills kits/starter
+          git add -A -- skills workflows kits/starter
           git commit -m "sync: DenoMCP 따라오기 — ${{ steps.sync.outputs.summary }}"
           git push
