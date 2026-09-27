@@ -1,6 +1,6 @@
 {
   "source": "https://api.denomcp.com/v1/knowhow",
-  "count": 21,
+  "count": 19,
   "packages": [
     {
       "slug": "bpm-probe",
@@ -38,7 +38,7 @@
       "slug": "comfyui-agent-basics",
       "title": "ComfyUI를 에이전트가 다루는 법 — 디노 방식(API로 접수·확인·회수·검수 한 바퀴)",
       "kind": "technique",
-      "version": "4",
+      "version": "5",
       "execution": "local",
       "tags": [
         "comfyui",
@@ -64,10 +64,10 @@
       "models": [
         "ComfyUI"
       ],
-      "summary": "에이전트가 사용자 PC(또는 같은 네트워크의 다른 PC)의 ComfyUI를 화면 조작 없이 API로 부리는 순서 — 서버 확인 → 그래프 준비·대조 → 참조 업로드 → 큐 비우기·메모리 내리기 → 접수 → 진행 → 회수 → 실제 파일 검수 → 정리. 이 창고의 모든 로컬 갈래(H3·LTX·Qwen)가 이 절차 위에서 돈다. 접수를 완료로 착각하는 것, 앞 판 잔여 메모리에 걸려 기어가는 것, 사용자 워크플로 폴더를 건드리는 것을 막는다.",
-      "updated_at": "2026-09-27T00:10:10.648Z",
+      "summary": "에이전트가 사용자 PC(또는 같은 네트워크의 다른 PC)의 ComfyUI를 화면 조작 없이 API로 부리는 순서 — 서버 확인 → 그래프 준비·대조 → 참조 업로드 → 큐 비우기·메모리 내리기 → 접수 → 진행 → 회수 → 실제 파일 검수 → 정리. 이 창고의 모든 로컬 갈래(H3·LTX)가 이 절차 위에서 돈다. 접수를 완료로 착각하는 것, 앞 판 잔여 메모리에 걸려 기어가는 것, 사용자 워크플로 폴더를 건드리는 것을 막는다.",
+      "updated_at": "2026-09-27T12:44:44.549Z",
       "file": "skills/comfyui-agent-basics.md",
-      "sha256": "2f4c17d7f97be4256a74da2fc25b07c34b92ee2c1a652c8092a048d6ea4aff1f",
+      "sha256": "45ecd052aca8e4f30642d9a735902c14bddb2ea41616bb5b8f3ef8da3c0ccf22",
       "files": [
         {
           "path": "fetch.py",
@@ -125,7 +125,7 @@
       "slug": "comfyui-fit-my-pc",
       "title": "내 PC에 맞는 설정값 찾기 — 스모크 테스트 → 사다리 → 사용자와 결정 → 고정 (디노 값은 참고점)",
       "kind": "technique",
-      "version": "4",
+      "version": "5",
       "execution": "local",
       "tags": [
         "장비",
@@ -141,7 +141,6 @@
         "2K",
         "미니맥스",
         "h3",
-        "qwen",
         "comfyui",
         "시작",
         "처음",
@@ -149,20 +148,19 @@
         "메모리 부족"
       ],
       "models": [
-        "MiniMax H3",
-        "Qwen-Image 2.1"
+        "MiniMax H3"
       ],
-      "summary": "디노 꾸러미의 수치는 디노 PC(RTX PRO 6000 96GB) 기준의 최고 품질 권장값이다. 에이전트는 사용자 PC에서 스모크 테스트(영상 MiniMax H3는 5초·초안 크기, 사진 Qwen-Image 2.1은 1080p급)로 시작해 되는 값을 한 단계씩 올리거나 내리며 찾고, 2~3안을 사용자에게 물어 정한 값을 프로젝트 파일 MY-PC.md에 고정한 뒤 그 값으로만 돌린다.",
-      "updated_at": "2026-09-26T23:58:02.356Z",
+      "summary": "디노 꾸러미의 수치는 디노 PC(RTX PRO 6000 96GB) 기준의 최고 품질 권장값이다. 에이전트는 사용자 PC에서 스모크 테스트(영상 MiniMax H3는 5초·초안 크기)로 시작해 되는 값을 한 단계씩 올리거나 내리며 찾고, 2~3안을 사용자에게 물어 정한 값을 프로젝트 파일 MY-PC.md에 고정한 뒤 그 값으로만 돌린다.",
+      "updated_at": "2026-09-27T12:44:44.754Z",
       "file": "skills/comfyui-fit-my-pc.md",
-      "sha256": "b9f62e930e3371f48303b4f416d0a6eab5eaa92c5045d4fa1ea5ad4749d7c981",
+      "sha256": "b32f3526116f0f8b55ec69ce907525d2f75e0f35d2f78db4f36430a16c5ea9d1",
       "files": []
     },
     {
       "slug": "deno-comfyui-workflows",
       "title": "디노의 ComfyUI 워크플로 목록 — 무엇을 만들 때 어느 워크플로·어느 모델을 쓰나(2026-09-26 기준)",
       "kind": "workflow",
-      "version": "11",
+      "version": "12",
       "execution": "local",
       "tags": [
         "목록",
@@ -173,7 +171,6 @@
         "모델",
         "h3",
         "ltx",
-        "qwen",
         "업스케일",
         "음악",
         "검수",
@@ -186,14 +183,13 @@
       "models": [
         "MiniMax H3",
         "LTX 2.5",
-        "Qwen-Image 2.1",
         "Stable Audio 3 Medium",
         "Whisper large-v3"
       ],
       "summary": "디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 한 장에 — 어떤 결과를 만들 때 어느 꾸러미를 열고, 어떤 모델이 필요하고, 내 ComfyUI(포터블·데스크탑)로 어떻게 켜고 돌리는지. 현행·실험·은퇴를 가른다. 각 줄의 세부는 그 꾸러미가 소유한다.",
-      "updated_at": "2026-09-27T03:02:03.369Z",
+      "updated_at": "2026-09-27T12:44:44.893Z",
       "file": "skills/deno-comfyui-workflows.md",
-      "sha256": "301085967d921f98a861debefd832f7f46ace712505f321bd6c61ca21dc55143",
+      "sha256": "64c30651692a7878ec2b5ad14d1f688512208282e5a386640d3934b7bc098a82",
       "files": []
     },
     {
@@ -649,90 +645,6 @@
       "file": "skills/premiere-post-production.md",
       "sha256": "2358ca5e2e6396c02c0270e8cb3282cc297540fe23b2c07ebe0fe95a228efc7e",
       "files": []
-    },
-    {
-      "slug": "qwen-image-21-prompting",
-      "title": "Qwen-Image 2.1 프롬프팅 가이드 — LLM에 그대로 넣는 영어 지시문(글→이미지·판면·편집 여섯 갈래·투명·크기표)",
-      "kind": "prompting",
-      "version": "1",
-      "execution": "both",
-      "tags": [
-        "qwen",
-        "qwen-image",
-        "qwen image 2.1",
-        "프롬프트",
-        "프롬프팅",
-        "prompting",
-        "편집",
-        "edit",
-        "t2i",
-        "포스터",
-        "인포그래픽",
-        "투명",
-        "rgba",
-        "크기표",
-        "비율",
-        "llm",
-        "지시문"
-      ],
-      "models": [
-        "Qwen-Image 2.1"
-      ],
-      "summary": "Qwen-Image 2.1 프롬프트를 쓰는 LLM용 영어 지시문 전문 — 통째로 시스템 프롬프트로 넣으면 모드 고르기(글→이미지/편집), 공통 규칙, 글→이미지 뼈대(카메라 거리·프레임 채움 틀 문장 포함), 판면(포스터·인포그래픽·앱 화면), 편집 여섯 갈래, 투명(RGBA), 비율·크기표, 점검표대로 프롬프트를 써 준다. 근거는 공식 보강 모델 지시문·공식 데모 37개·ComfyUI 공식 템플릿 3개와 디노 A/B.",
-      "updated_at": "2026-09-26T11:41:17.189Z",
-      "file": "skills/qwen-image-21-prompting.md",
-      "sha256": "ddbb01f0f0fde3956c2a078e3ddefac1f565d299bb31db874dc8ac8c973ddc79",
-      "files": []
-    },
-    {
-      "slug": "qwen-image-21-t2i-edit",
-      "title": "Qwen-Image 2.1 글→이미지 + 편집 — 한 그래프로 사진 생성·편집하는 디노 워크플로",
-      "kind": "workflow",
-      "version": "6",
-      "execution": "local",
-      "tags": [
-        "qwen",
-        "qwen-image",
-        "qwen image 2.1",
-        "이미지 생성",
-        "사진",
-        "편집",
-        "합성",
-        "배경 제거",
-        "투명",
-        "rgba",
-        "포스터",
-        "인포그래픽",
-        "판면",
-        "t2i",
-        "edit",
-        "comfyui",
-        "int8"
-      ],
-      "models": [
-        "Qwen-Image 2.1",
-        "Qwen3-VL 8B"
-      ],
-      "summary": "로컬 오픈 웨이트 Qwen-Image 2.1(int8)로 글→이미지와 편집(참고 1~10장 합성·부분 편집·배경 제거·투명 PNG)을 한 그래프로 돌리는 순서 — 참고 칸을 비우면 생성, 채우면 편집. 크기·CFG·부정 프롬프트는 사진마다 사용자가 정하고, 프롬프트는 꾸러미 qwen-image-21-prompting으로 쓴다. API 그래프 전문과 모델 배포처.",
-      "updated_at": "2026-09-26T23:51:12.115Z",
-      "file": "skills/qwen-image-21-t2i-edit.md",
-      "sha256": "ae4560fd53fb90970a483d37f6a58d86c5ff45ff0f2ed89ea522c32d4c0c41d7",
-      "files": [
-        {
-          "path": "Deno Qwen-Image 2.1 T2I + Edit.json",
-          "size": 17257,
-          "sha256": "042efcb80737de65e2304ea9e50734d86e5d74ae1c98c1a637db82d2fc03d82e",
-          "url": "https://denomcp.com/api/v1/knowhow/qwen-image-21-t2i-edit/files/Deno%20Qwen-Image%202.1%20T2I%20%2B%20Edit.json",
-          "repo_path": "workflows/qwen-image-21-t2i-edit/Deno Qwen-Image 2.1 T2I + Edit.json"
-        },
-        {
-          "path": "qwen_image21_t2i_edit.api.json",
-          "size": 4847,
-          "sha256": "c90cf0ac95536fdec9c5e1fd99657df996dcd7824557785f0d99e16dd367c05e",
-          "url": "https://denomcp.com/api/v1/knowhow/qwen-image-21-t2i-edit/files/qwen_image21_t2i_edit.api.json",
-          "repo_path": "workflows/qwen-image-21-t2i-edit/qwen_image21_t2i_edit.api.json"
-        }
-      ]
     },
     {
       "slug": "review-and-delivery",
