@@ -233,7 +233,7 @@
       "slug": "h3-prompt-six-fields",
       "title": "MiniMax H3 프롬프트 — 공식 6칸 작법과 대사 문법",
       "kind": "prompting",
-      "version": "2",
+      "version": "3",
       "execution": "both",
       "tags": [
         "미니맥스",
@@ -251,9 +251,9 @@
         "MiniMax H3 Ref2VA"
       ],
       "summary": "H3 참고→영상 프롬프트를 공식 6칸(subject_definitions·summary·retention_analysis·detailed_description·overall_soundscape·non_diegetic_music)으로 쓰는 법, 샷 시각·대사 태그·화자 8항목·립싱크 밀도·긍정문 원칙·대사 없는 판의 소리 배타 선언·참고물 번호, 큐잉 전 검사 항목과 합격 예시 한 편.",
-      "updated_at": "2026-09-26T14:42:04.751Z",
+      "updated_at": "2026-09-27T02:36:40.263Z",
       "file": "skills/h3-prompt-six-fields.md",
-      "sha256": "98d78b7309a7ee62836a79a5ed5c1d4f3162aeb6aff1e9fa94c0f99ee675e1bc",
+      "sha256": "b334c0127e500c7b5a097bbd3def1744283d7005661bfc91f29f7b7edc2679f7",
       "files": []
     },
     {
@@ -316,7 +316,7 @@
       "slug": "minimax-h3-r2v-deno",
       "title": "MiniMax H3 참고→영상(R2V)·시작 이미지→영상(FL2VA) — 디노의 현행 ComfyUI 워크플로(INT8 pruned + VDN 8스텝)",
       "kind": "workflow",
-      "version": "10",
+      "version": "11",
       "execution": "local",
       "tags": [
         "미니맥스",
@@ -353,9 +353,9 @@
         "KJNodes"
       ],
       "summary": "참고물(캐릭터 시트·장소 판·스타일 키·목소리 견본)로 새 장면을 만드는 R2V와, 독립 시작(·끝) 이미지를 정확한 첫 프레임으로 삼는 FL2VA를 같은 그래프 계약으로 돌리는 디노의 현행 워크플로. 한 번의 생성이 영상+스테레오 소리(대사·효과음)를 같이 낸다. 모드별 디퓨전·로라 한 쌍, 공통 체인, 화질 단계(초안·기본, R2V 1088p급 기본 7+1·액션 8+1), API 그래프 전문, 모델 배포처, 실측으로 확인된 함정.",
-      "updated_at": "2026-09-27T00:10:13.215Z",
+      "updated_at": "2026-09-27T02:36:40.440Z",
       "file": "skills/minimax-h3-r2v-deno.md",
-      "sha256": "2fb841965d51c3acc16a7b37599b23731e415ee3458498d41133d2b1bdc9e962",
+      "sha256": "1fce0a33e245906ee836add2d5c4c4a99078fb6b8b87889060aff33a30093399",
       "files": [
         {
           "path": "h3_prompt_lint.py",
