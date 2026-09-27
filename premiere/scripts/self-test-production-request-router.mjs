@@ -378,6 +378,14 @@ test("saving edited Helper metadata continues to youtube execution", "제목 내
   assert.ok(route.workflows.includes("docs/agent/workflows/youtube-upload-execution.md"));
 });
 
+// 2026-09-27: the user pressed the Upload Helper complete button (was recognized:false).
+for (const request of ["완료 눌렀어", "완료 버튼 눌렀어요", "업로드 시작 눌렀어"]) {
+  test(`pressing the Helper complete button continues to youtube execution: ${request}`, request, (route) => {
+    assert.equal(route.intent, "publishing-handoff");
+    assert.ok(route.workflows.includes("docs/agent/workflows/youtube-upload-execution.md"));
+  });
+}
+
 test("drafting titles alone does not jump to execution", "제목 설명 뽑아줘", (route) => {
   assert.ok(!route.workflows.includes("docs/agent/workflows/youtube-upload-execution.md"));
 });
