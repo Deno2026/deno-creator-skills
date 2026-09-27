@@ -1,6 +1,6 @@
 {
   "source": "https://api.denomcp.com/v1/knowhow",
-  "count": 19,
+  "count": 21,
   "packages": [
     {
       "slug": "bpm-probe",
@@ -162,7 +162,7 @@
       "slug": "deno-comfyui-workflows",
       "title": "디노의 ComfyUI 워크플로 목록 — 무엇을 만들 때 어느 워크플로·어느 모델을 쓰나(2026-09-26 기준)",
       "kind": "workflow",
-      "version": "10",
+      "version": "11",
       "execution": "local",
       "tags": [
         "목록",
@@ -191,16 +191,16 @@
         "Whisper large-v3"
       ],
       "summary": "디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 한 장에 — 어떤 결과를 만들 때 어느 꾸러미를 열고, 어떤 모델이 필요하고, 내 ComfyUI(포터블·데스크탑)로 어떻게 켜고 돌리는지. 현행·실험·은퇴를 가른다. 각 줄의 세부는 그 꾸러미가 소유한다.",
-      "updated_at": "2026-09-27T00:10:10.847Z",
+      "updated_at": "2026-09-27T03:02:03.369Z",
       "file": "skills/deno-comfyui-workflows.md",
-      "sha256": "e3ba3d634ebf5ae5cd45b2ecc2cf1d121a8567f777cfb4bf93cd1b664e897064",
+      "sha256": "301085967d921f98a861debefd832f7f46ace712505f321bd6c61ca21dc55143",
       "files": []
     },
     {
       "slug": "education-shorts",
       "title": "교육숏츠 — 원리 하나를 60~90초 세로 나레이션 숏츠로 반복 제작하는 워크플로",
       "kind": "workflow",
-      "version": "2",
+      "version": "3",
       "execution": "local",
       "tags": [
         "교육숏츠",
@@ -217,17 +217,79 @@
         "minimax",
         "h3",
         "r2v",
-        "gpt image"
+        "자막 정렬",
+        "mfa",
+        "제미나이",
+        "타입캐스트"
       ],
       "models": [
         "MiniMax H3 R2V",
-        "GPT Image 2.5"
+        "Montreal Forced Aligner",
+        "Gemini(선택)",
+        "Typecast(선택)"
       ],
       "summary": "기술·원리 하나를 시청자가 이해하는 60~90초 세로 숏츠로 반복 제작하는 순서 — 대본 승인 → 목소리 승인 → 화풍 승인 → 자율 제작. 단계마다 사용자와 무엇을 정하는지가 본문이고, 표현·호흡·화풍·목소리는 사용자가 정한다. 디노의 선택은 「디노는 이렇게 한다」 상자에 예시로만 붙였다.",
-      "updated_at": "2026-09-26T12:37:13.461Z",
+      "updated_at": "2026-09-27T03:02:06.722Z",
       "file": "skills/education-shorts.md",
-      "sha256": "decf310861c8edc14e1338c32605e706654513e4dcf94f6cfcb5db6bdcd6eaf1",
-      "files": []
+      "sha256": "228c6e638136c5a7456647cf83e77b4f3ef0b0820697a5230e4d997288523218",
+      "files": [
+        {
+          "path": "SETUP.md",
+          "size": 6525,
+          "sha256": "e9a00c1b81648d0a6459cd6eaa76abaae61776cc9d0b256c21fb513c74a12c6c",
+          "url": "https://denomcp.com/api/v1/knowhow/education-shorts/files/SETUP.md",
+          "repo_path": "workflows/education-shorts/SETUP.md"
+        },
+        {
+          "path": "caption-align/README.md",
+          "size": 12906,
+          "sha256": "9c8ef55bbce2281a59d288487b0dc09ee57d8a875bf54cdce1e2dd1405f1424d",
+          "url": "https://denomcp.com/api/v1/knowhow/education-shorts/files/caption-align/README.md",
+          "repo_path": "workflows/education-shorts/caption-align/README.md"
+        },
+        {
+          "path": "caption-align/bootstrap_mfa.ps1",
+          "size": 4061,
+          "sha256": "f0b6d9c2ad6dbcf0ff85e91c29a2448d9bb944ab5e4e622a01946b36dd0314f5",
+          "url": "https://denomcp.com/api/v1/knowhow/education-shorts/files/caption-align/bootstrap_mfa.ps1",
+          "repo_path": "workflows/education-shorts/caption-align/bootstrap_mfa.ps1"
+        },
+        {
+          "path": "caption-align/caption_align.py",
+          "size": 61399,
+          "sha256": "418cf34ee154420d1ef8b6852baae77b20a6e679c23f3f78a25c69921b542785",
+          "url": "https://denomcp.com/api/v1/knowhow/education-shorts/files/caption-align/caption_align.py",
+          "repo_path": "workflows/education-shorts/caption-align/caption_align.py"
+        },
+        {
+          "path": "caption-align/subtitle_paper_burn.py",
+          "size": 19020,
+          "sha256": "3ca97147d96ef2f2cef948a59dc5e8ae89a65470f31ec8b2a62391c8255fc45b",
+          "url": "https://denomcp.com/api/v1/knowhow/education-shorts/files/caption-align/subtitle_paper_burn.py",
+          "repo_path": "workflows/education-shorts/caption-align/subtitle_paper_burn.py"
+        },
+        {
+          "path": "script-review/gemini_review.py",
+          "size": 17735,
+          "sha256": "eef9d73933c7b72bd78f673a244c02a6f4899479d1af96394cd0d2a73bc49af2",
+          "url": "https://denomcp.com/api/v1/knowhow/education-shorts/files/script-review/gemini_review.py",
+          "repo_path": "workflows/education-shorts/script-review/gemini_review.py"
+        },
+        {
+          "path": "script-review/gemini_write.py",
+          "size": 6981,
+          "sha256": "6500ece0fa7aca209371f2245e12cb9946edb99ff370d93a141ef13de65a82e5",
+          "url": "https://denomcp.com/api/v1/knowhow/education-shorts/files/script-review/gemini_write.py",
+          "repo_path": "workflows/education-shorts/script-review/gemini_write.py"
+        },
+        {
+          "path": "typecast-tts/typecast_narration.py",
+          "size": 13340,
+          "sha256": "ad72d9f23de708027a217c400e21f364c29552eedcef27b214cce332f53bed78",
+          "url": "https://denomcp.com/api/v1/knowhow/education-shorts/files/typecast-tts/typecast_narration.py",
+          "repo_path": "workflows/education-shorts/typecast-tts/typecast_narration.py"
+        }
+      ]
     },
     {
       "slug": "h3-prompt-six-fields",
@@ -428,6 +490,30 @@
           "repo_path": "workflows/minimax-h3-r2v-deno/queue.py"
         }
       ]
+    },
+    {
+      "slug": "pre-generation-gate",
+      "title": "생성 전 게이트 — 큐에 넣기 직전, 어떤 모델이든 같은 확인을 같은 순서로",
+      "kind": "technique",
+      "version": "1",
+      "execution": "local",
+      "tags": [
+        "생성 전 확인",
+        "게이트",
+        "체크리스트",
+        "줄거리",
+        "방향 확정",
+        "참고물 검수",
+        "프레임 재주입 금지",
+        "형식 검사",
+        "상태 기록"
+      ],
+      "models": [],
+      "summary": "영상·이미지·음악을 실제로 생성하기 직전에 거치는 확인 열 가지 — 작품 폴더, 방향·줄거리·톤 확정, 내 PC 고정값, 참고물 직접 검수, 생성 프레임 재주입 금지, 명세 원문과 형식 검사, 정본 값 그대로, 상태 기록, 공개 가능 수준, 앞 장면 공간 이어받기. 하나라도 통과 못 하면 큐에 넣지 않고 그 사실을 보고한다.",
+      "updated_at": "2026-09-27T03:02:06.973Z",
+      "file": "skills/pre-generation-gate.md",
+      "sha256": "d998e0b805cbb00927e59cafb987276f3f863c8891e4c2bd67cb5f637b77f1de",
+      "files": []
     },
     {
       "slug": "premiere-audio-balance",
@@ -647,6 +733,31 @@
           "repo_path": "workflows/qwen-image-21-t2i-edit/qwen_image21_t2i_edit.api.json"
         }
       ]
+    },
+    {
+      "slug": "review-and-delivery",
+      "title": "결과 검수와 전달 — 에이전트가 확인할 것과 사람이 판정할 것을 가르고, 원본 그대로 비교할 수 있게 전한다",
+      "kind": "technique",
+      "version": "1",
+      "execution": "local",
+      "tags": [
+        "검수",
+        "전달",
+        "결과물",
+        "a/b 비교",
+        "완료 판정",
+        "원본",
+        "편집 경계",
+        "후보 정리",
+        "소리 판정",
+        "비교 실험"
+      ],
+      "models": [],
+      "summary": "생성 결과(영상·이미지·음향)를 받은 뒤의 순서 — 직접 확인한 것만 완료, 영상은 규격·디코드·훑어보기까지만 보고 좋고 나쁨은 사용자가 판정, 결함을 고치거나 가리지 않고 원본 그대로 전달, 후보 이름·순서·확인 포인트, A/B 자료, 소리 판정의 경계, 비교 실험의 변수 규칙. 판정은 사용자.",
+      "updated_at": "2026-09-27T03:02:07.440Z",
+      "file": "skills/review-and-delivery.md",
+      "sha256": "a50ebcfb3f7a8e2c4bf118a686d6bed408e2ad8cb667b981d6ab7d88852f0648",
+      "files": []
     },
     {
       "slug": "speech-check-whisper",

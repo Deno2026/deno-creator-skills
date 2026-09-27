@@ -5,7 +5,7 @@ kind: workflow
 tags: 목록, 카탈로그, 지도, 워크플로, comfyui, 모델, h3, ltx, qwen, 업스케일, 음악, 검수, 어댑터, 로컬, 데스크탑, 시작, 처음
 models: MiniMax H3, LTX 2.5, Qwen-Image 2.1, Stable Audio 3 Medium, Whisper large-v3
 execution: local
-version: 10
+version: 11
 summary: 디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 한 장에 — 어떤 결과를 만들 때 어느 꾸러미를 열고, 어떤 모델이 필요하고, 내 ComfyUI(포터블·데스크탑)로 어떻게 켜고 돌리는지. 현행·실험·은퇴를 가른다. 각 줄의 세부는 그 꾸러미가 소유한다.
 ---
 
@@ -85,6 +85,7 @@ summary: 디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 
 ## 실행 — 로컬(내 ComfyUI)
 
 - 각 꾸러미의 모델 표(배포처·파일명·크기)대로 받아 `comfyui-agent-basics` 순서로 돌린다. 데스크탑 앱 PC는 `comfyui-desktop-agent-launch`로 먼저 켠다.
+- 생성 직전에는 `pre-generation-gate`의 확인표를, 결과를 받으면 `review-and-delivery`의 검수·전달 순서를 쓴다.
 - 편마다 정본 파일(워크플로 JSON·도구 스크립트)이 첨부로 붙어 있다. `deno_knowhow_get`의 `files` 칸 주소로 받거나 공개 리포 `Deno2026/deno-creator-skills`(`skills/`·`workflows/<편>/`)에서 본다. 리포는 창고를 그대로 따라오는 거울이라 둘은 항상 같다(디노 2026-09-27).
 
 ## 디노는 이렇게 한다 — 예시 (참고이지 기준이 아니다)
@@ -96,6 +97,7 @@ summary: 디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 
 
 ## 바뀐 점
 
+- v11 (2026-09-27): 생성 전 게이트(`pre-generation-gate`)·검수와 전달(`review-and-delivery`) 편 안내.
 - v10 (2026-09-27): 발화 검수(`speech-check-whisper`)·BPM(`bpm-probe`) 편이 생겨 현행 목록으로; 첨부 안내에 도구 스크립트.
 - v9 (2026-09-27): 첨부 파일 안내 — 워크플로 편 다섯(H3·Qwen·배경음·LTX·업스케일)에 정본 JSON이 첨부로 붙었고 공개 리포 `workflows/`가 거울.
 - v8 (2026-09-27): 배경음 줄에 작법·실수 목록 편 `stable-audio-3-prompting` 추가.
