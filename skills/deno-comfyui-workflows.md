@@ -5,7 +5,7 @@ kind: workflow
 tags: 목록, 카탈로그, 지도, 워크플로, comfyui, 모델, h3, ltx, qwen, 업스케일, 음악, 검수, 어댑터, 로컬, 데스크탑, 시작, 처음
 models: MiniMax H3, LTX 2.5, Qwen-Image 2.1, Stable Audio 3 Medium, Whisper large-v3
 execution: local
-version: 9
+version: 10
 summary: 디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 한 장에 — 어떤 결과를 만들 때 어느 꾸러미를 열고, 어떤 모델이 필요하고, 내 ComfyUI(포터블·데스크탑)로 어떻게 켜고 돌리는지. 현행·실험·은퇴를 가른다. 각 줄의 세부는 그 꾸러미가 소유한다.
 ---
 
@@ -48,14 +48,16 @@ summary: 디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 
 | 글·이미지·음성 → 영상(진행자 A2V 포함), 글 → 오디오, 영상 편집(IC-LoRA) | 글·시작 이미지·음성·참조 | `ltx25-official-defaults` | LTX 2.5 22B distilled, Gemma 4 12B(LTX), Conv 영상 VAE, 오디오 VAE |
 | 사진·판면 생성, 이미지 편집·합성·배경 제거·투명 | 글·참고 이미지 1~10장 | `qwen-image-21-t2i-edit` + `qwen-image-21-prompting` | Qwen-Image 2.1 int8, Qwen3-VL 8B, VAE |
 | 연주곡 배경음·인트로·앰비언트(가사 없음, 5초~수 분) | 프롬프트 한 문단(태그 + 장르·악기·분위기·BPM) | `stable-audio-3-bgm` + 작법·실수 목록 `stable-audio-3-prompting` | Stable Audio 3 Medium(증류판 — base 판은 쓰지 않음) + T5Gemma 인코더 |
+| 생성 영상의 발화 검수(원고 대조·말소리 유무) — 귀 대신 전사 | 클립 + 원고 문장 | `speech-check-whisper` | Whisper large-v3 + Mel-Band RoFormer |
+| 영상·곡의 템포(BPM) 재기 — 배경음을 박자에 맞출 때 | 영상·오디오 파일 | `bpm-probe` | — |
 | 원리 하나를 60~90초 세로 나레이션 숏츠로 반복 제작 | 주제·대본·목소리·화풍 | `education-shorts` (형식 꾸러미 — 위 워크플로들을 조합) | H3 R2V + 사용자의 TTS·정렬·ffmpeg |
 
 ## 목록 — 아직 꾸러미가 없는 현행(요지만)
 
+(2026-09-27 현재 없음 — 발화 검수·BPM도 편이 됐다.)
+
 | 만들 것 | 방법 | 상태 |
 |---|---|---|
-| 발화 자동 검수(귀 대신 전사) | Mel-Band RoFormer로 목소리만 분리 → Whisper large-v3(터보 금지)로 전사 → 원고와 대조, MISS 문장만 2~3초 슬라이스 재전사. 발화 종료 뒤의 환청(무관 문장)은 RMS로 가른다. 입력은 스테레오 wav | 현행(`comfyui-agent-basics` 예시 상자). 다음 꾸러미 후보 |
-| 템포(BPM) 측정 | 영상·곡의 소리를 뽑아 자기상관·빗살 정합 두 방법으로 재고 수렴 여부 표시. 배수(96/192)는 낮은 쪽이 대개 실제 | 현행, 편집에서 붙일 판단은 사용자 |
 
 ## 목록 — 실험·설치만
 
@@ -83,7 +85,7 @@ summary: 디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 
 ## 실행 — 로컬(내 ComfyUI)
 
 - 각 꾸러미의 모델 표(배포처·파일명·크기)대로 받아 `comfyui-agent-basics` 순서로 돌린다. 데스크탑 앱 PC는 `comfyui-desktop-agent-launch`로 먼저 켠다.
-- 편마다 정본 파일(워크플로 JSON — 곧 도구 스크립트도)이 첨부로 붙어 있다. `deno_knowhow_get`의 `files` 칸 주소로 받거나 공개 리포 `Deno2026/deno-creator-skills`(`skills/`·`workflows/<편>/`)에서 본다. 리포는 창고를 그대로 따라오는 거울이라 둘은 항상 같다(디노 2026-09-27).
+- 편마다 정본 파일(워크플로 JSON·도구 스크립트)이 첨부로 붙어 있다. `deno_knowhow_get`의 `files` 칸 주소로 받거나 공개 리포 `Deno2026/deno-creator-skills`(`skills/`·`workflows/<편>/`)에서 본다. 리포는 창고를 그대로 따라오는 거울이라 둘은 항상 같다(디노 2026-09-27).
 
 ## 디노는 이렇게 한다 — 예시 (참고이지 기준이 아니다)
 
@@ -94,6 +96,7 @@ summary: 디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 
 
 ## 바뀐 점
 
+- v10 (2026-09-27): 발화 검수(`speech-check-whisper`)·BPM(`bpm-probe`) 편이 생겨 현행 목록으로; 첨부 안내에 도구 스크립트.
 - v9 (2026-09-27): 첨부 파일 안내 — 워크플로 편 다섯(H3·Qwen·배경음·LTX·업스케일)에 정본 JSON이 첨부로 붙었고 공개 리포 `workflows/`가 거울.
 - v8 (2026-09-27): 배경음 줄에 작법·실수 목록 편 `stable-audio-3-prompting` 추가.
 - v7 (2026-09-27): 연주곡 배경음 줄을 현행 목록으로(`stable-audio-3-bgm` — Stable Audio 3 Medium 증류판, base 안 씀).

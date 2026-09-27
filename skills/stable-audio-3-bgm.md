@@ -5,7 +5,7 @@ kind: workflow
 tags: 음악, 배경음, bgm, 앰비언트, 연주곡, 인트로, stable audio, stable audio 3, 오디오, comfyui, 로컬, 무보컬
 models: Stable Audio 3 Medium
 execution: local
-version: 3
+version: 4
 summary: 디노가 로컬에서 연주곡 배경음·인트로·앰비언트를 만드는 방법. Stable Audio 3 Medium(증류판, 8스텝·CFG 1 — base 판은 쓰지 않는다)을 ComfyUI 공식 템플릿 값 그대로 API로 돌린다. 프롬프트 한 문단 문법(TrackType·VocalType 태그 + 장르·악기·분위기·BPM), 길이 잡기, 후보 여러 개 뽑아 고르기, MP3 저장, 무보컬 오염 회피, 16GB 카드 길이 사다리 실측. 프롬프트 작법 전문과 실수 목록은 짝 편 stable-audio-3-prompting.
 ---
 
@@ -58,7 +58,7 @@ TrackType: Music, VocalType: Instrumental. Cinematic luxury perfume commercial s
 
 ## 실행 — 로컬(내 ComfyUI)
 
-**첨부 —** `Deno Stable Audio 3 Medium BGM.json`(배포용 UI 워크플로, 8노드 + 모델 링크 노트) · `stable_audio3_medium_bgm.api.json`(에이전트용 API 그래프, 같은 배선·같은 값). `deno_knowhow_get`의 `files` 칸 주소로 받는다(로그인 없음, 판이 바뀌면 sha256도 바뀐다). 공개 리포 `Deno2026/deno-creator-skills`의 `workflows/stable-audio-3-bgm/`에 같은 파일이 거울로 있다(창고를 그대로 따라온다).
+**첨부 —** `Deno Stable Audio 3 Medium BGM.json`(배포용 UI 워크플로, 8노드 + 모델 링크 노트) · `stable_audio3_medium_bgm.api.json`(에이전트용 API 그래프, 같은 배선·같은 값) · `music_queue.py`(도구: 프롬프트·길이·시드·저장 이름·후보 수만 넣어 큐잉 — 정본 그래프는 같은 폴더에서 읽는다, `--server`로 다른 PC, 파이썬 표준 라이브러리만). `deno_knowhow_get`의 `files` 칸 주소로 받는다(로그인 없음, 판이 바뀌면 sha256도 바뀐다). 공개 리포 `Deno2026/deno-creator-skills`의 `workflows/stable-audio-3-bgm/`에 같은 파일이 거울로 있다(창고를 그대로 따라온다).
 
 | 필요한 것 | 값 | 어디에 |
 |---|---|---|
@@ -137,6 +137,7 @@ API 그래프(자리표시자 셋: 프롬프트·길이·저장 이름; 시드�
 
 ## 바뀐 점
 
+- v4 (2026-09-27): 도구 `music_queue.py` 첨부(장비 주소 제거, 정본 그래프는 같은 폴더 우선).
 - v3 (2026-09-27): 배포용 UI 워크플로와 API 그래프를 첨부로 실었다(`files`). 공개 리포 `workflows/stable-audio-3-bgm/`가 거울.
 - v2 (2026-09-27): 짝 편 `stable-audio-3-prompting`(공식 가이드 기반 작법 전문 + 실수 목록) 연결, 효과음 태그를 공식 `TrackType: SFX`로, 공식 최대 380초·보컬 불가 함정 줄.
 - v1 (2026-09-27): 첫 판. 디노 결정 「지금 쓰는 증류판(Medium)을 로컬 배경음으로, base는 안 씀」 + 16GB 서브PC 길이 사다리 실측.

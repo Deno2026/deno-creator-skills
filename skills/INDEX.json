@@ -1,12 +1,44 @@
 {
   "source": "https://api.denomcp.com/v1/knowhow",
-  "count": 17,
+  "count": 19,
   "packages": [
+    {
+      "slug": "bpm-probe",
+      "title": "템포(BPM) 측정 — 영상의 박자와 만든 곡의 박자를 숫자로 재서 맞춘다",
+      "kind": "technique",
+      "version": "1",
+      "execution": "local",
+      "tags": [
+        "bpm",
+        "템포",
+        "박자",
+        "배경음",
+        "편집",
+        "음악",
+        "자기상관",
+        "빗살 정합",
+        "리듬"
+      ],
+      "models": [],
+      "summary": "영상(춤·컷 리듬)과 배경음의 템포를 자기상관·빗살 정합 두 방법으로 재고 수렴 여부까지 표시하는 도구와 순서 — 잰 값을 배경음 프롬프트의 BPM으로 넣고, 만든 곡도 되짚어 잰 뒤 둘을 함께 사용자에게 넘긴다(붙이는 판단은 편집). 배수 관계(96/192) 함정. 도구 첨부.",
+      "updated_at": "2026-09-27T00:10:09.783Z",
+      "file": "skills/bpm-probe.md",
+      "sha256": "5328bc3d403e2b361574dbf86f7de97e2539227b4ab081ce1e5c13b4fc14f462",
+      "files": [
+        {
+          "path": "bpm_probe.py",
+          "size": 5861,
+          "sha256": "9d910354550d2b3745781aeb4ba7bba8eb6800cf75d5624fadf40b90fc1f0911",
+          "url": "https://denomcp.com/api/v1/knowhow/bpm-probe/files/bpm_probe.py",
+          "repo_path": "skills/bpm-probe/bpm_probe.py"
+        }
+      ]
+    },
     {
       "slug": "comfyui-agent-basics",
       "title": "ComfyUI를 에이전트가 다루는 법 — 디노 방식(API로 접수·확인·회수·검수 한 바퀴)",
       "kind": "technique",
-      "version": "3",
+      "version": "4",
       "execution": "local",
       "tags": [
         "comfyui",
@@ -33,10 +65,25 @@
         "ComfyUI"
       ],
       "summary": "에이전트가 사용자 PC(또는 같은 네트워크의 다른 PC)의 ComfyUI를 화면 조작 없이 API로 부리는 순서 — 서버 확인 → 그래프 준비·대조 → 참조 업로드 → 큐 비우기·메모리 내리기 → 접수 → 진행 → 회수 → 실제 파일 검수 → 정리. 이 창고의 모든 로컬 갈래(H3·LTX·Qwen)가 이 절차 위에서 돈다. 접수를 완료로 착각하는 것, 앞 판 잔여 메모리에 걸려 기어가는 것, 사용자 워크플로 폴더를 건드리는 것을 막는다.",
-      "updated_at": "2026-09-26T13:38:54.929Z",
+      "updated_at": "2026-09-27T00:10:10.648Z",
       "file": "skills/comfyui-agent-basics.md",
-      "sha256": "6edf22748f46d8bd951b25019cfc8ec8a8439458ceb09410581cc245c07a29d4",
-      "files": []
+      "sha256": "2f4c17d7f97be4256a74da2fc25b07c34b92ee2c1a652c8092a048d6ea4aff1f",
+      "files": [
+        {
+          "path": "fetch.py",
+          "size": 2420,
+          "sha256": "79dc943fe88f5f9cf1f3eae5955875627209c489c760bb38ec6ad89a82be3356",
+          "url": "https://denomcp.com/api/v1/knowhow/comfyui-agent-basics/files/fetch.py",
+          "repo_path": "skills/comfyui-agent-basics/fetch.py"
+        },
+        {
+          "path": "status.py",
+          "size": 2303,
+          "sha256": "0c830f72b33425bd007f9dc83132c30624ed6db08bdd827632732d3ffc0551b9",
+          "url": "https://denomcp.com/api/v1/knowhow/comfyui-agent-basics/files/status.py",
+          "repo_path": "skills/comfyui-agent-basics/status.py"
+        }
+      ]
     },
     {
       "slug": "comfyui-desktop-agent-launch",
@@ -115,7 +162,7 @@
       "slug": "deno-comfyui-workflows",
       "title": "디노의 ComfyUI 워크플로 목록 — 무엇을 만들 때 어느 워크플로·어느 모델을 쓰나(2026-09-26 기준)",
       "kind": "workflow",
-      "version": "9",
+      "version": "10",
       "execution": "local",
       "tags": [
         "목록",
@@ -144,9 +191,9 @@
         "Whisper large-v3"
       ],
       "summary": "디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 한 장에 — 어떤 결과를 만들 때 어느 꾸러미를 열고, 어떤 모델이 필요하고, 내 ComfyUI(포터블·데스크탑)로 어떻게 켜고 돌리는지. 현행·실험·은퇴를 가른다. 각 줄의 세부는 그 꾸러미가 소유한다.",
-      "updated_at": "2026-09-26T23:47:19.908Z",
+      "updated_at": "2026-09-27T00:10:10.847Z",
       "file": "skills/deno-comfyui-workflows.md",
-      "sha256": "db5a6dba1327690ca5a9149bf550ccfc8604ce5d0fa8d52388784a8c4bb0f4fb",
+      "sha256": "e3ba3d634ebf5ae5cd45b2ecc2cf1d121a8567f777cfb4bf93cd1b664e897064",
       "files": []
     },
     {
@@ -213,7 +260,7 @@
       "slug": "ltx25-official-defaults",
       "title": "LTX 2.5 로컬 실행본 — 공식 템플릿(T2V·I2V·A2V·T2A·V2V·IC-LoRA)을 돌릴 때 디노가 실행 사본에 고정하는 것",
       "kind": "workflow",
-      "version": "3",
+      "version": "4",
       "execution": "local",
       "tags": [
         "ltx",
@@ -245,9 +292,9 @@
         "KJNodes"
       ],
       "summary": "LTX 2.5 공식 ComfyUI 템플릿(글→영상, 이미지→영상, 음성→영상 진행자, 글→오디오, 영상→영상 IC-LoRA)을 손대지 않고 실행 사본에만 네 가지를 고정해 돌리는 순서 — Conv 영상 VAE, 일반 VAEDecode, 디코드 전 VRAM Debug(모델 내리기), 일반 샘플러 기본. LTX 프롬프트 규격과 검수 자리. 길이·해상도는 사용자 GPU에서 찾는다.",
-      "updated_at": "2026-09-26T23:51:10.208Z",
+      "updated_at": "2026-09-27T00:10:11.583Z",
       "file": "skills/ltx25-official-defaults.md",
-      "sha256": "21ade8cf862e966c3020ab3aff00ed1b4e7d7ee8e1476882eebd37352b5b9ac4",
+      "sha256": "ca9ebf04e19aa6236516bac274abeb6eb0ac96fe87b7fd3d934288299782d5c8",
       "files": [
         {
           "path": "DENO_LTX25_A2V_1088p.api.json",
@@ -255,6 +302,13 @@
           "sha256": "33ed6dd85667e6788cdc44969930d591f7767352bd9770664564e245324a4852",
           "url": "https://denomcp.com/api/v1/knowhow/ltx25-official-defaults/files/DENO_LTX25_A2V_1088p.api.json",
           "repo_path": "workflows/ltx25-official-defaults/DENO_LTX25_A2V_1088p.api.json"
+        },
+        {
+          "path": "ltx_workflow_policy.py",
+          "size": 25217,
+          "sha256": "0a2522205b81c84a3fab7e3ecf17437b61646a2123f6e9e00a8bdb203fd16c8c",
+          "url": "https://denomcp.com/api/v1/knowhow/ltx25-official-defaults/files/ltx_workflow_policy.py",
+          "repo_path": "workflows/ltx25-official-defaults/ltx_workflow_policy.py"
         }
       ]
     },
@@ -262,7 +316,7 @@
       "slug": "minimax-h3-r2v-deno",
       "title": "MiniMax H3 참고→영상(R2V)·시작 이미지→영상(FL2VA) — 디노의 현행 ComfyUI 워크플로(INT8 pruned + VDN 8스텝)",
       "kind": "workflow",
-      "version": "9",
+      "version": "10",
       "execution": "local",
       "tags": [
         "미니맥스",
@@ -299,10 +353,31 @@
         "KJNodes"
       ],
       "summary": "참고물(캐릭터 시트·장소 판·스타일 키·목소리 견본)로 새 장면을 만드는 R2V와, 독립 시작(·끝) 이미지를 정확한 첫 프레임으로 삼는 FL2VA를 같은 그래프 계약으로 돌리는 디노의 현행 워크플로. 한 번의 생성이 영상+스테레오 소리(대사·효과음)를 같이 낸다. 모드별 디퓨전·로라 한 쌍, 공통 체인, 화질 단계(초안·기본, R2V 1088p급 기본 7+1·액션 8+1), API 그래프 전문, 모델 배포처, 실측으로 확인된 함정.",
-      "updated_at": "2026-09-26T23:51:11.022Z",
+      "updated_at": "2026-09-27T00:10:13.215Z",
       "file": "skills/minimax-h3-r2v-deno.md",
-      "sha256": "7af8a49e4a67305e3d8063452e2841b72c9016c6d82d1235359e2a8bc7eb716b",
+      "sha256": "2fb841965d51c3acc16a7b37599b23731e415ee3458498d41133d2b1bdc9e962",
       "files": [
+        {
+          "path": "h3_prompt_lint.py",
+          "size": 8165,
+          "sha256": "9334aea260230c19ad2e1fc2f2e13f103af2b14c11cf7902f63466c8d6449305",
+          "url": "https://denomcp.com/api/v1/knowhow/minimax-h3-r2v-deno/files/h3_prompt_lint.py",
+          "repo_path": "workflows/minimax-h3-r2v-deno/h3_prompt_lint.py"
+        },
+        {
+          "path": "h3_vdn.py",
+          "size": 4093,
+          "sha256": "4250482a3483813684c2a20207ace5a8379c5295836cc3fcf6915cd04e74d85a",
+          "url": "https://denomcp.com/api/v1/knowhow/minimax-h3-r2v-deno/files/h3_vdn.py",
+          "repo_path": "workflows/minimax-h3-r2v-deno/h3_vdn.py"
+        },
+        {
+          "path": "lightx_i2v.py",
+          "size": 12969,
+          "sha256": "9da6cdc41fc9394476eb3cd22455779a4de8887b33722020961de930a5d5b103",
+          "url": "https://denomcp.com/api/v1/knowhow/minimax-h3-r2v-deno/files/lightx_i2v.py",
+          "repo_path": "workflows/minimax-h3-r2v-deno/lightx_i2v.py"
+        },
         {
           "path": "minimax_h3_fl2va_pruned_vdn8_draft.api.json",
           "size": 4457,
@@ -344,6 +419,13 @@
           "sha256": "d9305256a7e261a627a210866aa637104898146f0472246b495359182fd65ec2",
           "url": "https://denomcp.com/api/v1/knowhow/minimax-h3-r2v-deno/files/minimax_h3_ref2va_pruned_vdn8_native.api.json",
           "repo_path": "workflows/minimax-h3-r2v-deno/minimax_h3_ref2va_pruned_vdn8_native.api.json"
+        },
+        {
+          "path": "queue.py",
+          "size": 10617,
+          "sha256": "9eb342e8d32223f37f5ae2fb3da168cd6ee8a9161acffa3acfccf4236befcb59",
+          "url": "https://denomcp.com/api/v1/knowhow/minimax-h3-r2v-deno/files/queue.py",
+          "repo_path": "workflows/minimax-h3-r2v-deno/queue.py"
         }
       ]
     },
@@ -567,10 +649,53 @@
       ]
     },
     {
+      "slug": "speech-check-whisper",
+      "title": "발화 자동 검수 — 목소리만 분리해 Whisper large-v3로 전사하고 원고와 대조한다",
+      "kind": "technique",
+      "version": "1",
+      "execution": "local",
+      "tags": [
+        "발화 검수",
+        "전사",
+        "whisper",
+        "자막",
+        "대사",
+        "말소리",
+        "검수",
+        "mel-band roformer",
+        "환청",
+        "검수 자동화"
+      ],
+      "models": [
+        "Whisper large-v3",
+        "Mel-Band RoFormer"
+      ],
+      "summary": "생성 영상의 말이 원고대로 나왔는지, 대사 없는 판에 말소리가 섞이지 않았는지를 귀 대신 전사로 판정하는 순서 — 목소리만 분리(Mel-Band RoFormer) → Whisper large-v3 전사 → 원고 문장 대조(OK/MISS) → MISS 구간만 슬라이스 재전사. 환청·단위 표기·모노 입력 함정과 판정 기준. 도구 둘 첨부(ComfyUI 경로·독립 실행 경로).",
+      "updated_at": "2026-09-27T00:10:14.457Z",
+      "file": "skills/speech-check-whisper.md",
+      "sha256": "b05bad9da1a7ee4a823214493a5a4faa02dbaed22e4a052ccd03d8dd08a29226",
+      "files": [
+        {
+          "path": "speech_check.py",
+          "size": 3127,
+          "sha256": "8ad5c1bb9c074235f5c5df17874f975ce3ad1afa6b560be107d57378d8ef3e4b",
+          "url": "https://denomcp.com/api/v1/knowhow/speech-check-whisper/files/speech_check.py",
+          "repo_path": "skills/speech-check-whisper/speech_check.py"
+        },
+        {
+          "path": "whisper_check.py",
+          "size": 9163,
+          "sha256": "19230590b55b560508597af63e842ec4b3522da7c8f3192c7ad66d5957713289",
+          "url": "https://denomcp.com/api/v1/knowhow/speech-check-whisper/files/whisper_check.py",
+          "repo_path": "skills/speech-check-whisper/whisper_check.py"
+        }
+      ]
+    },
+    {
       "slug": "stable-audio-3-bgm",
       "title": "로컬 배경음 — Stable Audio 3 Medium(증류판)으로 연주곡·앰비언트 만들기",
       "kind": "workflow",
-      "version": "3",
+      "version": "4",
       "execution": "local",
       "tags": [
         "음악",
@@ -590,9 +715,9 @@
         "Stable Audio 3 Medium"
       ],
       "summary": "디노가 로컬에서 연주곡 배경음·인트로·앰비언트를 만드는 방법. Stable Audio 3 Medium(증류판, 8스텝·CFG 1 — base 판은 쓰지 않는다)을 ComfyUI 공식 템플릿 값 그대로 API로 돌린다. 프롬프트 한 문단 문법(TrackType·VocalType 태그 + 장르·악기·분위기·BPM), 길이 잡기, 후보 여러 개 뽑아 고르기, MP3 저장, 무보컬 오염 회피, 16GB 카드 길이 사다리 실측. 프롬프트 작법 전문과 실수 목록은 짝 편 stable-audio-3-prompting.",
-      "updated_at": "2026-09-26T23:47:25.728Z",
+      "updated_at": "2026-09-27T00:10:14.907Z",
       "file": "skills/stable-audio-3-bgm.md",
-      "sha256": "d1d4f53b148a5c7b65048e4dbca27418249e4718ca9bdc29c04ffdc0785de750",
+      "sha256": "fea49830da78a56a7b3282cab000cad8917c7cf6bd2cde4430c813d6880306af",
       "files": [
         {
           "path": "Deno Stable Audio 3 Medium BGM.json",
@@ -600,6 +725,13 @@
           "sha256": "a968d2c43481f0ec90eab3fff67c6b957d546f61b85f60720075f3869e6f6f51",
           "url": "https://denomcp.com/api/v1/knowhow/stable-audio-3-bgm/files/Deno%20Stable%20Audio%203%20Medium%20BGM.json",
           "repo_path": "workflows/stable-audio-3-bgm/Deno Stable Audio 3 Medium BGM.json"
+        },
+        {
+          "path": "music_queue.py",
+          "size": 4172,
+          "sha256": "2780148a5363bb4cf6e7307e80ee6c43f979c090262f790b032326239dad1db2",
+          "url": "https://denomcp.com/api/v1/knowhow/stable-audio-3-bgm/files/music_queue.py",
+          "repo_path": "workflows/stable-audio-3-bgm/music_queue.py"
         },
         {
           "path": "stable_audio3_medium_bgm.api.json",
