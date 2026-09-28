@@ -205,7 +205,9 @@ function isAvatarDirection(text) {
 }
 
 function isMotion(text) {
-  return matches(text, /(?:모션(?:그래픽)?|오버레이|자료\s*화면|remotion|(?:^|\s)B\d{2}(?:-|\s|$)|블록.{0,12}(?:에러|오류|안\s*된|안된|깨|수정)|(?:미디어|클립).{0,8}오프라인|offline|relink|재연결|아이콘|마크\s*넣|(?:종이|무광|매트)\s*질감|질감\s*(?:배경|으로|바꿔)|배경.{0,6}질감)/iu) || wantsClaudeMotionParity(text)
+  return matches(text, /(?:모션(?:그래픽)?|오버레이|자료\s*화면|remotion|(?:^|\s)B\d{2}(?:-|\s|$)|블록.{0,12}(?:에러|오류|안\s*된|안된|깨|수정)|(?:미디어|클립).{0,8}오프라인|offline|relink|재연결|아이콘|마크\s*넣|(?:종이|무광|매트)\s*질감|질감\s*(?:배경|으로|바꿔)|배경.{0,6}질감)/iu)
+    // On-screen text requests without the word 모션 (2026-09-28: show the word the viewer must type, big, on screen).
+    || (!isCaption(text) && matches(text, /(?:텍스트|글자|문구|단어)\s*로?.{0,8}화면에.{0,20}(?:표시|띄워|띄우|보여|넣어)|(?:따라\s*)?(?:입력|검색)하게.{0,40}(?:표시|띄워|띄우|보여)/iu)) || wantsClaudeMotionParity(text)
     || isAvatarDirection(text)
     || (!isCaption(text) && matches(text, /(?:폰트|서체|타이포그래피|typography|adobe\s*fonts|google\s*fonts)/iu));
 }

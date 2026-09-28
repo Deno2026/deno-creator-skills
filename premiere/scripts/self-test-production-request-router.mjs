@@ -121,6 +121,11 @@ test("avatar lecture shot direction routes to motion", "내 아바타 강의 샷
   assert.ok(route.workflows.includes("docs/agent/workflows/avatar-longform-direction.md"));
 });
 
+test("type-this-word text cue routes to motion", "4분 35초 부근에 영어로 어텐션 이라고 입력해주세요 <- 이런 뉘앙스로 특정 단어를 따라 입력하게 만드는 요소들에 대해서는 친절하게 텍스트 로 화면에 굵직굵직하게 표시를 해주면 좋겠거든", (route) => {
+  assert.equal(route.intent, "motion-production");
+  assert.ok(route.workflows.includes("docs/agent/workflows/channel-motion-profile.md"));
+});
+
 test("ordinary motion loads the approved presenter profile for scope assessment", "모션 작업하자", (route) => {
   assert.ok(route.workflows.includes("docs/agent/workflows/avatar-longform-direction.md"));
 });
