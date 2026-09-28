@@ -229,6 +229,12 @@ function isRepeatSpeechRemoval(text) {
   return matches(text, /(?:중복(?:된|되는)?\s*말|했던\s*말.{0,6}또).{0,40}(?:걷어|빼|지워|없애|다듬)/iu);
 }
 
+// Sentence-level trimming named in the request (restarts, repeated speech, "문장 단위 다듬기"); failed takes and duplicate
+// speech are caught by the removeUselessSegments scope wording.
+function isSentenceTrim(text) {
+  return matches(text, /재시작|반복.{0,12}(?:걷어|빼|지워|없애|다듬)|문장\s*(?:단위)?.{0,8}다듬/iu);
+}
+
 function isCutEditing(text) {
   return matches(
     text,
@@ -478,17 +484,19 @@ export function resolveProductionRequest(value) {
   }
 
   if (isCutEditing(request) || isStrictWaveformOnly(request)) {
-    const strictWaveformOnly = isStrictWaveformOnly(request);
+    // Since 2026-09-28 a cut is sound-based by default: every sound keeps 0.15 s on each side and nothing is judged by
+    // meaning. Sentence-level trimming runs only when the request names it and is not explicitly waveform-only.
+    const editorial = !isStrictWaveformOnly(request) && (scope.removeUselessSegments || isSentenceTrim(request));
     return commonResult(request, {
-      intent: strictWaveformOnly ? "waveform-only-cut" : "editorial-cut",
-      mode: strictWaveformOnly ? "strict-waveform-only" : "bounded-editorial",
+      intent: editorial ? "editorial-cut" : "waveform-only-cut",
+      mode: editorial ? "bounded-editorial" : "strict-waveform-only",
       domain: "edit",
       workflows: [WORKFLOWS.audio, WORKFLOWS.premiere],
       liveReads: ["active sequence, target clip, fps, and target waveform"],
-      scope: {...scope, removeUselessSegments: strictWaveformOnly ? false : true},
-      guidance: strictWaveformOnly
-        ? ["Use waveform silence as requested and preserve semantic decisions for the user."]
-        : ["Use editorial judgment for obvious retakes while protecting spoken audio at waveform boundaries."],
+      scope: {...scope, removeUselessSegments: editorial},
+      guidance: editorial
+        ? ["Trim the retakes and repeated speech the request names, with edges in real silence that protect spoken audio."]
+        : ["Cut by sound only: keep 0.15 s before and after every sound (--fixed-air 0.15 --min-remove 0.1) unless the request sets another margin; leave meaning decisions to the user."],
     });
   }
 

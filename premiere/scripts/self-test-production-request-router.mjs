@@ -57,20 +57,32 @@ function test(name, request, verify) {
   console.log(`ok ${passed} - ${name}`);
 }
 
-test("통파일만 remains an editorial scope signal", "인트로부분은 건들지말고 통파일만 오디오 파형 컷 해줘", (route) => {
-  assert.equal(route.intent, "editorial-cut");
+// Since 2026-09-28 a cut is sound-based by default (0.15 s kept on each side of every sound); trimming needs explicit wording.
+test("통파일만 is a sound-based cut that keeps the scope signals", "인트로부분은 건들지말고 통파일만 오디오 파형 컷 해줘", (route) => {
+  assert.equal(route.intent, "waveform-only-cut");
   assert.equal(route.domain, "edit");
   assert.equal(route.scope.preserveIntro, true);
   assert.equal(route.scope.targetWholeFileOnly, true);
-  assert.equal(route.scope.removeUselessSegments, true);
+  assert.equal(route.scope.removeUselessSegments, false);
   assert.ok(route.workflows.includes("docs/agent/workflows/premiere-control.md"));
 });
 
-test("a plain timeline cut request is an editorial cut", "프리미어프로 타임라인 컷편집 부탁해", (route) => {
-  assert.equal(route.recognized, true);
-  assert.equal(route.intent, "editorial-cut");
-  assert.ok(route.workflows.includes("docs/agent/workflows/audio-finishing.md"));
-});
+for (const request of ["프리미어프로 타임라인 컷편집 부탁해", "통파일 컷 해줘", "알아서 컷해줘"]) {
+  test(`a plain cut request is sound-based by default: ${request}`, request, (route) => {
+    assert.equal(route.recognized, true);
+    assert.equal(route.intent, "waveform-only-cut");
+    assert.equal(route.scope.removeUselessSegments, false);
+    assert.ok(route.workflows.includes("docs/agent/workflows/audio-finishing.md"));
+    assert.ok(route.guidance.some((line) => line.includes("0.15")));
+  });
+}
+
+for (const request of ["통파일 컷하면서 재시작이랑 실패 테이크도 걷어내줘", "컷편집하고 문장 단위로 다듬어줘"]) {
+  test(`named trimming stays an editorial cut: ${request}`, request, (route) => {
+    assert.equal(route.intent, "editorial-cut");
+    assert.equal(route.scope.removeUselessSegments, true);
+  });
+}
 
 test("repeat and duplicate speech removal is an editorial cut", "위스퍼도 돌리고 프리미어 타임라인에 내가 지금 캡션올려놓은것까지 같이 고려해서 내가 했던말 또하고 중복된말하거나 그런거도 걷어내고 자연스럽게 이어지도록 전체 다듬어봐줄래?", (route) => {
   assert.equal(route.recognized, true);
