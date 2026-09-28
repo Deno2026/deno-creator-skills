@@ -1,9 +1,9 @@
 {
   "kit": "deno-creator-skills/premiere",
   "version": "0.1.0",
-  "exportedAt": "2026-09-28T00:08:36.551Z",
+  "exportedAt": "2026-09-28T00:25:32.595Z",
   "sourceRepo": "PremierePro Helper (local)",
-  "sourceCommit": "2af6547",
+  "sourceCommit": "cf035d7",
   "files": {
     "AGENTS.md": "75cda0cedd038bf97becb1871e95fe27055fc1060dd6b080f53a8d139c0c8660",
     "apps/youtube-upload-helper/.env.example": "1f9f7ef88c5a8baad4cb64c8008ac737021b1715af1807ef2079d8ae936e2040",
@@ -461,7 +461,7 @@
     "src/lib/motion-studio/LocateCue.tsx": "d5ab983c3c82e03810675a9fcefb06edc168f77aa1cfd5e02375f1bde07d9c4f",
     "src/lib/motion-studio/NotePanel.tsx": "32ee8ae11d2fd10a0bfb4fe70550d271945a10e2a218f46dc16282d753469c90",
     "src/lib/motion-studio/PinnedCommentCue.tsx": "43882978db8b94fba025660f666e7729487654e3c6dc19bedc907da1e7dc644a",
-    "src/lib/motion-studio/TypeCue.tsx": "7c30750d6c443de7573515f399e379b55f01123421f2a84595ab1c230a1b80bf",
+    "src/lib/motion-studio/TypeCue.tsx": "13f1d2af412d382a389e08fa6d07becd8bbc5e7ad6f8a08a1c499d8d329ab5c9",
     "src/lib/motion-studio/TypingCard.tsx": "56787bd82c08fc32053fcb94fb92919d759ca43863161a4cdf7226082d7c57b1",
     "src/lib/motion-typography/catalog.ts": "69117c5ba3e9d09a398185511634750d4a4b3ed413f03161016bb4707bee8f58",
     "src/lib/motion-typography/google-fonts.lock.json": "a226a1b30e55a676a0e45038ef200ba05cb923f176eb19f7d2c19d4da6c2f7bd",
