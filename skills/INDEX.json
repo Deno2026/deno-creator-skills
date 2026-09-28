@@ -374,7 +374,7 @@
       "slug": "minimax-h3-r2v-deno",
       "title": "MiniMax H3 참고→영상(R2V)·시작 이미지→영상(FL2VA) — 디노의 현행 ComfyUI 워크플로(INT8 pruned + VDN 8스텝)",
       "kind": "workflow",
-      "version": "12",
+      "version": "13",
       "execution": "local",
       "tags": [
         "미니맥스",
@@ -415,9 +415,9 @@
         "KJNodes"
       ],
       "summary": "참고물(캐릭터 시트·장소 판·스타일 키·목소리 견본)로 새 장면을 만드는 R2V와, 독립 시작(·끝) 이미지를 정확한 첫 프레임으로 삼는 FL2VA를 같은 그래프 계약으로 돌리는 디노의 현행 워크플로. 한 번의 생성이 영상+스테레오 소리(대사·효과음)를 같이 낸다. 모드별 디퓨전·로라 한 쌍, 공통 체인, 화질 단계(초안·기본, R2V 1088p급 기본 7+1·액션 8+1), API 그래프 전문, 모델 배포처, 실측으로 확인된 함정.",
-      "updated_at": "2026-09-27T20:06:13.930Z",
+      "updated_at": "2026-09-28T08:59:48.363Z",
       "file": "skills/minimax-h3-r2v-deno.md",
-      "sha256": "dd2e8b987f3a942a84a89968f9109ad9de882dd52bb1c04076d2cb3950d3bee3",
+      "sha256": "050468089c21f856aeda0fc9c979ceca0072e417bf52f2e152498c965ae2cfbd",
       "files": [
         {
           "path": "h3_prompt_lint.py",
