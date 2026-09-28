@@ -2,10 +2,10 @@
 slug: deno-comfyui-workflows
 title: 디노의 ComfyUI 워크플로 목록 — 무엇을 만들 때 어느 워크플로·어느 모델을 쓰나(2026-09-26 기준)
 kind: workflow
-tags: 목록, 카탈로그, 지도, 워크플로, comfyui, 모델, h3, ltx, qwen, 업스케일, 음악, 검수, 어댑터, 로컬, 데스크탑, 시작, 처음
-models: MiniMax H3, LTX 2.5, Qwen-Image 2.1, Stable Audio 3 Medium, Whisper large-v3
+tags: 목록, 카탈로그, 지도, 워크플로, comfyui, 모델, h3, ltx, 업스케일, 음악, 검수, 어댑터, 로컬, 데스크탑, 시작, 처음
+models: MiniMax H3, LTX 2.5, Stable Audio 3 Medium, Whisper large-v3
 execution: local
-version: 11
+version: 12
 summary: 디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 한 장에 — 어떤 결과를 만들 때 어느 꾸러미를 열고, 어떤 모델이 필요하고, 내 ComfyUI(포터블·데스크탑)로 어떻게 켜고 돌리는지. 현행·실험·은퇴를 가른다. 각 줄의 세부는 그 꾸러미가 소유한다.
 ---
 
@@ -14,7 +14,7 @@ summary: 디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 
 이 꾸러미는 **지도**다. 무엇을 만들지가 정해지면 아래 표에서 줄 하나를 골라 그 꾸러미를 연다. 값·그래프·함정은 각 꾸러미에 있고, 여기에는 고를 때 필요한 것만 둔다.
 어느 장비에서 어떤 크기·길이로 갈지는 사용자 GPU에서 찾는다(모든 꾸러미 공통). 디노의 장비·배분은 「디노는 이렇게 한다」.
 
-**축은 둘이다(디노 확정 2026-09-27): 영상은 MiniMax H3, 사진은 Qwen-Image 2.1.** 사용 노하우는 이 두 워크플로를 중심으로 쓰고, LTX(리파인·공식 기본값)·H3 잠재 업스케일·오디오 검수는 그 둘을 돕는 보조편이다.
+**중심 축은 영상 MiniMax H3다.** 사용 노하우는 이 워크플로를 중심으로 쓰고, LTX(리파인·공식 기본값)·H3 잠재 업스케일·오디오 검수는 그것을 돕는 보조편이다.
 
 ## 무엇을 얻나
 
@@ -46,7 +46,6 @@ summary: 디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 
 | H3를 처음부터 큰 해상도로(1088p급, 7+1·8+1) | 위 R2V 재료 | `upscale-h3-4mp-5plus3` ① | + H3 3D 잠재 업스케일러 |
 | 이미 만든 영상의 디테일 올리기(×1.5 리파인, 오디오 원본 유지) | mp4 + 인물 참조 시트 | `upscale-h3-4mp-5plus3` ② | LTX 2.5 dev + 디스틸 로라 + MSR IC-LoRA, LTX 2.3 ×1.5 잠재 업샘플러 |
 | 글·이미지·음성 → 영상(진행자 A2V 포함), 글 → 오디오, 영상 편집(IC-LoRA) | 글·시작 이미지·음성·참조 | `ltx25-official-defaults` | LTX 2.5 22B distilled, Gemma 4 12B(LTX), Conv 영상 VAE, 오디오 VAE |
-| 사진·판면 생성, 이미지 편집·합성·배경 제거·투명 | 글·참고 이미지 1~10장 | `qwen-image-21-t2i-edit` + `qwen-image-21-prompting` | Qwen-Image 2.1 int8, Qwen3-VL 8B, VAE |
 | 연주곡 배경음·인트로·앰비언트(가사 없음, 5초~수 분) | 프롬프트 한 문단(태그 + 장르·악기·분위기·BPM) | `stable-audio-3-bgm` + 작법·실수 목록 `stable-audio-3-prompting` | Stable Audio 3 Medium(증류판 — base 판은 쓰지 않음) + T5Gemma 인코더 |
 | 생성 영상의 발화 검수(원고 대조·말소리 유무) — 귀 대신 전사 | 클립 + 원고 문장 | `speech-check-whisper` | Whisper large-v3 + Mel-Band RoFormer |
 | 영상·곡의 템포(BPM) 재기 — 배경음을 박자에 맞출 때 | 영상·오디오 파일 | `bpm-probe` | — |
@@ -97,15 +96,16 @@ summary: 디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 
 
 ## 바뀐 점
 
+- v12 (2026-09-27): 이미지 갈래를 목록에서 뺐다.
 - v11 (2026-09-27): 생성 전 게이트(`pre-generation-gate`)·검수와 전달(`review-and-delivery`) 편 안내.
 - v10 (2026-09-27): 발화 검수(`speech-check-whisper`)·BPM(`bpm-probe`) 편이 생겨 현행 목록으로; 첨부 안내에 도구 스크립트.
-- v9 (2026-09-27): 첨부 파일 안내 — 워크플로 편 다섯(H3·Qwen·배경음·LTX·업스케일)에 정본 JSON이 첨부로 붙었고 공개 리포 `workflows/`가 거울.
+- v9 (2026-09-27): 첨부 파일 안내 — 워크플로 편 넷(H3·배경음·LTX·업스케일)에 정본 JSON이 첨부로 붙었고 공개 리포 `workflows/`가 거울.
 - v8 (2026-09-27): 배경음 줄에 작법·실수 목록 편 `stable-audio-3-prompting` 추가.
 - v7 (2026-09-27): 연주곡 배경음 줄을 현행 목록으로(`stable-audio-3-bgm` — Stable Audio 3 Medium 증류판, base 안 씀).
 
 - v6 (2026-09-27): H3 5+3 은퇴(디노 확정) — 큰 해상도 줄을 R2V 1088p급(7+1·8+1)으로, 은퇴 목록에 5+3.
 - v5 (2026-09-27): 「내 PC에 맞는 설정값 찾기」 줄 추가(`comfyui-fit-my-pc`) — 디노 값은 디노 PC 기준 권장값, 사용자 PC 값은 스모크·사다리·결정·고정으로.
-- v4 (2026-09-27): 두 축 선언 — 영상 MiniMax H3·사진 Qwen-Image 2.1, 나머지는 보조편(디노).
+- v4 (2026-09-27): 축 선언 — 영상 MiniMax H3 중심, 나머지는 보조편(디노).
 
 - v3 (2026-09-26 밤): 어텐션 Kitchen 통일 — 세이지를 은퇴 목록으로.
 - v2 (2026-09-26 밤): 실행 열과 상용 절을 뺐다 — 지금은 로컬 파이프라인 복제만(디노). 데스크탑 켜기 줄 추가.
