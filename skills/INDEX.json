@@ -519,7 +519,7 @@
       "slug": "premiere-audio-balance",
       "title": "프리미어 오디오 밸런스 — 구간별 체감 음량 맞추기와 순간 피크만 누르는 리미터, 실제 출력으로 검증하기",
       "kind": "technique",
-      "version": "1",
+      "version": "2",
       "execution": "local",
       "tags": [
         "오디오",
@@ -532,6 +532,7 @@
         "프리미어",
         "premiere",
         "나레이션",
+        "대사",
         "bgm",
         "효과음",
         "밸런스",
@@ -539,9 +540,9 @@
       ],
       "models": [],
       "summary": "컷이 끝난 Premiere 시퀀스의 나레이션·삽입 영상·BGM·효과음을 역할별 목표 음량에 맞추는 법 — 타임라인의 실제 사용 구간을 측정해 정적 gain을 볼륨 레벨로 주고, 순간 피크만 하드 리미터(천장 절대값)로 제한하며, 검증용 오디오를 실제로 내보내 LUFS·true peak로 판정한다. Premiere가 레벨을 효과보다 먼저 적용한다는 사실과 거기서 나온 함정들.",
-      "updated_at": "2026-09-26T21:53:24.127Z",
+      "updated_at": "2026-09-28T23:47:01.663Z",
       "file": "skills/premiere-audio-balance.md",
-      "sha256": "a2ae05c1025ef4125ed353ae27e23bbc9b8e0f0149bf6a6476afe8b4bd6dbd40",
+      "sha256": "7eaf1d65a2d9d8b87c54383f5d0cc48ae4ea009124c52440bb73d778fc705f8e",
       "files": []
     },
     {
@@ -615,7 +616,7 @@
       "slug": "premiere-post-production",
       "title": "프리미어 후반 흐름 — 컷편집 뒤 오디오·자막·모션·4K 마스터·유튜브 업로드·현지화·숏폼 게시를 에이전트가 이어받는 순서",
       "kind": "workflow",
-      "version": "1",
+      "version": "2",
       "execution": "local",
       "tags": [
         "프리미어",
@@ -645,9 +646,9 @@
         "Qwen3-ASR"
       ],
       "summary": "디노가 Premiere Pro로 유튜브 롱폼을 마무리하는 후반 흐름 전체 — 통파일 무음 컷과 문장 단위 다듬기, 구간별 오디오 밸런스와 리미터, 사용자가 내보낸 SRT를 정본으로 하는 2단계 자막, Remotion 알파 오버레이, 4K 마스터, 업로드 헬퍼로 제목·설명·챕터 확정 뒤 unlisted 업로드와 한국어·영어 자막·80여 개 언어 현지화, 숏폼 4플랫폼 예약 게시. 어디서 사용자가 결정하고 어디서 에이전트가 하는지, 넘지 않는 선. 실행 도구는 공개 키트(Deno Creator Skills / premiere).",
-      "updated_at": "2026-09-26T21:53:24.348Z",
+      "updated_at": "2026-09-28T23:47:01.992Z",
       "file": "skills/premiere-post-production.md",
-      "sha256": "2358ca5e2e6396c02c0270e8cb3282cc297540fe23b2c07ebe0fe95a228efc7e",
+      "sha256": "b68814553cee8a129b72e9c184d20949b80979ee9a2faa92f0eafe295a68c8eb",
       "files": []
     },
     {
