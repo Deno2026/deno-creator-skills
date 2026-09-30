@@ -1,6 +1,6 @@
 {
   "source": "https://api.denomcp.com/v1/knowhow",
-  "count": 19,
+  "count": 18,
   "packages": [
     {
       "slug": "bpm-probe",
@@ -38,7 +38,7 @@
       "slug": "comfyui-agent-basics",
       "title": "ComfyUI를 에이전트가 다루는 법 — 디노 방식(API로 접수·확인·회수·검수 한 바퀴)",
       "kind": "technique",
-      "version": "6",
+      "version": "7",
       "execution": "local",
       "tags": [
         "comfyui",
@@ -64,10 +64,10 @@
       "models": [
         "ComfyUI"
       ],
-      "summary": "에이전트가 사용자 PC(또는 같은 네트워크의 다른 PC)의 ComfyUI를 화면 조작 없이 API로 부리는 순서 — 서버 확인 → 그래프 준비·대조 → 참조 업로드 → 큐 비우기·메모리 내리기 → 접수 → 진행 → 회수 → 실제 파일 검수 → 정리. 이 창고의 모든 로컬 갈래(H3·LTX)가 이 절차 위에서 돈다. 접수를 완료로 착각하는 것, 앞 판 잔여 메모리에 걸려 기어가는 것, 사용자 워크플로 폴더를 건드리는 것을 막는다.",
-      "updated_at": "2026-09-27T20:06:12.925Z",
+      "summary": "에이전트가 사용자 PC(또는 같은 네트워크의 다른 PC)의 ComfyUI를 화면 조작 없이 API로 부리는 순서 — 서버 확인 → 그래프 준비·대조 → 참조 업로드 → 큐 비우기·메모리 내리기 → 접수 → 진행 → 회수 → 실제 파일 검수 → 정리. 이 창고의 모든 로컬 갈래(H3 · 배경음 등)가 이 절차 위에서 돈다. 접수를 완료로 착각하는 것, 앞 판 잔여 메모리에 걸려 기어가는 것, 사용자 워크플로 폴더를 건드리는 것을 막는다.",
+      "updated_at": "2026-09-30T14:29:34.886Z",
       "file": "skills/comfyui-agent-basics.md",
-      "sha256": "dac794dcfafb06d0c9ba40458a767e738815c60ee812ecfbb33b76f36b8a959f",
+      "sha256": "faa609550dbf7452beefae6d82ad316d03659a435d318b80b6a4326652fbea1a",
       "files": [
         {
           "path": "fetch.py",
@@ -160,7 +160,7 @@
       "slug": "deno-comfyui-workflows",
       "title": "디노의 ComfyUI 워크플로 목록 — 무엇을 만들 때 어느 워크플로·어느 모델을 쓰나(2026-09-26 기준)",
       "kind": "workflow",
-      "version": "12",
+      "version": "13",
       "execution": "local",
       "tags": [
         "목록",
@@ -170,11 +170,9 @@
         "comfyui",
         "모델",
         "h3",
-        "ltx",
         "업스케일",
         "음악",
         "검수",
-        "어댑터",
         "로컬",
         "데스크탑",
         "시작",
@@ -182,14 +180,13 @@
       ],
       "models": [
         "MiniMax H3",
-        "LTX 2.5",
         "Stable Audio 3 Medium",
         "Whisper large-v3"
       ],
       "summary": "디노가 지금 실제로 쓰는 ComfyUI 워크플로를 용도별로 한 장에 — 어떤 결과를 만들 때 어느 꾸러미를 열고, 어떤 모델이 필요하고, 내 ComfyUI(포터블·데스크탑)로 어떻게 켜고 돌리는지. 현행·실험·은퇴를 가른다. 각 줄의 세부는 그 꾸러미가 소유한다.",
-      "updated_at": "2026-09-27T12:44:44.893Z",
+      "updated_at": "2026-09-30T14:29:35.277Z",
       "file": "skills/deno-comfyui-workflows.md",
-      "sha256": "64c30651692a7878ec2b5ad14d1f688512208282e5a386640d3934b7bc098a82",
+      "sha256": "f6faca71369ed28d4d71201c611141010d900ab6d95672bd63d7fdcbf6223e1b",
       "files": []
     },
     {
@@ -313,62 +310,6 @@
       "file": "skills/h3-prompt-six-fields.md",
       "sha256": "b334c0127e500c7b5a097bbd3def1744283d7005661bfc91f29f7b7edc2679f7",
       "files": []
-    },
-    {
-      "slug": "ltx25-official-defaults",
-      "title": "LTX 2.5 로컬 실행본 — 공식 템플릿(T2V·I2V·A2V·T2A·V2V·IC-LoRA)을 돌릴 때 디노가 실행 사본에 고정하는 것",
-      "kind": "workflow",
-      "version": "4",
-      "execution": "local",
-      "tags": [
-        "ltx",
-        "ltx 2.5",
-        "ltxv",
-        "t2v",
-        "i2v",
-        "a2v",
-        "t2a",
-        "v2v",
-        "ic-lora",
-        "진행자",
-        "아바타",
-        "립싱크",
-        "음성",
-        "영상 생성",
-        "conv vae",
-        "vram debug",
-        "디코드",
-        "메모리",
-        "타일",
-        "8n+1",
-        "프롬프트"
-      ],
-      "models": [
-        "LTX 2.5",
-        "LTX-2.5 22B distilled",
-        "Gemma 4 12B(LTX)",
-        "KJNodes"
-      ],
-      "summary": "LTX 2.5 공식 ComfyUI 템플릿(글→영상, 이미지→영상, 음성→영상 진행자, 글→오디오, 영상→영상 IC-LoRA)을 손대지 않고 실행 사본에만 네 가지를 고정해 돌리는 순서 — Conv 영상 VAE, 일반 VAEDecode, 디코드 전 VRAM Debug(모델 내리기), 일반 샘플러 기본. LTX 프롬프트 규격과 검수 자리. 길이·해상도는 사용자 GPU에서 찾는다.",
-      "updated_at": "2026-09-27T00:10:11.583Z",
-      "file": "skills/ltx25-official-defaults.md",
-      "sha256": "ca9ebf04e19aa6236516bac274abeb6eb0ac96fe87b7fd3d934288299782d5c8",
-      "files": [
-        {
-          "path": "DENO_LTX25_A2V_1088p.api.json",
-          "size": 12542,
-          "sha256": "33ed6dd85667e6788cdc44969930d591f7767352bd9770664564e245324a4852",
-          "url": "https://denomcp.com/api/v1/knowhow/ltx25-official-defaults/files/DENO_LTX25_A2V_1088p.api.json",
-          "repo_path": "workflows/ltx25-official-defaults/DENO_LTX25_A2V_1088p.api.json"
-        },
-        {
-          "path": "ltx_workflow_policy.py",
-          "size": 25217,
-          "sha256": "0a2522205b81c84a3fab7e3ecf17437b61646a2123f6e9e00a8bdb203fd16c8c",
-          "url": "https://denomcp.com/api/v1/knowhow/ltx25-official-defaults/files/ltx_workflow_policy.py",
-          "repo_path": "workflows/ltx25-official-defaults/ltx_workflow_policy.py"
-        }
-      ]
     },
     {
       "slug": "minimax-h3-r2v-deno",
@@ -807,9 +748,9 @@
     },
     {
       "slug": "upscale-h3-4mp-5plus3",
-      "title": "업스케일 두 방법 — H3 1088p급 잠재 업스케일(7+1·8+1)과 LTX 2.5 MSR 리파인(×1.5)",
+      "title": "업스케일 — H3 1088p급 잠재 업스케일(7+1·8+1)",
       "kind": "technique",
-      "version": "7",
+      "version": "9",
       "execution": "local",
       "tags": [
         "업스케일",
@@ -819,39 +760,19 @@
         "1088p",
         "7+1",
         "8+1",
-        "LTX",
-        "MSR",
-        "리파인",
         "디테일",
         "해상도",
         "오디오 보존"
       ],
       "models": [
         "MiniMax H3 Ref2VA",
-        "MinimaxH3LatentUpscaler3D",
-        "LTX 2.5",
-        "LTX-2.5 MSR IC-LoRA"
+        "MinimaxH3LatentUpscaler3D"
       ],
-      "summary": "만든 영상의 해상도·디테일을 올리는 디노의 두 방법. ① 같은 생성 안에서 앞 단계 → 3D 잠재 업스케일(기본 ×2·액션 ×1.5) → 같은 8스텝 일정의 마지막 1스텝(H3 R2V, 오디오 잠재가 함께 간다) ② 이미 있는 mp4를 LTX 2.5가 1.5배로 다시 그리는 리파인(참조 시트로 인물을 붙잡고 오디오는 원본 트랙). 언제 무엇을 쓰는지, 배선 계약, 모델 배포처.",
-      "updated_at": "2026-09-26T23:47:26.649Z",
+      "summary": "만든 영상의 해상도·디테일을 올리는 디노의 방법 — 같은 생성 안에서 앞 단계 → 3D 잠재 업스케일(기본 ×2·액션 ×1.5) → 같은 8스텝 일정의 마지막 1스텝(H3 R2V, 오디오 잠재가 함께 간다). 언제 쓰는지, 배선 계약, 모델 배포처.",
+      "updated_at": "2026-09-30T14:29:36.470Z",
       "file": "skills/upscale-h3-4mp-5plus3.md",
-      "sha256": "4e8c1ae4e2918d74fb2e416387de6276f6ab914a4a1183cc6be943d2baeda68e",
-      "files": [
-        {
-          "path": "Deno LTX2.5 MSR Refine.json",
-          "size": 43336,
-          "sha256": "508fa1f936e0a97c1b8cd933d33f0f7fa926841483c028ed0c09848c645d776f",
-          "url": "https://denomcp.com/api/v1/knowhow/upscale-h3-4mp-5plus3/files/Deno%20LTX2.5%20MSR%20Refine.json",
-          "repo_path": "skills/upscale-h3-4mp-5plus3/Deno LTX2.5 MSR Refine.json"
-        },
-        {
-          "path": "ltx25_msr_refine.api.json",
-          "size": 8885,
-          "sha256": "6075c1d59624854f7ee9690c54e61f5fbbd16783822ce6ccd0f113a9fbfe7112",
-          "url": "https://denomcp.com/api/v1/knowhow/upscale-h3-4mp-5plus3/files/ltx25_msr_refine.api.json",
-          "repo_path": "skills/upscale-h3-4mp-5plus3/ltx25_msr_refine.api.json"
-        }
-      ]
+      "sha256": "f2937ac34f2a331ae8a694cde005d06f265bee1ae6d4ca5577518b8c79e79b10",
+      "files": []
     }
   ]
 }
