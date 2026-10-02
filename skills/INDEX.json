@@ -288,7 +288,7 @@
       "slug": "h3-no-chinese-speech",
       "title": "MiniMax H3가 중국어로 말하지 않게 — 원하지 않는 말소리 막기",
       "kind": "prompting",
-      "version": "2",
+      "version": "3",
       "execution": "both",
       "tags": [
         "미니맥스",
@@ -318,9 +318,9 @@
         "MiniMax H3 FL2VA"
       ],
       "summary": "H3가 시키지 않은 중국어(가끔 영어) 말을 지어내는 원인 — 비어 있는 소리 칸, 말을 떠올리게 하는 글, 말하지 않는 인물의 화자 번호, 한국어로 쓴 설명문(대사로 읽힘) — 과 막는 법. 대사 없는 영상의 소리 배타 선언(복사용 두 문장, 한국어 글에도 듣는다), 설명문은 영어·한국어는 `<d>[Korean]` 대사에만, 참고 오디오 영상의 audio reuse·reference, 뽑은 뒤 말소리 검사(전사기 헛말과 진짜 말을 목소리 분리로 가르기)와 고치는 순서, 실측 사례(2026-10-02 형식 비교 38판 포함)와 아직 모르는 것.",
-      "updated_at": "2026-10-02T02:41:55.214Z",
+      "updated_at": "2026-10-02T03:12:21.546Z",
       "file": "skills/h3-no-chinese-speech.md",
-      "sha256": "1ba5d1e04f3003624bb1e99c0ecadf58162f8c865942d655009fdd3a790e5466",
+      "sha256": "6bb84feb5b6b2f1f64e3809d4b0d6dcc1fc52b4eaaa0127618786adf8e9caf20",
       "files": []
     },
     {
