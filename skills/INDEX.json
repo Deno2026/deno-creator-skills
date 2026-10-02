@@ -1,6 +1,6 @@
 {
   "source": "https://api.denomcp.com/v1/knowhow",
-  "count": 18,
+  "count": 19,
   "packages": [
     {
       "slug": "bpm-probe",
@@ -283,6 +283,42 @@
           "repo_path": "workflows/education-shorts/typecast-tts/typecast_narration.py"
         }
       ]
+    },
+    {
+      "slug": "h3-no-chinese-speech",
+      "title": "MiniMax H3가 중국어로 말하지 않게 — 원하지 않는 말소리 막기",
+      "kind": "prompting",
+      "version": "1",
+      "execution": "both",
+      "tags": [
+        "미니맥스",
+        "h3",
+        "중국어",
+        "중국어 말소리",
+        "엉뚱한 말",
+        "말소리",
+        "내레이션",
+        "대사 없는 판",
+        "무대사",
+        "소리 배타 선언",
+        "overall_soundscape",
+        "언어 표기",
+        "대사",
+        "화자 번호",
+        "말소리 검사",
+        "Chinese speech",
+        "unwanted speech",
+        "gibberish"
+      ],
+      "models": [
+        "MiniMax H3 Ref2VA",
+        "MiniMax H3 FL2VA"
+      ],
+      "summary": "H3가 시키지 않은 중국어(가끔 영어) 말을 지어내는 원인 — 비어 있는 소리 칸, 말을 떠올리게 하는 글, 말하지 않는 인물의 화자 번호 — 과 막는 법. 대사 없는 영상의 소리 배타 선언(복사용 두 문장), 대사 영상의 영어 본문과 대사마다 `<d>[Korean]` 언어 표기, 참고 오디오 영상의 audio reuse·reference, 뽑은 뒤 말소리 검사와 고치는 순서, 실측 사례와 아직 모르는 것.",
+      "updated_at": "2026-10-02T01:43:31.667Z",
+      "file": "skills/h3-no-chinese-speech.md",
+      "sha256": "441c228c74ad3ffa57cb01c586dde0a41260d68f9401b62b154b3a6919a562d8",
+      "files": []
     },
     {
       "slug": "h3-prompt-six-fields",

@@ -30,9 +30,10 @@ DenoMCP 노하우 창고(에이전트 도구 `deno_knowhow_search`·`deno_knowho
 | [`speech-check-whisper`](speech-check-whisper.md) | 1 | 발화 자동 검수 — 목소리만 분리해 Whisper large-v3로 전사하고 원고와 대조한다 | 생성 영상의 말이 원고대로 나왔는지, 대사 없는 판에 말소리가 섞이지 않았는지를 귀 대신 전사로 판정하는 순서 — 목소리만 분리(Mel-Band RoFormer) → Whisper large-v3 전사 → 원고 문장 대조(OK/MISS) → MISS 구간만 슬라이스 재전사. 환청·단위 표기·모노 입력 함정과 판정 기준. 도구 둘 첨부(ComfyUI 경로·독립 실행 경로). | [`speech_check.py`](speech-check-whisper/speech_check.py) · [`whisper_check.py`](speech-check-whisper/whisper_check.py) | 2026-09-27 |
 | [`upscale-h3-4mp-5plus3`](upscale-h3-4mp-5plus3.md) | 9 | 업스케일 — H3 1088p급 잠재 업스케일(7+1·8+1) | 만든 영상의 해상도·디테일을 올리는 디노의 방법 — 같은 생성 안에서 앞 단계 → 3D 잠재 업스케일(기본 ×2·액션 ×1.5) → 같은 8스텝 일정의 마지막 1스텝(H3 R2V, 오디오 잠재가 함께 간다). 언제 쓰는지, 배선 계약, 모델 배포처. | — | 2026-09-30 |
 
-## 프롬프팅 (2)
+## 프롬프팅 (3)
 
 | 편 | 판 | 제목 | 요약 | 첨부 | 갱신 |
 |---|---|---|---|---|---|
+| [`h3-no-chinese-speech`](h3-no-chinese-speech.md) | 1 | MiniMax H3가 중국어로 말하지 않게 — 원하지 않는 말소리 막기 | H3가 시키지 않은 중국어(가끔 영어) 말을 지어내는 원인 — 비어 있는 소리 칸, 말을 떠올리게 하는 글, 말하지 않는 인물의 화자 번호 — 과 막는 법. 대사 없는 영상의 소리 배타 선언(복사용 두 문장), 대사 영상의 영어 본문과 대사마다 `<d>[Korean]` 언어 표기, 참고 오디오 영상의 audio reuse·reference, 뽑은 뒤 말소리 검사와 고치는 순서, 실측 사례와 아직 모르는 것. | — | 2026-10-02 |
 | [`h3-prompt-six-fields`](h3-prompt-six-fields.md) | 3 | MiniMax H3 프롬프트 — 공식 6칸 작법과 대사 문법 | H3 참고→영상 프롬프트를 공식 6칸(subject_definitions·summary·retention_analysis·detailed_description·overall_soundscape·non_diegetic_music)으로 쓰는 법, 샷 시각·대사 태그·화자 8항목·립싱크 밀도·긍정문 원칙·대사 없는 판의 소리 배타 선언·참고물 번호, 큐잉 전 검사 항목과 합격 예시 한 편. | — | 2026-09-27 |
 | [`stable-audio-3-prompting`](stable-audio-3-prompting.md) | 1 | Stable Audio 3 Medium 프롬프팅 가이드 + 에이전트 매뉴얼 — LLM에 그대로 넣는 영어 지시문과 하지 말 것 | Stable Audio 3 Medium(증류판) 프롬프트를 쓰는 LLM용 영어 지시문 전문 + 에이전트가 부르는 순서와 실수 목록. Stability 공식 프롬프팅 가이드(모드별 TrackType 태그, 장르·악기·분위기·BPM 네 요소, 공식 예시)에 디노 규칙(구조·길이 문장, 부정문 금지, 여유 길이, 후보 2~4개)을 [Deno]로 표시해 합쳤다. 하지 말 것 — 가사·보컬, 부정문, 스텝·CFG 변경, 한국어, 태그 누락, 딱 맞춘 길이, 380초 초과, 아티스트명, 한 판만, 바로 최종본. | — | 2026-09-26 |
