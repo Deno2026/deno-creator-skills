@@ -15,7 +15,7 @@
         "MY-PC.md",
         "skills/README.md"
       ],
-      "note": "Making things in the user's own ComfyUI: the map package (deno-comfyui-workflows) → once, comfyui-fit-my-pc to fix MY-PC.md → the workflow package and its attached files. Fetch packages with deno_knowhow_get into skills/"
+      "note": "Making things in the user's own ComfyUI: find the workflow package that fits with deno_knowhow_search → once, fill MY-PC.md by measuring and keep it → open the attached workflow as the package's requirements and steps say. Fetch packages with deno_knowhow_get into skills/"
     },
     "recipe": {
       "read": [

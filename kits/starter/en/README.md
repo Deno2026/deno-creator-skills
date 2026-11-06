@@ -6,7 +6,7 @@ and the order of work; what to make and how it should look is yours to decide. T
 ## Say things like this to your agent
 
 - "What can I do with DenoMCP?" — what is available right now
-- "What Deno skills are there?" / "Bring in the education-shorts package" — list and install production methods (packages)
+- "What Deno workflows are there?" / "Bring in the tiled sampler workflow" — list and install the workflows Deno has released with his videos (packages)
 - "Let's make one on my topic" — creates a production folder and starts by asking your purpose and direction
 - "Tune it to my PC" — reads the hardware and fills `MY-PC.md` with fixed values from smoke tests
 - "Any Deno updates?" — compares the packages you installed with the current versions and shows what changed

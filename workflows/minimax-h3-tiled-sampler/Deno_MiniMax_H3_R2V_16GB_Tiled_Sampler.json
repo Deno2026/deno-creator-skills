@@ -1,0 +1,2622 @@
+{
+  "id": "d93cf682-a966-5825-801e-122d5e38cbc0",
+  "revision": 0,
+  "last_node_id": 8107,
+  "last_link_id": 48,
+  "nodes": [
+    {
+      "id": 116,
+      "type": "MarkdownNote",
+      "pos": [
+        -610,
+        90
+      ],
+      "size": [
+        570,
+        1490
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "DENO · Quick Start",
+      "properties": {},
+      "widgets_values": [
+        "## DENO · MiniMax H3 R2V\n\n**Tiled Sampler 1088p · 16GB and up**\n\nReference images → Pika 6 steps at 960×544 → trained latent upscale 2× → **DENO Tiled Sampler**: DMD, final 1 step in tiles sized for your VRAM → 1920×1088.\n\n### How it flows\n**1 · Models → 2 · Inputs → 3 · Generate 544p → 4 · Upscale ×2 + Tiled Sampler 1088p → 5 · Decode once + Save**\n\n### Quick start\n1. Update ComfyUI to v0.44.0 or newer (built-in MiniMax H3 latent upscaler), then install the models and required node packs (notes on the left).\n2. In **2 · Inputs**: add reference images, write the prompt, set the starting size in Resize Box, the length in seconds and the seed. For a reference video or audio, place a Load Video or Load Audio node in the free space left of **Reference to Video** and connect it to `ref_video_0` or `ref_audio_0`.\n3. Run. **3** makes the 544p video and its sound and frees VRAM, **4** upscales it 2× and finishes it tile by tile, **5** frees VRAM, decodes once and saves the MP4 with audio.\n\n### Tiled Sampler\nSet **Tile width**, **Tile height**, **Overlap X** and **Overlap Y** in pixels — multiples of 32, each overlap smaller than its tile. The defaults, 896×704 tiles with 256×320 overlap, are what we tested on 16GB: six tiles at 1920×1088. With more VRAM use larger tiles; a tile as large as the frame runs it in one piece. Measured working memory of the sampler for one 15-second tile: about 1.8 GB at 1920×1088 and 2.9 GB at 2560×1440 (sparse attention 0.15 + memory optimization; DynamicVRAM streams the model weights separately).\n\nAt every step all windows predict from the same full latent, the overlaps are blended and one update is applied to the whole frame, so there are no tile seams to repair afterwards. Audio passes through unchanged. The model is loaded once for all windows.\n\n### Tested configuration\nRTX 4060 Ti 16GB VRAM · 32GB system RAM · ComfyUI v0.44.0 · up to 15 s at 24 fps; the default length is 5 s. Sparse budget 0.15; Early/Late 0; Kitchen 64Q×64KV. Memory chunk rows 4096, native precision, QKV Auto, Standard. Keep DynamicVRAM enabled. VRAM is freed after the 544p pass, before the latent upscale, and right before the decode (VRAM Debug). Requires 16GB VRAM or more. Results do not guarantee identical memory use on every GPU.\n\nThis graph keeps only what the tiled finish needs. Color matching, tear detection and resume checkpoints are not included.\n\n**The DENO Tiled Sampler node is in DENO Custom Nodes v0.7.126 or newer** (ComfyUI Manager: `deno-custom-nodes`). The JSON does not install Python code. See Required Node Packs.\n\nAuthor: **DENO** · Workflow: **GPL-3.0-only**\n\n[Homepage](https://denomcp.com) · [Workflow repository](https://github.com/Deno2026/deno-creator-skills)\n\nModels and node packs retain their respective licenses and terms."
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 117,
+      "type": "MarkdownNote",
+      "pos": [
+        -1230,
+        90
+      ],
+      "size": [
+        620,
+        1820
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Model Links",
+      "properties": {},
+      "widgets_values": [
+        "## Model Links\n[🤗 Deno2026/MiniMax-H3-DenoMix](https://huggingface.co/Deno2026/MiniMax-H3-DenoMix) · [🤗 Comfy-Org/MiniMax-H3](https://huggingface.co/Comfy-Org/MiniMax-H3)\n\n**diffusion_models**\n\n- DenoMix v3: [MiniMax-H3_DenoMix_ref2va_pruned_int8_v3.safetensors](https://huggingface.co/Deno2026/MiniMax-H3-DenoMix/resolve/main/MiniMax-H3_DenoMix_ref2va_pruned_int8_v3.safetensors) (21.0 GB)\n\n**loras**\n\n- Stage 1 · Pika 6 steps: [pika_h3_flex_ref2va_v1_avg_rank_55_bf16.safetensors](https://huggingface.co/Kijai/MiniMax-H3_comfy/resolve/main/loras/Pika/pika_h3_flex_ref2va_v1_avg_rank_55_bf16.safetensors) (553 MB)\n- Stage 2 · DMD: [minimax_h3_dmd_ref2va_8step_turbo_pruned.safetensors](https://huggingface.co/drbaph/MiniMax-H3-Turbo-Lora-ComfyUI/resolve/main/experimental/minimax_h3_dmd_ref2va_8step_turbo_pruned.safetensors) (2.29 GB)\n\n**text_encoders**\n\n- [qwen3vl_32b_minimax_h3_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors) (27.1 GB)\n\n**vae**\n\n- [minimax_h3_video_vae_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_int8_convrot.safetensors) (2.81 GB)\n- [minimax_h3_audio_vae_fp32.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_audio_vae_fp32.safetensors) (605 MB)\n\n**latent_upscale_models**\n\n- [minimax_h3_latent_upscaler_3d_bf16.safetensors](https://huggingface.co/Konteni2/Minimax_h3_latent_Upscaler/resolve/main/minimax_h3_latent_upscaler_3d_bf16.safetensors) (691 MB)\n\n## Model Storage Location\n\n```\n📂 ComfyUI/\n├── 📂 models/\n│   ├── 📂 diffusion_models/\n│   │   └── MiniMax-H3_DenoMix_ref2va_pruned_int8_v3.safetensors\n│   ├── 📂 loras/\n│   │   ├── pika_h3_flex_ref2va_v1_avg_rank_55_bf16.safetensors\n│   │   └── minimax_h3_dmd_ref2va_8step_turbo_pruned.safetensors\n│   ├── 📂 text_encoders/\n│   │   └── qwen3vl_32b_minimax_h3_int8_convrot.safetensors\n│   ├── 📂 vae/\n│   │   ├── minimax_h3_video_vae_int8_convrot.safetensors\n│   │   └── minimax_h3_audio_vae_fp32.safetensors\n│   └── 📂 latent_upscale_models/\n│       └── minimax_h3_latent_upscaler_3d_bf16.safetensors\n```\n\n## Required Node Packs\n\n- [H3-Optimizations](https://github.com/Zironic/H3-Optimizations) · Advanced Sparse + Memory Optimization. Use the tested 64Q×64KV option; do not substitute a different geometry silently.\n- [DENO Custom Nodes](https://github.com/Deno2026/comfyui-deno-custom-nodes) · v0.7.126 or newer (includes the Tiled Sampler)\n- [KJNodes](https://github.com/kijai/ComfyUI-KJNodes)\n- [VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite)\n\n## Report Issue\n\nNote: Requires ComfyUI v0.44.0 or newer (built-in MiniMax H3 latent upscaler) with Comfy Kitchen support. Please update ComfyUI first ([guide](https://docs.comfy.org/installation/update_comfyui)) and prepare the models above.\n\n- If memory runs out, lower the starting resolution or duration.\n- For compiler errors, check the startup option `--disable-comfy-compiler`.\n- Workflow issues: [Deno2026/deno-creator-skills](https://github.com/Deno2026/deno-creator-skills/issues)"
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 119,
+      "type": "VAELoader",
+      "pos": [
+        30,
+        510
+      ],
+      "size": [
+        640,
+        70
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            5,
+            36
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader",
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "models": [
+          {
+            "name": "minimax_h3_video_vae_int8_convrot.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_int8_convrot.safetensors",
+            "directory": "vae"
+          }
+        ]
+      },
+      "widgets_values": [
+        "minimax_h3_video_vae_int8_convrot.safetensors"
+      ]
+    },
+    {
+      "id": 120,
+      "type": "VAELoader",
+      "pos": [
+        30,
+        620
+      ],
+      "size": [
+        640,
+        70
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            1,
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader",
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "models": [
+          {
+            "name": "minimax_h3_audio_vae_fp32.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_audio_vae_fp32.safetensors",
+            "directory": "vae"
+          }
+        ]
+      },
+      "widgets_values": [
+        "minimax_h3_audio_vae_fp32.safetensors"
+      ]
+    },
+    {
+      "id": 127,
+      "type": "UNETLoader",
+      "pos": [
+        30,
+        120
+      ],
+      "size": [
+        640,
+        90
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            14
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader",
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "models": [
+          {
+            "name": "MiniMax-H3_DenoMix_ref2va_pruned_int8_v3.safetensors",
+            "url": "https://huggingface.co/Deno2026/MiniMax-H3-DenoMix/resolve/main/MiniMax-H3_DenoMix_ref2va_pruned_int8_v3.safetensors",
+            "directory": "diffusion_models"
+          }
+        ]
+      },
+      "widgets_values": [
+        "MiniMax-H3_DenoMix_ref2va_pruned_int8_v3.safetensors",
+        "default"
+      ]
+    },
+    {
+      "id": 128,
+      "type": "CLIPLoader",
+      "pos": [
+        30,
+        350
+      ],
+      "size": [
+        640,
+        120
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            4,
+            19
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader",
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0",
+        "models": [
+          {
+            "name": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+            "directory": "text_encoders"
+          }
+        ]
+      },
+      "widgets_values": [
+        "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+        "minimax",
+        "default"
+      ]
+    },
+    {
+      "id": 132,
+      "type": "PrimitiveFloat",
+      "pos": [
+        1140,
+        560
+      ],
+      "size": [
+        270,
+        70
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": [
+            21
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveFloat",
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0"
+      },
+      "widgets_values": [
+        5.0
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 142,
+      "type": "DenoMiniMaxH3ReferenceImageLoader",
+      "pos": [
+        780,
+        120
+      ],
+      "size": [
+        440,
+        390
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "ref_images",
+          "type": "DENO_MINIMAX_H3_REFERENCE_IMAGES",
+          "links": [
+            8
+          ]
+        },
+        {
+          "name": "image_list",
+          "shape": 6,
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DenoMiniMaxH3ReferenceImageLoader",
+        "denoH3ReferenceLoaderLayoutVersion": 1,
+        "denoH3AudioOutputIds": [],
+        "cnr_id": "deno-custom-nodes",
+        "ver": "0.7.75"
+      },
+      "widgets_values": [
+        "",
+        "",
+        "[]"
+      ]
+    },
+    {
+      "id": 145,
+      "type": "DenoResolutionSetup",
+      "pos": [
+        780,
+        560
+      ],
+      "size": [
+        320,
+        460
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": []
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "links": [
+            9,
+            45
+          ]
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": [
+            10,
+            47
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DenoResolutionSetup",
+        "cnr_id": "deno-custom-nodes",
+        "ver": "0.7.77"
+      },
+      "widgets_values": [
+        "Manual Input",
+        "16:9",
+        1.0,
+        960,
+        544,
+        "32",
+        "Center Crop (Fill)",
+        "lanczos",
+        0.5,
+        0.5,
+        1.0
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 184,
+      "type": "KSamplerSelect",
+      "pos": [
+        2160,
+        450
+      ],
+      "size": [
+        300,
+        58
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "SAMPLER",
+          "type": "SAMPLER",
+          "links": [
+            12
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSamplerSelect",
+        "cnr_id": "comfy-core",
+        "ver": "0.34.1"
+      },
+      "widgets_values": [
+        "lcm"
+      ]
+    },
+    {
+      "id": 186,
+      "type": "DenoPromptText",
+      "pos": [
+        1450,
+        120
+      ],
+      "size": [
+        600,
+        350
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DenoPromptText",
+        "cnr_id": "deno-custom-nodes",
+        "ver": "0.7.95"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 215,
+      "type": "MarkdownNote",
+      "pos": [
+        1450,
+        520
+      ],
+      "size": [
+        600,
+        430
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Prompt · Speech Guidance",
+      "properties": {},
+      "widgets_values": [
+        "## Writing the prompt\n\nUse these six sections in English and assign a role to each reference:\n\n`subject_definitions:` → `summary:` → `retention_analysis:` → `detailed_description:` → `overall_soundscape:` → `non_diegetic_music:`\n\nImage order starts at `<Picture 1>`. Specify which face, clothing, style or background elements to use.\n\n### With dialogue\nKeep dialogue in its original language, e.g. `<d>[English]Hello.</d>`. Use speaker IDs only for characters who speak.\n\n### Without dialogue\nDescribe the intended ambience and effects in `overall_soundscape`, e.g. `Only ambient sound and sound effects are heard.` Avoid describing talking or singing.\n\nListen to the saved audio. Unintended speech can still occur."
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 400,
+      "type": "ManualSigmas",
+      "pos": [
+        2160,
+        550
+      ],
+      "size": [
+        300,
+        90
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "sigmas",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "sigmas"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            23
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ManualSigmas"
+      },
+      "widgets_values": [
+        "1, 0.972972972973, 0.923076923077, 0.8, 0.571428571429, 0.333333333333, 0"
+      ]
+    },
+    {
+      "id": 401,
+      "type": "PrimitiveInt",
+      "pos": [
+        1140,
+        760
+      ],
+      "size": [
+        270,
+        90
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            24,
+            33
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [
+        1,
+        "randomize"
+      ]
+    },
+    {
+      "id": 5220,
+      "type": "LatentUpscaleModelLoader",
+      "pos": [
+        30,
+        730
+      ],
+      "size": [
+        640,
+        70
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "model_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT_UPSCALE_MODEL",
+          "type": "LATENT_UPSCALE_MODEL",
+          "links": [
+            40
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LatentUpscaleModelLoader"
+      },
+      "widgets_values": [
+        "minimax_h3_latent_upscaler_3d_bf16.safetensors"
+      ]
+    },
+    {
+      "id": 129,
+      "type": "RandomNoise",
+      "pos": [
+        2160,
+        780
+      ],
+      "size": [
+        360,
+        90
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "noise_seed",
+          "type": "INT",
+          "widget": {
+            "name": "noise_seed"
+          },
+          "link": 24
+        }
+      ],
+      "outputs": [
+        {
+          "name": "NOISE",
+          "type": "NOISE",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "RandomNoise",
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0"
+      },
+      "widgets_values": [
+        1,
+        "fixed"
+      ]
+    },
+    {
+      "id": 131,
+      "type": "ComfyMathExpression",
+      "pos": [
+        1140,
+        680
+      ],
+      "size": [
+        320,
+        128
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "a",
+          "name": "values.a",
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 21
+        },
+        {
+          "name": "values.b",
+          "shape": 7,
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            11
+          ]
+        },
+        {
+          "name": "BOOL",
+          "type": "BOOLEAN",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ComfyMathExpression",
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0"
+      },
+      "widgets_values": [
+        "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17"
+      ]
+    },
+    {
+      "id": 191,
+      "type": "ModelAttentionBackend",
+      "pos": [
+        30,
+        250
+      ],
+      "size": [
+        640,
+        58
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            15,
+            27
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ModelAttentionBackend",
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0"
+      },
+      "widgets_values": [
+        "comfy kitchen attention"
+      ]
+    },
+    {
+      "id": 5217,
+      "type": "ComfyMathExpression",
+      "pos": [
+        3520,
+        300
+      ],
+      "size": [
+        320,
+        128
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "a",
+          "name": "values.a",
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 45
+        },
+        {
+          "name": "values.b",
+          "shape": 7,
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            46
+          ]
+        },
+        {
+          "name": "BOOL",
+          "type": "BOOLEAN",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ComfyMathExpression",
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0"
+      },
+      "widgets_values": [
+        "a * 2"
+      ]
+    },
+    {
+      "id": 5218,
+      "type": "ComfyMathExpression",
+      "pos": [
+        3520,
+        350
+      ],
+      "size": [
+        320,
+        128
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "a",
+          "name": "values.a",
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 47
+        },
+        {
+          "name": "values.b",
+          "shape": 7,
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            48
+          ]
+        },
+        {
+          "name": "BOOL",
+          "type": "BOOLEAN",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ComfyMathExpression",
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0"
+      },
+      "widgets_values": [
+        "a * 2"
+      ]
+    },
+    {
+      "id": 141,
+      "type": "DenoMiniMaxH3ReferenceToVideo",
+      "pos": [
+        1450,
+        1080
+      ],
+      "size": [
+        600,
+        330
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 4
+        },
+        {
+          "name": "vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": 5
+        },
+        {
+          "name": "audio_vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": 6
+        },
+        {
+          "name": "ref_images",
+          "shape": 7,
+          "type": "DENO_MINIMAX_H3_REFERENCE_IMAGES",
+          "link": 8
+        },
+        {
+          "label": "ref_video_0",
+          "name": "ref_videos.ref_video_0",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "label": "ref_video_audio_0",
+          "name": "ref_video_audios.ref_video_audio_0",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "label": "ref_audio_0",
+          "name": "ref_audios.ref_audio_0",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": 13
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 9
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 10
+        },
+        {
+          "name": "length",
+          "type": "INT",
+          "widget": {
+            "name": "length"
+          },
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            18
+          ]
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DenoMiniMaxH3ReferenceToVideo",
+        "cnr_id": "deno-custom-nodes",
+        "ver": "0.7.75"
+      },
+      "widgets_values": [
+        "",
+        960,
+        544,
+        362,
+        "max"
+      ]
+    },
+    {
+      "id": 192,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        2160,
+        180
+      ],
+      "size": [
+        440,
+        82
+      ],
+      "flags": {},
+      "order": 21,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 15
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            16
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly",
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0",
+        "models": [
+          {
+            "name": "pika_h3_flex_ref2va_v1_avg_rank_55_bf16.safetensors",
+            "url": "https://huggingface.co/Kijai/MiniMax-H3_comfy/resolve/main/loras/Pika/pika_h3_flex_ref2va_v1_avg_rank_55_bf16.safetensors",
+            "directory": "loras"
+          }
+        ]
+      },
+      "widgets_values": [
+        "pika_h3_flex_ref2va_v1_avg_rank_55_bf16.safetensors",
+        1.0
+      ]
+    },
+    {
+      "id": 7400,
+      "type": "H3SparseAttentionAdvanced",
+      "pos": [
+        3000,
+        180
+      ],
+      "size": [
+        440,
+        380
+      ],
+      "flags": {},
+      "order": 22,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 27
+        },
+        {
+          "name": "video_budget",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "video_budget"
+          }
+        },
+        {
+          "name": "early_steps",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "early_steps"
+          }
+        },
+        {
+          "name": "early_kv",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "early_kv"
+          }
+        },
+        {
+          "name": "late_steps",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "late_steps"
+          }
+        },
+        {
+          "name": "late_kv",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "late_kv"
+          }
+        },
+        {
+          "name": "backend",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "backend"
+          }
+        },
+        {
+          "name": "early_schedule",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "early_schedule"
+          }
+        },
+        {
+          "name": "video_token_order",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "video_token_order"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            28
+          ]
+        },
+        {
+          "name": "report",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "H3SparseAttentionAdvanced",
+        "aux_id": "Zironic/H3-Optimizations"
+      },
+      "widgets_values": [
+        0.15,
+        0,
+        0.5,
+        0,
+        0.35,
+        "Kitchen INT8 64Q x 64KV (Quality)",
+        "Ramp",
+        "1x8x8"
+      ]
+    },
+    {
+      "id": 193,
+      "type": "MiniMaxH3SigmaShift",
+      "pos": [
+        2160,
+        300
+      ],
+      "size": [
+        440,
+        82
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 16
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            17
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3SigmaShift",
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0"
+      },
+      "widgets_values": [
+        12,
+        3
+      ]
+    },
+    {
+      "id": 195,
+      "type": "DenoTextEncoderUnload",
+      "pos": [
+        2160,
+        680
+      ],
+      "size": [
+        500,
+        90
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 24,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "positive_conditioning",
+          "type": "CONDITIONING",
+          "link": 18
+        },
+        {
+          "name": "text_encoder",
+          "type": "CLIP",
+          "link": 19
+        },
+        {
+          "name": "negative_conditioning",
+          "shape": 7,
+          "type": "CONDITIONING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Positive Conditioning",
+          "type": "CONDITIONING",
+          "links": [
+            20,
+            31
+          ]
+        },
+        {
+          "name": "Negative Conditioning",
+          "type": "CONDITIONING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DenoTextEncoderUnload",
+        "cnr_id": "deno-custom-nodes",
+        "ver": "0.7.100"
+      }
+    },
+    {
+      "id": 7401,
+      "type": "H3MemoryOptimization",
+      "pos": [
+        3000,
+        600
+      ],
+      "size": [
+        440,
+        370
+      ],
+      "flags": {},
+      "order": 25,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 28
+        },
+        {
+          "name": "fused_qkv",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "fused_qkv"
+          }
+        },
+        {
+          "name": "mlp_memory",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "mlp_memory"
+          }
+        },
+        {
+          "name": "chunk_rows",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "chunk_rows"
+          }
+        },
+        {
+          "name": "preserve_precision",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "preserve_precision"
+          }
+        },
+        {
+          "name": "precision_mode",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "precision_mode"
+          }
+        },
+        {
+          "name": "qkv_streaming_mode",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "qkv_streaming_mode"
+          }
+        },
+        {
+          "name": "embedding_memory_mode",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "embedding_memory_mode"
+          }
+        },
+        {
+          "name": "kitchen_v_memory_mode",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "kitchen_v_memory_mode"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            29
+          ]
+        },
+        {
+          "name": "report",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "H3MemoryOptimization",
+        "aux_id": "Zironic/H3-Optimizations"
+      },
+      "widgets_values": [
+        "auto",
+        "auto",
+        4096,
+        true,
+        "Preserve native",
+        "Auto",
+        "Auto",
+        "Standard"
+      ]
+    },
+    {
+      "id": 126,
+      "type": "BasicGuider",
+      "pos": [
+        2160,
+        730
+      ],
+      "size": [
+        360,
+        60
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 17
+        },
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 20
+        }
+      ],
+      "outputs": [
+        {
+          "name": "GUIDER",
+          "type": "GUIDER",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicGuider",
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0"
+      }
+    },
+    {
+      "id": 199,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        3000,
+        1010
+      ],
+      "size": [
+        440,
+        82
+      ],
+      "flags": {},
+      "order": 27,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 29
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            37
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly",
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0",
+        "models": [
+          {
+            "name": "minimax_h3_dmd_ref2va_8step_turbo_pruned.safetensors",
+            "url": "https://huggingface.co/drbaph/MiniMax-H3-Turbo-Lora-ComfyUI/resolve/main/experimental/minimax_h3_dmd_ref2va_8step_turbo_pruned.safetensors",
+            "directory": "loras"
+          }
+        ]
+      },
+      "widgets_values": [
+        "minimax_h3_dmd_ref2va_8step_turbo_pruned.safetensors",
+        1
+      ]
+    },
+    {
+      "id": 125,
+      "type": "SamplerCustomAdvanced",
+      "pos": [
+        2640,
+        120
+      ],
+      "size": [
+        260,
+        326
+      ],
+      "flags": {},
+      "order": 28,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "noise",
+          "type": "NOISE",
+          "link": 2
+        },
+        {
+          "name": "guider",
+          "type": "GUIDER",
+          "link": 3
+        },
+        {
+          "name": "sampler",
+          "type": "SAMPLER",
+          "link": 12
+        },
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 23
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "LATENT",
+          "links": []
+        },
+        {
+          "name": "denoised_output",
+          "type": "LATENT",
+          "links": [
+            38
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SamplerCustomAdvanced",
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0"
+      }
+    },
+    {
+      "id": 200,
+      "type": "MiniMaxH3SigmaShift",
+      "pos": [
+        3000,
+        1130
+      ],
+      "size": [
+        440,
+        82
+      ],
+      "flags": {},
+      "order": 29,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 37
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            25,
+            30
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3SigmaShift",
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0"
+      },
+      "widgets_values": [
+        12,
+        3
+      ]
+    },
+    {
+      "id": 185,
+      "type": "BasicScheduler",
+      "pos": [
+        3520,
+        430
+      ],
+      "size": [
+        440,
+        115
+      ],
+      "flags": {},
+      "order": 30,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 25
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            26
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicScheduler",
+        "cnr_id": "comfy-core",
+        "ver": "0.34.1"
+      },
+      "widgets_values": [
+        "simple",
+        8,
+        1.0
+      ]
+    },
+    {
+      "id": 8107,
+      "type": "VRAM_Debug",
+      "pos": [
+        2640,
+        490
+      ],
+      "size": [
+        310,
+        186
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 31,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "any_input",
+          "shape": 7,
+          "type": "*",
+          "link": 38
+        },
+        {
+          "name": "image_pass",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "model_pass",
+          "shape": 7,
+          "type": "MODEL",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "any_output",
+          "type": "*",
+          "links": [
+            39
+          ]
+        },
+        {
+          "name": "image_pass",
+          "type": "IMAGE",
+          "links": []
+        },
+        {
+          "name": "model_pass",
+          "type": "MODEL",
+          "links": []
+        },
+        {
+          "label": "freemem_before",
+          "name": "freemem_before",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "label": "freemem_after",
+          "name": "freemem_after",
+          "type": "INT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VRAM_Debug",
+        "cnr_id": "comfyui-kjnodes",
+        "ver": "3f20054214fec9f9234fd3841ae6f1e4287948f6"
+      },
+      "widgets_values": [
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "id": 194,
+      "type": "SplitSigmas",
+      "pos": [
+        3520,
+        590
+      ],
+      "size": [
+        440,
+        82
+      ],
+      "flags": {},
+      "order": 32,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 26
+        }
+      ],
+      "outputs": [
+        {
+          "name": "high_sigmas",
+          "type": "SIGMAS",
+          "links": []
+        },
+        {
+          "name": "low_sigmas",
+          "type": "SIGMAS",
+          "links": [
+            32
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SplitSigmas",
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0"
+      },
+      "widgets_values": [
+        7
+      ]
+    },
+    {
+      "id": 5221,
+      "type": "MiniMaxH3LatentUpscaleWithModel",
+      "pos": [
+        3520,
+        120
+      ],
+      "size": [
+        440,
+        140
+      ],
+      "flags": {},
+      "order": 33,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "LATENT_UPSCALE_MODEL",
+          "link": 40
+        },
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 39
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 46,
+          "widget": {
+            "name": "width"
+          }
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 48,
+          "widget": {
+            "name": "height"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            41
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3LatentUpscaleWithModel"
+      },
+      "widgets_values": [
+        1920,
+        1088
+      ]
+    },
+    {
+      "id": 109,
+      "type": "DenoMiniMaxH3TiledSampler",
+      "pos": [
+        4010,
+        120
+      ],
+      "size": [
+        450,
+        150
+      ],
+      "flags": {},
+      "order": 34,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 30
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 31
+        },
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "link": 41
+        },
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 32
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 33,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "tile_width",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "tile_width"
+          }
+        },
+        {
+          "name": "tile_height",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "tile_height"
+          }
+        },
+        {
+          "name": "overlap_x",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "overlap_x"
+          }
+        },
+        {
+          "name": "overlap_y",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "overlap_y"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "links": [
+            42
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DenoMiniMaxH3TiledSampler",
+        "cnr_id": "deno-custom-nodes",
+        "ver": "0.7.126"
+      },
+      "widgets_values": [
+        1,
+        "fixed",
+        896,
+        704,
+        256,
+        320
+      ]
+    },
+    {
+      "id": 8105,
+      "type": "VRAM_Debug",
+      "pos": [
+        4580,
+        120
+      ],
+      "size": [
+        310,
+        186
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 35,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "any_input",
+          "shape": 7,
+          "type": "*",
+          "link": 42
+        },
+        {
+          "name": "image_pass",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "model_pass",
+          "shape": 7,
+          "type": "MODEL",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "any_output",
+          "type": "*",
+          "links": [
+            34
+          ]
+        },
+        {
+          "name": "image_pass",
+          "type": "IMAGE",
+          "links": []
+        },
+        {
+          "name": "model_pass",
+          "type": "MODEL",
+          "links": []
+        },
+        {
+          "label": "freemem_before",
+          "name": "freemem_before",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "label": "freemem_after",
+          "name": "freemem_after",
+          "type": "INT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VRAM_Debug",
+        "cnr_id": "comfyui-kjnodes",
+        "ver": "3f20054214fec9f9234fd3841ae6f1e4287948f6"
+      },
+      "widgets_values": [
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "id": 8103,
+      "type": "LTXVSeparateAVLatent",
+      "pos": [
+        4580,
+        170
+      ],
+      "size": [
+        570,
+        80
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 36,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "av_latent",
+          "type": "LATENT",
+          "link": 34
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video_latent",
+          "type": "LATENT",
+          "links": [
+            35
+          ]
+        },
+        {
+          "name": "audio_latent",
+          "type": "LATENT",
+          "links": [
+            43
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVSeparateAVLatent"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 121,
+      "type": "VAEDecodeAudio",
+      "pos": [
+        4580,
+        430
+      ],
+      "size": [
+        300,
+        60
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 37,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 43
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            22
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecodeAudio",
+        "cnr_id": "comfy-core",
+        "ver": "0.30.0"
+      }
+    },
+    {
+      "id": 8106,
+      "type": "VAEDecode",
+      "pos": [
+        4580,
+        250
+      ],
+      "size": [
+        440,
+        60
+      ],
+      "flags": {},
+      "order": 38,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 35
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 36
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            44
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 144,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        4580,
+        510
+      ],
+      "size": [
+        700,
+        560
+      ],
+      "flags": {},
+      "order": 39,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 44
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 22
+        },
+        {
+          "name": "meta_batch",
+          "shape": 7,
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine",
+        "cnr_id": "comfyui-videohelpersuite",
+        "ver": "4ee72c065db22c9d96c2427954dc69e7b908444b"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "Deno_MiniMax_H3/Tiled_Sampler_16GB/final1088",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 15,
+        "save_metadata": false,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true
+      }
+    }
+  ],
+  "links": [
+    [
+      1,
+      120,
+      0,
+      121,
+      1,
+      "VAE"
+    ],
+    [
+      2,
+      129,
+      0,
+      125,
+      0,
+      "NOISE"
+    ],
+    [
+      3,
+      126,
+      0,
+      125,
+      1,
+      "GUIDER"
+    ],
+    [
+      4,
+      128,
+      0,
+      141,
+      0,
+      "CLIP"
+    ],
+    [
+      5,
+      119,
+      0,
+      141,
+      1,
+      "VAE"
+    ],
+    [
+      6,
+      120,
+      0,
+      141,
+      2,
+      "VAE"
+    ],
+    [
+      7,
+      141,
+      1,
+      125,
+      4,
+      "LATENT"
+    ],
+    [
+      8,
+      142,
+      0,
+      141,
+      3,
+      "DENO_MINIMAX_H3_REFERENCE_IMAGES"
+    ],
+    [
+      9,
+      145,
+      1,
+      141,
+      8,
+      "INT"
+    ],
+    [
+      10,
+      145,
+      2,
+      141,
+      9,
+      "INT"
+    ],
+    [
+      11,
+      131,
+      1,
+      141,
+      10,
+      "INT"
+    ],
+    [
+      12,
+      184,
+      0,
+      125,
+      2,
+      "SAMPLER"
+    ],
+    [
+      13,
+      186,
+      0,
+      141,
+      7,
+      "STRING"
+    ],
+    [
+      14,
+      127,
+      0,
+      191,
+      0,
+      "MODEL"
+    ],
+    [
+      15,
+      191,
+      0,
+      192,
+      0,
+      "MODEL"
+    ],
+    [
+      16,
+      192,
+      0,
+      193,
+      0,
+      "MODEL"
+    ],
+    [
+      17,
+      193,
+      0,
+      126,
+      0,
+      "MODEL"
+    ],
+    [
+      18,
+      141,
+      0,
+      195,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      19,
+      128,
+      0,
+      195,
+      1,
+      "CLIP"
+    ],
+    [
+      20,
+      195,
+      0,
+      126,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      21,
+      132,
+      0,
+      131,
+      0,
+      "FLOAT"
+    ],
+    [
+      22,
+      121,
+      0,
+      144,
+      1,
+      "AUDIO"
+    ],
+    [
+      23,
+      400,
+      0,
+      125,
+      3,
+      "SIGMAS"
+    ],
+    [
+      24,
+      401,
+      0,
+      129,
+      0,
+      "INT"
+    ],
+    [
+      25,
+      200,
+      0,
+      185,
+      0,
+      "MODEL"
+    ],
+    [
+      26,
+      185,
+      0,
+      194,
+      0,
+      "SIGMAS"
+    ],
+    [
+      27,
+      191,
+      0,
+      7400,
+      0,
+      "MODEL"
+    ],
+    [
+      28,
+      7400,
+      0,
+      7401,
+      0,
+      "MODEL"
+    ],
+    [
+      29,
+      7401,
+      0,
+      199,
+      0,
+      "MODEL"
+    ],
+    [
+      30,
+      200,
+      0,
+      109,
+      0,
+      "MODEL"
+    ],
+    [
+      31,
+      195,
+      0,
+      109,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      32,
+      194,
+      1,
+      109,
+      3,
+      "SIGMAS"
+    ],
+    [
+      33,
+      401,
+      0,
+      109,
+      4,
+      "INT"
+    ],
+    [
+      34,
+      8105,
+      0,
+      8103,
+      0,
+      "*"
+    ],
+    [
+      35,
+      8103,
+      0,
+      8106,
+      0,
+      "LATENT"
+    ],
+    [
+      36,
+      119,
+      0,
+      8106,
+      1,
+      "VAE"
+    ],
+    [
+      37,
+      199,
+      0,
+      200,
+      0,
+      "MODEL"
+    ],
+    [
+      38,
+      125,
+      1,
+      8107,
+      0,
+      "LATENT"
+    ],
+    [
+      39,
+      8107,
+      0,
+      5221,
+      1,
+      "*"
+    ],
+    [
+      40,
+      5220,
+      0,
+      5221,
+      0,
+      "LATENT_UPSCALE_MODEL"
+    ],
+    [
+      41,
+      5221,
+      0,
+      109,
+      2,
+      "LATENT"
+    ],
+    [
+      42,
+      109,
+      0,
+      8105,
+      0,
+      "LATENT"
+    ],
+    [
+      43,
+      8103,
+      1,
+      121,
+      0,
+      "LATENT"
+    ],
+    [
+      44,
+      8106,
+      0,
+      144,
+      0,
+      "IMAGE"
+    ],
+    [
+      45,
+      145,
+      1,
+      5217,
+      0,
+      "INT"
+    ],
+    [
+      46,
+      5217,
+      1,
+      5221,
+      2,
+      "INT"
+    ],
+    [
+      47,
+      145,
+      2,
+      5218,
+      0,
+      "INT"
+    ],
+    [
+      48,
+      5218,
+      1,
+      5221,
+      3,
+      "INT"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "1 · Models",
+      "bounding": [
+        10,
+        30,
+        680,
+        790
+      ],
+      "color": "#5A386B",
+      "font_size": 26,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "2 · Inputs · images · prompt · size · length · seed",
+      "bounding": [
+        760,
+        30,
+        1310,
+        1400
+      ],
+      "color": "#5A386B",
+      "font_size": 26,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "3 · Generate 544p · Pika 6 steps",
+      "bounding": [
+        2120,
+        30,
+        800,
+        770
+      ],
+      "color": "#5A386B",
+      "font_size": 26,
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "Model · Pika LoRA + shift",
+      "bounding": [
+        2140,
+        90,
+        480,
+        312
+      ],
+      "color": "#444444",
+      "font_size": 20,
+      "flags": {}
+    },
+    {
+      "id": 5,
+      "title": "4 · Upscale ×2 + Tiled Sampler 1088p",
+      "bounding": [
+        2960,
+        30,
+        1520,
+        1222
+      ],
+      "color": "#5A386B",
+      "font_size": 26,
+      "flags": {}
+    },
+    {
+      "id": 6,
+      "title": "Model · sparse + memory + DMD",
+      "bounding": [
+        2980,
+        90,
+        480,
+        1142
+      ],
+      "color": "#444444",
+      "font_size": 20,
+      "flags": {}
+    },
+    {
+      "id": 7,
+      "title": "5 · Decode once + Save",
+      "bounding": [
+        4560,
+        30,
+        740,
+        1060
+      ],
+      "color": "#5A386B",
+      "font_size": 26,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.3,
+      "offset": [
+        1300,
+        80
+      ]
+    },
+    "frontendVersion": "1.57.4",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true,
+    "deno": {
+      "name": "DENO MiniMax H3 R2V · Tiled Sampler 1088p",
+      "description": "Generate 544P video and audio, upscale the latent 2× and finish it at 1088P with the DENO tiled sampler, tiles sized for the GPU (16GB and up).",
+      "author": "DENO",
+      "homepage": "https://denomcp.com",
+      "repository": "https://github.com/Deno2026/deno-creator-skills",
+      "license": "GPL-3.0-only",
+      "model": "DenoMix v3",
+      "source_date": "2026-11-05",
+      "release_status": "tiled-sampler-in-deno-custom-nodes-0.7.126",
+      "tested_hardware": "RTX 4060 Ti 16GB VRAM; 32GB system RAM",
+      "tested_scope": "15 s 1920x1088 completed on the 16GB SUBPC (ComfyUI 0.44.0) with this graph (Pika 6 + DMD 1 only) and the node from DENO Custom Nodes 0.7.126. Clean-install validation from the Registry is pending.",
+      "requires_comfyui": "0.44.0",
+      "requires_deno_custom_nodes": "0.7.126"
+    }
+  },
+  "version": 0.4
+}

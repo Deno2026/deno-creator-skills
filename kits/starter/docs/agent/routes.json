@@ -15,7 +15,7 @@
         "MY-PC.md",
         "skills/README.md"
       ],
-      "note": "내 ComfyUI로 만들기: 지도 편(deno-comfyui-workflows) → 처음 한 번 comfyui-fit-my-pc로 MY-PC.md 고정 → 해당 워크플로 편과 첨부 파일. 편은 deno_knowhow_get으로 받아 skills/에 둔다"
+      "note": "내 ComfyUI로 만들기: deno_knowhow_search로 만들 것에 맞는 워크플로 편을 찾는다 → 처음 한 번 MY-PC.md를 측정으로 채워 고정 → 그 편의 준비물 · 쓰는 법대로 첨부 워크플로를 연다. 편은 deno_knowhow_get으로 받아 skills/에 둔다"
     },
     "recipe": {
       "read": [

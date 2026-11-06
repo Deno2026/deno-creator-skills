@@ -1,4 +1,4 @@
-# Agent guide (DenoMCP starter kit v8)
+# Agent guide (DenoMCP starter kit v9)
 
 This repo is a workshop for making video and images together with AI agents (Claude Code, Codex, Hermes, ...).
 This file is only the skeleton — the order of work and where to ask the user. What to make and how it should look is the user's decision.
@@ -14,12 +14,12 @@ This file is only the skeleton — the order of work and where to ask the user. 
 ## DenoMCP (connected MCP server)
 
 - Use DenoMCP only for creative work such as video and images. `deno_briefing` tells you what is available right now — say only what it lists, and never claim a feature it does not show.
-- Available now: the know-how store (`deno_knowhow_search` → `deno_knowhow_get` — the workflows, techniques and prompting Deno actually uses in production; each package carries attached files (workflow JSON, tool scripts) in `files`) · the starter kit (`deno_starter_kit`) · update notes (`deno_whats_new`).
+- Available now: the know-how store (`deno_knowhow_search` → `deno_knowhow_get` — the ComfyUI workflows and manuals Deno releases one by one with his YouTube videos; each package carries attached files (workflow JSON) in `files`) · the starter kit (`deno_starter_kit`) · update notes (`deno_whats_new`).
 - Don't announce updates yourself — they are written up on the website (denomcp.com/updates). If the user asks, open them with `deno_whats_new`.
 - Show workflows and know-how (packages) as a list with their results; bring in only what the user picks. Never push suggestions or install anything unprompted. Never change the user's existing files without asking.
 - When a package is brought in, save the body as `skills/<slug>.md`, download its attachments from the `files` URLs into `skills/<slug>/`, and add one line to `skills/deno-kit.json` (the ledger): name, version, date, whole/partial. When the user asks "any Deno updates?", compare the ledger's versions with `deno_knowhow_get` and show only what changed; update only what the user picks.
 - A package gives the purpose and the order of steps. Expression, pacing and mood are the user's choices — the package's "this is how Deno does it" parts are examples, not the standard.
-- When making things in the user's own ComfyUI, read `MY-PC.md` (this PC's fixed values) first. If it is empty, fill it in the order of the `comfyui-fit-my-pc` package (read the hardware → smoke test → ladder → decide with the user) and then keep those values. The numbers in Deno's packages are examples from Deno's PC.
+- When making things in the user's own ComfyUI, read `MY-PC.md` (this PC's fixed values) first. If it is empty, fill it in this order — read the hardware → smoke test (short, low settings) → ladder (raise size and length one step at a time) → decide with the user — and then keep those values. The numbers in Deno's packages are examples from Deno's PC.
 - When a long conversation is compacted, the documents read earlier survive only as a summary — before the next action, re-read this file and the documents `docs/agent/routes.json` lists for the current task in full (the hooks in `.codex/hooks.json` and `.claude/settings.json` remind you at that moment). Never continue from the summary alone.
 - When one unit of work is done, start the next in a new session. For long work, keep the progress in `productions/<title>/STATE.md` so a fresh session can pick it up — quality drops as a conversation grows.
 
