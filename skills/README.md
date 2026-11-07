@@ -1,6 +1,6 @@
 # skills — 노하우 창고 편(꾸러미)
 
-Deno MCP 노하우 창고(Deno Skill)에 있는 편을 파일로 그대로 둔 자리다. 창고와 같은 내용, 같은 판 번호. 편 목록은
+Deno MCP 노하우 창고에 있는 편을 파일로 그대로 둔 자리다. 창고와 같은 내용, 같은 판 번호. 편 목록은
 [`INDEX.md`](INDEX.md), 기계가 읽는 목록은 [`INDEX.json`](INDEX.json)(slug·판·요약·파일 해시).
 
 ## 쓰는 법
